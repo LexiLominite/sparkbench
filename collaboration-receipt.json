@@ -1,0 +1,52 @@
+{
+  "project": "SparkBench public static UI",
+  "primary_model": "GPT-5.6",
+  "grok_cli": "grok CLI",
+  "grok_requested_model": "grok-4.7",
+  "grok_verified_default_model": "grok-4.7",
+  "grok_available_models": [
+    "grok-4.7",
+    "grok-4.7-build-fast",
+    "grok-4.6",
+    "grok-4.5"
+  ],
+  "grok_public_review_attempts": [
+    {
+      "started_utc": "2026-09-28T09:36:13Z",
+      "reasoning_effort": "xhigh",
+      "input": "redacted public design tokens and data contract only",
+      "tools_requested": "disabled; web and subagents disabled",
+      "state": "interrupted_after_no_response",
+      "elapsed_seconds_approx": 540
+    },
+    {
+      "started_utc": "2026-09-28T09:45:41Z",
+      "reasoning_effort": "xhigh",
+      "input": "public palette and compact CSS/JS review request only",
+      "tools_requested": "plan mode; web and subagents disabled",
+      "state": "interrupted_after_no_response",
+      "elapsed_seconds_approx": 210
+    }
+  ],
+  "grok_reused_work": {
+    "source": "existing reviewed Grok 4.7 private-dashboard component",
+    "receipt": "outputs/spark-benchmark-dashboard/grok-redesign-receipt.json",
+    "response_sha256": "21f2a80e9bc5d62f9f3c319093395da713c5ef6d8c9cd72f25c63d9402bb0535",
+    "full_response_sha256": "400ebe545ddb8ce9ce8ec27181b51de58675ebce21a4506d87e4a58a8690aff3",
+    "production_sha256": "e7f0babdcb64d3d83ab4675f1892745ce0513a405a5e85ae3e593a4abaa9bc11",
+    "reuse": "The public UI retains and reshapes the reviewed comparison-chart and benchmark interaction patterns from the private dashboard."
+  },
+  "reference_site_sha256": "119ff4abc4320f4bff925044f82957fd159b843b416eaedd1443ed70ee8f23d6",
+  "public_index_sha256": "379ab1950be270a679f9989a8acfc181c838e9cfe0f67dd8609c677155b7129b",
+  "public_data_sha256": "66412b77ff9378842a25e68276ff0725c3878729cb1e3e085d8528175fab9451",
+  "private_theme_sha256": "33ceb6e2dcd02d43d9940ee1da317721d14bdd761a4796276c9081b0a6080097",
+  "verification": {
+    "javascript_syntax": "passed",
+    "json_syntax": "passed",
+    "http_static_files": "passed",
+    "browser_qa": "passed by root agent",
+    "snapshot_models": 25,
+    "snapshot_successful": 24,
+    "snapshot_trials": 96
+  }
+}

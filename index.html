@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Measured local model performance on NVIDIA DGX Spark, with methodology and evidence.">
+  <meta name="theme-color" content="#02161a">
+  <title>SparkBench · LexiLominite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --canvas: #02161a;
+      --canvas-soft: #031e23;
+      --panel: rgba(3, 31, 36, .88);
+      --panel-solid: #041f24;
+      --cyan: #27e1fa;
+      --cyan-muted: #19a0b3;
+      --cyan-faint: rgba(39, 225, 250, .12);
+      --yellow: #fae127;
+      --text: #cccccc;
+      --text-strong: #f2f6f6;
+      --muted: #8ba7ab;
+      --line: rgba(39, 225, 250, .24);
+      --line-strong: rgba(39, 225, 250, .52);
+      --danger: #ff8f84;
+      --ok: #69e6b6;
+      --focus: #fae127;
+      --font-body: "Electrolize", "Avenir Next", "Segoe UI", sans-serif;
+      --font-display: "Orbitron", "Avenir Next", "Segoe UI", sans-serif;
+      --max: 1460px;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--canvas); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 82% -10%, rgba(39, 225, 250, .15), transparent 34rem),
+        linear-gradient(180deg, #02161a 0, #02161a 56%, #031b20 100%);
+      font: 16px/1.55 var(--font-body);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .22;
+      background-image:
+        linear-gradient(rgba(39, 225, 250, .07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(39, 225, 250, .07) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+    ::selection { color: var(--canvas); background: var(--yellow); }
+    a { color: var(--cyan); }
+    button, input, select { font: inherit; }
+    button, select, input[type="search"] {
+      min-height: 42px;
+      color: var(--text-strong);
+      background: rgba(2, 22, 26, .92);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+    }
+    button { cursor: pointer; padding: .68rem .9rem; }
+    button:hover { color: var(--cyan); border-color: var(--line-strong); }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+    input[type="search"], select { padding: .68rem .8rem; }
+    input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--cyan); }
+    h1, h2, h3 {
+      margin: 0;
+      color: var(--text-strong);
+      font-family: var(--font-display);
+      line-height: 1.18;
+    }
+    h1 { max-width: 18ch; font-size: clamp(2rem, 5vw, 4.8rem); letter-spacing: -.045em; }
+    h2 { font-size: clamp(1.18rem, 2vw, 1.55rem); letter-spacing: -.025em; }
+    h3 { font-size: 1rem; }
+    p { margin: 0; }
+    small { font-size: .82rem; }
+    code, pre, .numeric { font-variant-numeric: tabular-nums; }
+
+    .skip-link { position: fixed; top: -5rem; left: 1rem; z-index: 99; padding: .7rem 1rem; color: var(--canvas); background: var(--yellow); }
+    .skip-link:focus { top: 1rem; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(2, 22, 26, .94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+    .head-row, .tab-row, main, .site-footer { width: min(calc(100% - 40px), var(--max)); margin-inline: auto; }
+    .head-row { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; min-height: 78px; }
+    .brand { display: inline-flex; align-items: baseline; gap: .52rem; color: var(--text-strong); text-decoration: none; font-family: var(--font-display); font-size: 1.22rem; letter-spacing: -.02em; }
+    .brand-mark { color: var(--cyan); text-shadow: 0 0 14px rgba(39, 225, 250, .38); }
+    .brand-origin { color: var(--muted); font-family: var(--font-body); font-size: .78rem; }
+    .head-actions { display: flex; align-items: center; justify-content: flex-end; gap: .7rem; }
+    .snapshot { max-width: 23rem; color: var(--muted); font-size: .78rem; text-align: right; }
+    .action { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 42px; padding: .68rem .9rem; color: var(--text-strong); background: rgba(2, 22, 26, .92); border: 1px solid var(--line); border-radius: 3px; text-decoration: none; white-space: nowrap; }
+    .action:hover { color: var(--cyan); border-color: var(--line-strong); }
+    .action svg { width: 16px; height: 16px; }
+    .action-primary { color: var(--canvas); background: var(--cyan); border-color: var(--cyan); font-weight: 700; }
+    .action-primary:hover { color: var(--canvas); background: #87f7fc; }
+    .tab-shell { border-top: 1px solid rgba(39, 225, 250, .08); }
+    .tab-row { display: flex; gap: clamp(1rem, 4vw, 2.8rem); overflow-x: auto; scrollbar-width: thin; }
+    .tab {
+      flex: 0 0 auto;
+      min-height: 50px;
+      padding: .82rem 0 .72rem;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+    }
+    .tab[aria-selected="true"] { color: var(--cyan); border-bottom-color: var(--cyan); text-shadow: 0 0 9px rgba(39, 225, 250, .3); }
+    .count-badge { min-width: 1.25rem; padding: .06rem .32rem; color: var(--canvas); background: var(--yellow); border-radius: 999px; font-size: .72rem; }
+
+    main { min-height: calc(100vh - 180px); padding-block: clamp(2rem, 5vw, 5rem); }
+    .view[hidden] { display: none; }
+    .page-head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: clamp(1.8rem, 4vw, 3.5rem); }
+    .page-copy { max-width: 47rem; }
+    .page-kicker { margin-bottom: .7rem; color: var(--cyan); font-size: .86rem; }
+    .page-deck { max-width: 66ch; margin-top: 1rem; color: var(--muted); font-size: clamp(1rem, 1.5vw, 1.15rem); }
+    .panel {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: inset 0 1px rgba(255,255,255,.025);
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -1px;
+      left: -1px;
+      border-top: 2px solid var(--cyan);
+      border-left: 2px solid var(--cyan);
+      pointer-events: none;
+    }
+    .notice { margin-bottom: 1.4rem; padding: .9rem 1rem; color: #ffe6b2; background: rgba(250, 225, 39, .08); border: 1px solid rgba(250, 225, 39, .35); }
+    .notice[hidden] { display: none; }
+    .error-box { margin: 3rem auto; max-width: 48rem; padding: 1.4rem; }
+
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, .65fr); gap: 1.2rem; }
+    .lead-panel { min-height: 520px; padding: clamp(1.4rem, 3vw, 2.5rem); overflow: hidden; }
+    .lead-panel::after { content: ""; position: absolute; inset: auto -10% -55% 10%; height: 75%; border: 1px solid rgba(39, 225, 250, .16); border-radius: 50%; box-shadow: 0 0 80px rgba(39,225,250,.08); pointer-events: none; }
+    .lead-top { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .84rem; }
+    .lead-reading { position: relative; z-index: 1; margin: clamp(2.7rem, 7vw, 6rem) 0 3.2rem; }
+    .winner-name { max-width: 28ch; color: var(--text-strong); font-size: clamp(1.05rem, 2vw, 1.45rem); }
+    .winner-speed { display: flex; align-items: baseline; gap: .7rem; margin-top: .45rem; color: var(--cyan); font-family: var(--font-display); font-size: clamp(4.4rem, 10vw, 9.5rem); line-height: .94; letter-spacing: -.075em; text-shadow: 0 0 28px rgba(39,225,250,.2); }
+    .winner-speed span { color: var(--muted); font-family: var(--font-body); font-size: 1rem; letter-spacing: 0; }
+    .winner-meta { margin-top: 1.2rem; color: var(--muted); }
+    .trace-list { position: relative; z-index: 1; display: grid; gap: .8rem; }
+    .trace-row { display: grid; grid-template-columns: minmax(110px, 1.1fr) minmax(100px, 2fr) 5.4rem; gap: .85rem; align-items: center; }
+    .trace-name { overflow: hidden; color: var(--text); border: 0; background: transparent; padding: 0; min-height: auto; text-align: left; white-space: nowrap; text-overflow: ellipsis; }
+    .trace-name:hover { border: 0; }
+    .trace-track { height: 7px; background: rgba(39,225,250,.09); }
+    .trace-fill { height: 100%; background: linear-gradient(90deg, var(--cyan-muted), var(--cyan)); box-shadow: 0 0 12px rgba(39,225,250,.24); }
+    .trace-value { color: var(--text-strong); text-align: right; }
+    .aside-stack { display: grid; align-content: start; gap: 1.2rem; }
+    .evidence-panel, .read-panel { padding: 1.35rem; }
+    .evidence-title { color: var(--muted); font-size: .85rem; }
+    .evidence-number { margin: .35rem 0 .15rem; color: var(--text-strong); font-family: var(--font-display); font-size: 2.6rem; line-height: 1; }
+    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 1rem; margin-top: 1.5rem; }
+    .evidence-grid > div { padding-top: .8rem; border-top: 1px solid var(--line); }
+    .evidence-grid strong { display: block; color: var(--text-strong); font-family: var(--font-display); font-size: 1.3rem; }
+    .evidence-grid span, .fine { color: var(--muted); font-size: .82rem; }
+    .verified { display: flex; gap: .7rem; margin-top: 1.3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--ok); }
+    .verified-dot { flex: 0 0 auto; width: 9px; height: 9px; margin-top: .42rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; }
+    .read-panel h2 { margin-bottom: 1rem; }
+    .read-panel p + p { margin-top: .8rem; }
+
+    .control-panel { display: grid; grid-template-columns: minmax(220px, 1.5fr) repeat(2, minmax(145px, .55fr)) auto; gap: .75rem; margin-bottom: .9rem; }
+    .control-panel input, .control-panel select { width: 100%; }
+    .advanced-controls { margin: 0 0 1.1rem; }
+    .advanced-controls summary { width: fit-content; color: var(--cyan); cursor: pointer; }
+    .advanced-grid { display: grid; grid-template-columns: repeat(4, minmax(130px, 1fr)) auto; gap: .7rem; margin-top: .9rem; }
+    .advanced-grid select { width: 100%; }
+    .filter-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1.1rem 0 .7rem; color: var(--muted); font-size: .85rem; }
+    .toggle { display: inline-flex; align-items: center; gap: .6rem; }
+    .table-shell { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    th { padding: .85rem 1rem; color: var(--muted); border-bottom: 1px solid var(--line-strong); font-weight: 400; text-align: left; white-space: nowrap; }
+    td { padding: 1rem; border-bottom: 1px solid rgba(39,225,250,.11); vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: rgba(39,225,250,.035); }
+    .model-button { min-height: auto; padding: 0; color: var(--text-strong); background: transparent; border: 0; text-align: left; }
+    .model-button:hover { color: var(--cyan); border: 0; }
+    .cell-sub { display: block; max-width: 27rem; margin-top: .25rem; color: var(--muted); font-size: .8rem; }
+    .status-ok { color: var(--ok); }
+    .status-warn { color: var(--yellow); }
+    .status-error { color: var(--danger); }
+    .tag { display: inline-block; margin: .2rem .25rem .1rem 0; padding: .12rem .38rem; color: var(--muted); border: 1px solid var(--line); font-size: .72rem; }
+
+    .selection { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.2rem; }
+    .selection-chip { display: inline-flex; align-items: center; gap: .8rem; padding: .5rem .6rem .5rem .8rem; color: var(--text-strong); border: 1px solid var(--line-strong); }
+    .selection-chip button { min-height: auto; padding: .05rem .35rem; border: 0; background: transparent; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .metric-panel { padding: 1.35rem; }
+    .metric-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.3rem; }
+    .direction { color: var(--muted); font-size: .8rem; }
+    .compare-row { display: grid; grid-template-columns: minmax(105px, 1fr) minmax(100px, 1.6fr) 5.5rem; gap: .75rem; align-items: center; margin: .85rem 0; }
+    .compare-label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .compare-track { height: 24px; background: rgba(39,225,250,.07); }
+    .compare-fill { height: 100%; min-width: 2px; background: var(--cyan-muted); }
+    .compare-row:first-of-type .compare-fill { background: var(--cyan); }
+    .compare-value { text-align: right; color: var(--text-strong); }
+    .empty-panel { padding: 2rem; }
+    .empty-panel h2 { margin-bottom: .7rem; }
+    .empty-panel p { max-width: 55ch; margin-bottom: 1.2rem; color: var(--muted); }
+
+    .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .method-panel { padding: clamp(1.3rem, 3vw, 2rem); }
+    .method-panel h2 { margin-bottom: 1rem; }
+    .method-panel p { max-width: 68ch; }
+    .method-panel p + p { margin-top: .8rem; color: var(--muted); font-size: .88rem; }
+    details.evidence { margin-top: 1.2rem; }
+    details.evidence summary { cursor: pointer; color: var(--cyan); }
+    pre { max-height: 29rem; overflow: auto; padding: 1rem; color: #b8d8db; background: #011014; border: 1px solid var(--line); font: .76rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+    dialog { width: min(980px, calc(100% - 28px)); max-height: 90vh; padding: 0; color: var(--text); background: var(--panel-solid); border: 1px solid var(--line-strong); box-shadow: 0 30px 100px rgba(0,0,0,.7); }
+    dialog::backdrop { background: rgba(0, 8, 10, .78); backdrop-filter: blur(4px); }
+    .dialog-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.35rem; background: rgba(4,31,36,.97); border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { margin-bottom: .3rem; }
+    .dialog-body { padding: 1.35rem; }
+    .dialog-body > * + * { margin-top: 1.2rem; }
+    .dialog-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+    .dialog-stat { padding: .8rem; border-left: 1px solid var(--cyan-muted); }
+    .dialog-stat strong { display: block; color: var(--text-strong); font-family: var(--font-display); font-size: 1.25rem; }
+    .dialog-stat span { color: var(--muted); font-size: .8rem; }
+    .toast { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 50; max-width: 23rem; padding: .85rem 1rem; color: var(--canvas); background: var(--yellow); box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+    .toast[hidden] { display: none; }
+    .site-footer { display: flex; justify-content: space-between; gap: 2rem; padding-block: 1.4rem 2rem; color: var(--muted); border-top: 1px solid var(--line); font-size: .82rem; }
+
+    @media (max-width: 980px) {
+      .snapshot { display: none; }
+      .overview-grid, .compare-grid, .method-grid { grid-template-columns: 1fr; }
+      .control-panel { grid-template-columns: 1fr 1fr; }
+      .control-panel input { grid-column: 1 / -1; }
+      .advanced-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .head-row, .tab-row, main, .site-footer { width: min(calc(100% - 24px), var(--max)); }
+      .head-row { align-items: flex-start; min-height: auto; padding-block: .9rem; }
+      .brand-origin, .action span { display: none; }
+      .head-actions { gap: .4rem; }
+      .page-head { align-items: flex-start; flex-direction: column; }
+      .lead-panel { min-height: 0; }
+      .winner-speed { font-size: clamp(4rem, 20vw, 7rem); }
+      .trace-row, .compare-row { grid-template-columns: minmax(92px, 1.05fr) minmax(70px, 1.2fr) 4.6rem; gap: .55rem; }
+      .control-panel, .advanced-grid { grid-template-columns: 1fr; }
+      .control-panel input, .advanced-grid > * { grid-column: auto; }
+      .filter-meta { align-items: flex-start; flex-direction: column; }
+      .table-shell { overflow: visible; border: 0; background: transparent; }
+      .table-shell::before { display: none; }
+      table, thead, tbody, tr, th, td { display: block; }
+      thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      tbody { display: grid; gap: .75rem; }
+      tbody tr { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: .75rem 1rem; padding: 1rem; background: var(--panel); border: 1px solid var(--line); }
+      td { padding: 0; border: 0; }
+      td::before { content: attr(data-label); display: block; margin-bottom: .18rem; color: var(--muted); font-size: .72rem; }
+      td:first-child { position: absolute; top: 1rem; right: 1rem; }
+      td:first-child::before { display: none; }
+      td:nth-child(2) { grid-column: 1 / -1; padding-right: 2.5rem; }
+      .dialog-stats { grid-template-columns: 1fr; }
+      .site-footer { flex-direction: column; gap: .5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to benchmark</a>
+  <header class="site-header">
+    <div class="head-row">
+      <a class="brand" href="#overview" aria-label="SparkBench overview">
+        <span class="brand-mark">SPARK</span><span>BENCH</span><span class="brand-origin">by LexiLominite</span>
+      </a>
+      <div class="head-actions">
+        <span class="snapshot" id="snapshotStatus">Loading public snapshot…</span>
+        <button class="action" id="reloadButton" type="button" title="Reload data.json">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5"/><path d="M18.5 16a8 8 0 1 1 .6-8.7L20 12"/></svg><span>Reload snapshot</span>
+        </button>
+        <a class="action action-primary" id="exportButton" href="./data.json" download="sparkbench-data.json">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg><span>Download data</span>
+        </a>
+      </div>
+    </div>
+    <div class="tab-shell">
+      <nav class="tab-row" aria-label="Benchmark sections" role="tablist">
+        <button class="tab" id="tab-overview" type="button" role="tab" aria-controls="overview" aria-selected="true" data-view="overview">Overview</button>
+        <button class="tab" id="tab-models" type="button" role="tab" aria-controls="models" aria-selected="false" data-view="models">Models</button>
+        <button class="tab" id="tab-compare" type="button" role="tab" aria-controls="compare" aria-selected="false" data-view="compare">Compare <span class="count-badge" id="selectionCount" hidden>0</span></button>
+        <button class="tab" id="tab-method" type="button" role="tab" aria-controls="method" aria-selected="false" data-view="method">Method</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div class="notice" id="globalNotice" role="status" hidden></div>
+    <section class="view" id="overview" role="tabpanel" aria-labelledby="tab-overview"></section>
+
+    <section class="view" id="models" role="tabpanel" aria-labelledby="tab-models" hidden>
+      <div class="page-head">
+        <div class="page-copy">
+          <p class="page-kicker">Explore the run</p>
+          <h1>Find your model.</h1>
+          <p class="page-deck">Search the measured configurations, inspect every trial, or select up to three for a direct comparison.</p>
+        </div>
+      </div>
+      <div class="control-panel">
+        <input id="searchInput" type="search" autocomplete="off" placeholder="Search model, engine, or precision" aria-label="Search models">
+        <select id="sortSelect" aria-label="Sort models">
+          <option value="speed">Fastest output</option>
+          <option value="ttft">Quickest first token</option>
+          <option value="name">Model name</option>
+        </select>
+        <select id="statusSelect" aria-label="Filter benchmark status">
+          <option value="">Every status</option>
+          <option value="ok">Successful</option>
+          <option value="incomplete">Incomplete</option>
+          <option value="error">Failed</option>
+          <option value="running">Running</option>
+        </select>
+        <button class="action-primary" id="compareButton" type="button">Compare selected</button>
+      </div>
+      <details class="advanced-controls">
+        <summary>More filters</summary>
+        <div class="advanced-grid">
+          <select id="engineSelect" aria-label="Filter engine"></select>
+          <select id="formatSelect" aria-label="Filter format"></select>
+          <select id="precisionSelect" aria-label="Filter precision"></select>
+          <label class="toggle"><input id="aliasesToggle" type="checkbox"> Show duplicate tags</label>
+          <button id="clearFiltersButton" type="button">Clear filters</button>
+        </div>
+      </details>
+      <div class="filter-meta"><span id="modelCount"></span><span>Output speed uses each engine’s recorded timing basis.</span></div>
+      <div class="panel table-shell">
+        <table>
+          <thead><tr><th scope="col">Compare</th><th scope="col">Model</th><th scope="col">Precision</th><th scope="col">Engine</th><th scope="col">Output speed</th><th scope="col">First token</th><th scope="col">Result</th></tr></thead>
+          <tbody id="modelRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="view" id="compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
+      <div class="page-head">
+        <div class="page-copy">
+          <p class="page-kicker">Side by side</p>
+          <h1>Compare the trade-offs.</h1>
+          <p class="page-deck">Output speed, response time, and whole-request speed answer different questions. Use matching engines for the fairest comparison.</p>
+        </div>
+      </div>
+      <div class="selection" id="selection"></div>
+      <div id="comparison"></div>
+    </section>
+
+    <section class="view" id="method" role="tabpanel" aria-labelledby="tab-method" hidden>
+      <div class="page-head">
+        <div class="page-copy">
+          <p class="page-kicker">Read the evidence</p>
+          <h1>What the numbers mean.</h1>
+          <p class="page-deck">A small, repeatable test of real model configurations on one DGX Spark. The caveats are part of the result.</p>
+        </div>
+      </div>
+      <div class="method-grid">
+        <article class="panel method-panel"><h2>A warmup, then three trials</h2><p>One model runs at a time. A 16-token warmup comes before three measured requests capped at 256 generated tokens. Temperature is zero and the seed is fixed. SparkBench shows the median.</p><p>Three trials are a useful first check, not a confidence interval. Test order, temperature, clocks, and background activity can change a result.</p></article>
+        <article class="panel method-panel"><h2>Engine timing methods differ</h2><p>Ollama output speed comes from the engine’s generated-token count and evaluation duration. vLLM output speed is estimated from the interval between the first and last streamed text.</p><p>Both are useful within their own configuration. Cross-engine differences include measurement method, tokenizer, kernels, and memory settings.</p></article>
+        <article class="panel method-panel"><h2>Context and caching matter</h2><p>Ollama and the additional vLLM tests use an 8,192-token context. The existing FP8 service uses its 262,144-token configuration. Prompt caching was not disabled.</p><p>Prompt-processing speed can include cache reuse. Precision labels come from the recorded checkpoint or engine metadata; unknown stays unknown.</p></article>
+        <article class="panel method-panel"><h2>Generation is separate from embeddings</h2><p>Embedding models process input rather than generate an answer, so SparkBench does not rank them beside generation models. Completion counts include reasoning tokens when an engine returns them.</p><p>GPT-OSS returned reasoning despite the request to disable it. Its result includes those tokens and does not represent visible-answer-only speed.</p></article>
+      </div>
+      <details class="evidence"><summary>Show the public protocol and host snapshot</summary><pre id="protocolEvidence"></pre></details>
+      <p class="fine" style="margin-top:1rem"><a href="https://github.com/LexiLominite/sparkbench/blob/main/BENCHMARK.md">Full statistical report</a> · <a href="./summary.json" download="sparkbench-summary.json">Download aggregate summary</a></p>
+    </section>
+  </main>
+
+  <dialog id="modelDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-head"><div><h2 id="dialogTitle"></h2><p class="fine" id="dialogSubtitle"></p></div><button id="closeDialogButton" type="button" aria-label="Close model details">Close</button></div>
+    <div class="dialog-body" id="dialogBody"></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <footer class="site-footer"><span>SparkBench · measured on NVIDIA DGX Spark</span><span>Public snapshot · inspectable methodology · no live machine controls</span></footer>
+
+  <script>
+  (() => {
+    'use strict';
+    const byId = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+    const number = (value, decimals = 1) => typeof value === 'number' && Number.isFinite(value) ? value.toFixed(decimals) : '—';
+    const median = values => {
+      const sorted = values.filter(value => typeof value === 'number' && Number.isFinite(value)).sort((a, b) => a - b);
+      return sorted.length ? (sorted[(sorted.length - 1) >> 1] + sorted[sorted.length >> 1]) / 2 : null;
+    };
+    const measuredTrials = model => (model.trials || []).filter(trial => trial.phase === 'measured');
+    const metric = (model, key) => median(measuredTrials(model).map(trial => key === 'embed' ? trial.raw?.input_tps_wall : trial[key]));
+    const prettyName = model => String(model.name || 'Unknown model')
+      .replace(/^nvidia_/i, '').replace(/^Qwen_Qwen/i, 'Qwen').replace(/-(?:q[0-9]+(?:_[a-z0-9]+)*|mxfp4|nvfp4|fp8|bf16)$/i, '')
+      .replace(/_/g, ' ').replace(/-IT(?=-|$)/, '').replace(/[:]/g, ' ').replace(/-/g, ' ')
+      .replace(/^qwen/i, 'Qwen ').replace(/^gemma/i, 'Gemma ').replace(/^gpt oss/i, 'GPT-OSS')
+      .replace(/^qwythos/i, 'Qwythos').replace(/^trendyol/i, 'Trendyol').replace(/^falak orion/i, 'Falak Orion')
+      .replace(/(\d)b\b/gi, '$1B').replace(/\ba(\d)/gi, 'A$1').replace(/\s+/g, ' ').trim();
+    const parameterLabel = model => /^\d+$/.test(String(model.parameters)) ? `${(Number(model.parameters) / 1e9).toFixed(2)}B` : model.parameters === 'unknown' ? 'Size not recorded' : String(model.parameters ?? 'Size not recorded');
+    const isPatched = model => Boolean(model.metadata?.runtime_patch || model.metadata?.result?.runtime_patch || model.metadata?.receipt_public?.runtime_patch);
+    const engineLabel = model => `${model.engine || 'Unknown engine'}${isPatched(model) ? ' · patched runtime' : ''}`;
+    const comparisonName = model => `${prettyName(model)} · ${model.quantization || 'Unknown precision'} · ${model.engine || 'Unknown engine'}`;
+    const timingLabel = model => model.engine === 'vLLM' ? 'stream estimate' : model.engine === 'Ollama' ? 'engine timing' : 'recorded timing';
+    const weightKey = model => model.digest ? `${model.engine}|${model.digest}` : model.id;
+    const statusLabel = status => ({ok:'Successful', error:'Failed', incomplete:'Incomplete', running:'Running', pending:'Pending'})[status] || status || 'Unknown';
+    const statusClass = status => status === 'ok' ? 'status-ok' : status === 'error' ? 'status-error' : 'status-warn';
+    const substantial = model => {
+      const match = String(model.parameters).match(/([\d.]+)B/i);
+      const count = match ? Number(match[1]) : /^\d+$/.test(String(model.parameters)) ? Number(model.parameters) / 1e9 : null;
+      return count !== null && count >= 7;
+    };
+    const groupModels = models => {
+      const groups = new Map();
+      models.forEach(model => { const key = weightKey(model); if (!groups.has(key)) groups.set(key, []); groups.get(key).push(model); });
+      return [...groups.values()].map(group => {
+        const preferred = group.find(model => !/^(agent|fast|reasoning|coder|default|vision):/.test(model.name)) || group[0];
+        return {...preferred, aliasCount: group.length - 1, aliases: group.map(model => model.name)};
+      });
+    };
+
+    let payload = null;
+    let currentRun = null;
+    let selected = new Set();
+    let activeView = 'overview';
+    let toastTimer = null;
+
+    function toast(message) {
+      const element = byId('toast');
+      element.textContent = message;
+      element.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { element.hidden = true; }, 3200);
+    }
+
+    function showNotice(message = '') {
+      const notice = byId('globalNotice');
+      notice.textContent = message;
+      notice.hidden = !message;
+    }
+
+    function setView(view, updateHash = true) {
+      if (!['overview', 'models', 'compare', 'method'].includes(view)) view = 'overview';
+      activeView = view;
+      document.querySelectorAll('.view').forEach(panel => { panel.hidden = panel.id !== view; });
+      document.querySelectorAll('.tab').forEach(tab => { tab.setAttribute('aria-selected', String(tab.dataset.view === view)); });
+      if (view === 'compare') renderCompare();
+      if (updateHash) history.replaceState(null, '', `#${view}`);
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function modelById(id) { return currentRun?.models?.find(model => model.id === id); }
+
+    function renderTrace(models) {
+      const values = models.map(model => metric(model, 'decode_tps'));
+      const max = Math.max(...values.filter(Number.isFinite), 1);
+      return models.map((model, index) => `<div class="trace-row">
+        <button class="trace-name" type="button" data-detail="${esc(model.id)}" title="${esc(prettyName(model))}">${esc(prettyName(model))}</button>
+        <div class="trace-track" aria-hidden="true"><div class="trace-fill" style="width:${values[index] === null ? 0 : Math.max(1, values[index] / max * 100)}%"></div></div>
+        <span class="trace-value numeric">${number(values[index])} <small>tok/s</small></span>
+      </div>`).join('');
+    }
+
+    function renderOverview() {
+      const grouped = groupModels(currentRun.models || []);
+      const generation = grouped.filter(model => model.kind !== 'embedding' && model.status === 'ok' && metric(model, 'decode_tps') !== null).sort((a,b) => metric(b, 'decode_tps') - metric(a, 'decode_tps'));
+      const winner = generation.find(substantial) || generation[0];
+      const successfulTags = (currentRun.models || []).filter(model => model.status === 'ok').length;
+      const successfulConfigs = grouped.filter(model => model.status === 'ok').length;
+      const engines = new Set((currentRun.models || []).map(model => model.engine).filter(Boolean));
+      const bf16Receipt = currentRun.artifacts?.['bf16-install-receipt.json'];
+      const bf16Verified = bf16Receipt?.state === 'complete';
+      const incomplete = grouped.filter(model => model.status === 'incomplete' || model.status === 'error').length;
+      const runDate = currentRun.started_utc ? new Date(currentRun.started_utc).toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'}) : 'Recorded snapshot';
+
+      byId('overview').innerHTML = `<div class="page-head"><div class="page-copy"><p class="page-kicker">DGX Spark · local inference</p><h1>Your models, measured.</h1><p class="page-deck">A practical view of generation speed, response time, and the test conditions behind each result.</p></div></div>
+        <div class="overview-grid">
+          <article class="panel lead-panel">
+            <div class="lead-top"><span>Fastest measured model${winner && substantial(winner) ? ' with 7B+ parameters' : ''}</span><span>${esc(runDate)}</span></div>
+            ${winner ? `<div class="lead-reading"><p class="winner-name">${esc(prettyName(winner))}</p><div class="winner-speed numeric">${number(metric(winner, 'decode_tps'))}<span>tokens / second</span></div><p class="winner-meta">${esc(parameterLabel(winner))} parameters · ${esc(winner.quantization)} · ${esc(engineLabel(winner))}<br>First token in ${number(metric(winner, 'ttft_s'), 2)} seconds · ${esc(timingLabel(winner))}</p></div>` : '<div class="lead-reading"><p class="winner-name">No successful generation result in this snapshot.</p></div>'}
+            <div class="trace-list" aria-label="Fastest measured generation models">${renderTrace(generation.slice(0, 6))}</div>
+          </article>
+          <div class="aside-stack">
+            <article class="panel evidence-panel"><p class="evidence-title">Public evidence snapshot</p><div class="evidence-number numeric">${successfulTags}<small> / ${(currentRun.models || []).length}</small></div><p class="fine">successful model tags</p><div class="evidence-grid"><div><strong>${successfulConfigs}</strong><span>successful configurations</span></div><div><strong>${engines.size}</strong><span>inference engines</span></div><div><strong>${generation.length}</strong><span>generation configurations</span></div><div><strong>${incomplete}</strong><span>incomplete or failed</span></div></div>${bf16Verified ? '<div class="verified"><span class="verified-dot"></span><span>BF16 installation receipt is complete and verified in this snapshot.</span></div>' : ''}</article>
+            <article class="panel read-panel"><h2>Read before ranking</h2><p>Ollama uses engine timing. vLLM uses a stream estimate. The methods, tokenizers, and runtime settings differ.</p><p class="fine">Compare matching engine configurations where possible. Open any model to inspect its trials and caveats.</p></article>
+          </div>
+        </div>${incomplete ? `<div class="notice" style="margin-top:1.2rem">${incomplete} configuration${incomplete === 1 ? '' : 's'} did not complete successfully. The Models view retains the recorded status and cause.</div>` : ''}`;
+      bindDetailButtons();
+    }
+
+    function fillSelect(id, label, property) {
+      const select = byId(id);
+      const previous = select.value;
+      const values = [...new Set((currentRun.models || []).map(model => model[property]).filter(value => value !== null && value !== undefined && value !== ''))].sort();
+      select.innerHTML = `<option value="">${esc(label)}</option>${values.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join('')}`;
+      if (values.includes(previous)) select.value = previous;
+    }
+
+    function filteredModels() {
+      let models = byId('aliasesToggle').checked ? [...currentRun.models] : groupModels(currentRun.models);
+      const terms = byId('searchInput').value.toLowerCase().trim().split(/\s+/).map(term => term.replace(/[^a-z0-9]/g, '')).filter(Boolean);
+      models = models.filter(model => {
+        const haystack = [model.name, prettyName(model), model.engine, engineLabel(model), model.format, model.quantization, model.status].join(' ').toLowerCase().replace(/[^a-z0-9]/g, '');
+        return terms.every(term => haystack.includes(term))
+          && (!byId('statusSelect').value || model.status === byId('statusSelect').value)
+          && (!byId('engineSelect').value || model.engine === byId('engineSelect').value)
+          && (!byId('formatSelect').value || model.format === byId('formatSelect').value)
+          && (!byId('precisionSelect').value || model.quantization === byId('precisionSelect').value);
+      });
+      const sort = byId('sortSelect').value;
+      models.sort((a,b) => sort === 'name' ? prettyName(a).localeCompare(prettyName(b)) : sort === 'ttft' ? (metric(a, 'ttft_s') ?? Infinity) - (metric(b, 'ttft_s') ?? Infinity) : (metric(b, 'decode_tps') ?? -1) - (metric(a, 'decode_tps') ?? -1));
+      return models;
+    }
+
+    function renderModels() {
+      if (!currentRun) return;
+      const models = filteredModels();
+      byId('modelCount').textContent = `${models.length} model${models.length === 1 ? '' : 's'} shown${byId('aliasesToggle').checked ? ' · all tags visible' : ' · shared digests grouped'}`;
+      byId('modelRows').innerHTML = models.length ? models.map(model => {
+        const speed = model.kind === 'embedding' ? metric(model, 'embed') : metric(model, 'decode_tps');
+        const patch = isPatched(model) ? '<span class="tag status-warn">Patched runtime</span>' : '';
+        const reason = model.metadata?.thinking_returned ? '<span class="tag">Reasoning included</span>' : '';
+        return `<tr>
+          <td data-label="Compare"><input type="checkbox" data-select="${esc(model.id)}" aria-label="Compare ${esc(comparisonName(model))}" ${selected.has(model.id) ? 'checked' : ''}></td>
+          <td data-label="Model"><button class="model-button" type="button" data-detail="${esc(model.id)}">${esc(prettyName(model))}</button><span class="cell-sub">${esc(parameterLabel(model))}${model.aliasCount ? ` · ${model.aliasCount} additional tag${model.aliasCount === 1 ? '' : 's'}` : ''}</span>${patch}${reason}</td>
+          <td data-label="Precision">${esc(model.quantization || 'Unknown')}</td>
+          <td data-label="Engine">${esc(engineLabel(model))}<span class="cell-sub">${esc(model.format || 'Unknown format')}</span></td>
+          <td data-label="Output speed" class="numeric">${number(speed)} ${model.kind === 'embedding' ? 'input tok/s' : 'tok/s'}<span class="cell-sub">${model.kind === 'embedding' ? 'whole request' : timingLabel(model)}</span></td>
+          <td data-label="First token" class="numeric">${model.kind === 'embedding' ? '—' : `${number(metric(model, 'ttft_s'), 2)} s`}</td>
+          <td data-label="Result" class="${statusClass(model.status)}">${esc(statusLabel(model.status))}<span class="cell-sub">${measuredTrials(model).length} measured trial${measuredTrials(model).length === 1 ? '' : 's'}</span></td>
+        </tr>`;
+      }).join('') : '<tr><td data-label="Result" colspan="7">No models match these filters. Clear the filters to restore the full snapshot.</td></tr>';
+      bindDetailButtons();
+    }
+
+    function updateSelection() {
+      const badge = byId('selectionCount');
+      badge.textContent = selected.size;
+      badge.hidden = selected.size === 0;
+      document.querySelectorAll('[data-select]').forEach(input => { input.checked = selected.has(input.dataset.select); });
+    }
+
+    function metricPanel(models, key, title, unit, direction, note) {
+      const values = models.map(model => metric(model, key));
+      const valid = values.filter(Number.isFinite);
+      if (!valid.length) return `<article class="panel metric-panel"><div class="metric-head"><h2>${esc(title)}</h2><span class="direction">${esc(direction)}</span></div><p class="fine">No measurements for these selections.</p></article>`;
+      const max = Math.max(...valid, 1);
+      return `<article class="panel metric-panel"><div class="metric-head"><h2>${esc(title)}</h2><span class="direction">${esc(direction)}</span></div>${models.map((model, index) => `<div class="compare-row"><span class="compare-label" title="${esc(comparisonName(model))}">${esc(comparisonName(model))}</span><div class="compare-track" aria-hidden="true"><div class="compare-fill" style="width:${values[index] === null ? 0 : Math.max(1, values[index] / max * 100)}%"></div></div><span class="compare-value numeric">${number(values[index], key === 'ttft_s' ? 2 : 1)} ${esc(unit)}</span></div>`).join('')}<p class="fine">${esc(note)}</p></article>`;
+    }
+
+    function renderCompare() {
+      if (!currentRun) return;
+      const models = [...selected].map(modelById).filter(Boolean);
+      byId('selection').innerHTML = models.map(model => `<span class="selection-chip">${esc(comparisonName(model))}<button type="button" data-remove="${esc(model.id)}" aria-label="Remove ${esc(comparisonName(model))}">×</button></span>`).join('');
+      const comparison = byId('comparison');
+      if (!models.length) {
+        comparison.innerHTML = '<div class="panel empty-panel"><h2>Choose two or three models</h2><p>Select models from the Models view. Your selection stays available while you search and filter.</p><button class="action-primary" id="chooseModelsButton" type="button">Browse models</button></div>';
+        byId('chooseModelsButton').addEventListener('click', () => setView('models'));
+      } else {
+        comparison.innerHTML = `<div class="compare-grid">${metricPanel(models, 'decode_tps', 'Output speed', 'tok/s', 'Higher is faster', 'Generation models only. Ollama uses engine timing; vLLM uses a stream estimate.')}${metricPanel(models, 'ttft_s', 'Time to first token', 's', 'Lower is faster', 'Time from request submission until the first generated text arrives.')}${metricPanel(models, 'end_to_end_tps', 'Whole-request output', 'tok/s', 'Higher is faster', 'Includes prompt preparation, waiting, and generation.')}${metricPanel(models, 'embed', 'Embedding input speed', 'tok/s', 'Higher is faster', 'Embedding models only; measured across the whole request.')}</div>${new Set(models.map(weightKey)).size < models.length ? '<div class="notice" style="margin-top:1.2rem">Some selections share a weight digest. Their templates may differ, but they are not distinct weight sets.</div>' : ''}`;
+      }
+      document.querySelectorAll('[data-remove]').forEach(button => button.addEventListener('click', () => { selected.delete(button.dataset.remove); updateSelection(); renderCompare(); renderModels(); }));
+    }
+
+    function resourceRange(model, index) {
+      const values = (model.resources || []).filter(resource => resource.phase === 'measured').map(resource => Number(String(resource.gpu || '').split(',')[index])).filter(Number.isFinite);
+      return values.length ? `${number(Math.min(...values))}–${number(Math.max(...values))}` : '—';
+    }
+
+    function peakHostMemory(model) {
+      const values = (model.resources || []).filter(resource => resource.phase === 'measured').map(resource => {
+        const memory = resource.memory_kib || {};
+        return Number.isFinite(memory.MemTotal) && Number.isFinite(memory.MemAvailable) ? (memory.MemTotal - memory.MemAvailable) / 1048576 : null;
+      }).filter(Number.isFinite);
+      return values.length ? Math.max(...values) : null;
+    }
+
+    function checkpointSize(model) {
+      const bytes = model.metadata?.checkpoint?.bytes;
+      return typeof bytes === 'number' && Number.isFinite(bytes) ? bytes / 1e9 : null;
+    }
+
+    function openDetail(id) {
+      const model = modelById(id);
+      if (!model) return;
+      byId('dialogTitle').textContent = comparisonName(model);
+      byId('dialogSubtitle').textContent = `${model.name} · ${engineLabel(model)} · ${model.format || 'Unknown format'} · ${model.quantization || 'Unknown precision'}`;
+      const warmup = (model.trials || []).find(trial => trial.phase === 'warmup');
+      const warmupLoad = warmup?.raw?.stats?.load_duration / 1e9;
+      const startup = model.metadata?.result?.startup_to_ready_s ?? model.metadata?.startup_to_ready_s;
+      const patch = isPatched(model) ? '<div class="notice">This result used a patched vLLM runtime. Treat it as a measured workaround, not a stock-runtime result. Public patch evidence is retained below when available.</div>' : '';
+      const reasoning = model.metadata?.thinking_returned ? '<div class="notice">Reasoning tokens were returned and are included in the generated-token counts. This is not visible-answer-only throughput.</div>' : '';
+      const error = model.error ? `<div class="notice">${esc(model.error)}</div>` : '';
+      const basis = model.metadata?.measurement_basis || (model.kind === 'embedding' ? 'Embedding input throughput includes the whole request.' : `${engineLabel(model)} · ${timingLabel(model)}.`);
+      byId('dialogBody').innerHTML = `${error}${patch}${reasoning}<p class="fine">${esc(basis)}</p>
+        <div class="dialog-stats"><div class="dialog-stat"><strong>${number(metric(model, 'decode_tps'))}</strong><span>output tok/s</span></div><div class="dialog-stat"><strong>${number(metric(model, 'ttft_s'), 2)} s</strong><span>first token</span></div><div class="dialog-stat"><strong>${number(startup ?? warmupLoad, 2)} s</strong><span>${startup !== undefined ? 'engine startup to ready' : 'warmup model load'}</span></div></div>
+        <div><h3>Every recorded trial</h3><div class="table-shell"><table><thead><tr><th>Phase / trial</th><th>Output tok/s</th><th>First token</th><th>Whole request</th><th>Input / output</th></tr></thead><tbody>${(model.trials || []).map(trial => `<tr><td data-label="Phase">${esc(trial.phase)} / ${esc(trial.trial)}</td><td data-label="Output" class="numeric">${number(trial.decode_tps)}</td><td data-label="First token" class="numeric">${number(trial.ttft_s, 3)} s</td><td data-label="Whole request" class="numeric">${number(trial.wall_s, 3)} s</td><td data-label="Tokens">${esc(trial.input_tokens ?? '—')} / ${esc(trial.output_tokens ?? '—')}</td></tr>`).join('')}</tbody></table></div></div>
+        <div><h3>Machine conditions</h3><p class="fine">Measured phase: ${resourceRange(model, 0)} °C · ${resourceRange(model, 1)} W · ${resourceRange(model, 2)}% GPU use${peakHostMemory(model) !== null ? ` · peak ${number(peakHostMemory(model), 1)} GiB host memory in use` : ''}.${checkpointSize(model) !== null ? ` Recorded checkpoint size: ${number(checkpointSize(model), 2)} GB.` : ''} Host memory includes the model, inference runtime, and other system processes; it is not model-only VRAM.</p></div>
+        <details class="evidence"><summary>Show public metadata and counters</summary><pre>${esc(JSON.stringify({digest:model.digest, metadata:model.metadata, trials:model.trials}, null, 2))}</pre></details>`;
+      byId('modelDialog').showModal();
+    }
+
+    function bindDetailButtons() { document.querySelectorAll('[data-detail]').forEach(button => button.addEventListener('click', () => openDetail(button.dataset.detail))); }
+
+    function renderAll() {
+      if (!currentRun) return;
+      fillSelect('engineSelect', 'Every engine', 'engine');
+      fillSelect('formatSelect', 'Every format', 'format');
+      fillSelect('precisionSelect', 'Every precision', 'quantization');
+      renderOverview();
+      renderModels();
+      renderCompare();
+      byId('protocolEvidence').textContent = JSON.stringify({protocol: currentRun.protocol, host: currentRun.system}, null, 2);
+      updateSelection();
+    }
+
+    async function loadSnapshot({quiet = false} = {}) {
+      if (!quiet) byId('snapshotStatus').textContent = 'Loading public snapshot…';
+      try {
+        const response = await fetch('./data.json', {cache: 'no-store'});
+        if (!response.ok) throw new Error(`data.json returned HTTP ${response.status}`);
+        const nextPayload = await response.json();
+        if (!Array.isArray(nextPayload.runs) || !nextPayload.runs.length) throw new Error('data.json does not contain a benchmark run');
+        payload = nextPayload;
+        currentRun = payload.runs[0];
+        selected = new Set([...selected].filter(id => modelById(id)));
+        const updated = payload.archive_updated_utc ? new Date(payload.archive_updated_utc) : null;
+        byId('snapshotStatus').textContent = updated && !Number.isNaN(updated.getTime()) ? `Public snapshot · ${updated.toLocaleString()}` : 'Public snapshot loaded';
+        showNotice('');
+        renderAll();
+        if (quiet) toast('Snapshot reloaded');
+      } catch (error) {
+        byId('snapshotStatus').textContent = 'Snapshot unavailable';
+        showNotice(`Could not load the public benchmark snapshot: ${error.message}. Serve this folder over HTTP and confirm data.json is present.`);
+        if (!payload) byId('overview').innerHTML = '<div class="panel error-box"><h2>Benchmark data is unavailable</h2><p class="fine">SparkBench needs a public data.json file beside index.html. No live machine connection is used.</p></div>';
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => setView(tab.dataset.view)));
+    document.addEventListener('change', event => {
+      const input = event.target.closest?.('[data-select]');
+      if (!input) return;
+      const id = input.dataset.select;
+      if (input.checked && selected.size >= 3 && !selected.has(id)) { input.checked = false; toast('Choose up to three models. Remove one before adding another.'); return; }
+      if (input.checked) selected.add(id); else selected.delete(id);
+      updateSelection();
+    });
+    ['sortSelect','statusSelect','engineSelect','formatSelect','precisionSelect','aliasesToggle'].forEach(id => byId(id).addEventListener('change', renderModels));
+    byId('searchInput').addEventListener('input', renderModels);
+    byId('clearFiltersButton').addEventListener('click', () => { ['searchInput','statusSelect','engineSelect','formatSelect','precisionSelect'].forEach(id => { byId(id).value = ''; }); byId('aliasesToggle').checked = false; renderModels(); });
+    byId('compareButton').addEventListener('click', () => setView('compare'));
+    byId('reloadButton').addEventListener('click', () => loadSnapshot({quiet: true}));
+    byId('closeDialogButton').addEventListener('click', () => byId('modelDialog').close());
+    byId('modelDialog').addEventListener('click', event => { if (event.target === byId('modelDialog')) byId('modelDialog').close(); });
+    window.addEventListener('hashchange', () => setView(location.hash.slice(1), false));
+    setView(location.hash.slice(1) || 'overview', false);
+    loadSnapshot();
+  })();
+  </script>
+</body>
+</html>
