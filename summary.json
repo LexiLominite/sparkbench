@@ -5,7 +5,8 @@
     "driver": "580.178.04",
     "cuda_driver_reported": "13.0",
     "ollama_version": "0.32.14",
-    "vllm_version": "0.24.0"
+    "vllm_version": "0.24.0",
+    "tensorfold_version": "0.3.6.3"
   },
   "protocol": {
     "concurrency": 1,
@@ -22,9 +23,10 @@
     "warmup_basis": "First request after load. Ollama load_duration retained in raw warmup; vLLM startup_to_ready_s retained in model metadata. Warmup is excluded from ranked medians.",
     "decode_basis": {
       "Ollama": "engine eval_count / (eval_duration nanoseconds / 1e9)",
-      "vLLM": "stream estimate (completion_tokens - 1) / (last-content time - first-content time); not engine-native decode"
+      "vLLM": "stream estimate (completion_tokens - 1) / (last-content time - first-content time); not engine-native decode",
+      "TensorFold": "engine usage.completion_tokens / tensorfold.decode_s. MTP drafting was enabled: up to 6 drafts a round, stop before a draft under confidence 0.60. Accepted drafts count as output tokens. This is not a vLLM stream estimate."
     },
-    "configuration_caveat": "Ollama context8192; existing FP8 vLLM service context262144 and GPU memory utilization0.90; extra vLLM context8192 eager single sequence utilization0.80. Different model tokenizers and kernel settings prevent strict apples-to-apples hardware comparisons.",
+    "configuration_caveat": "Ollama context8192; existing FP8 vLLM service context262144 and GPU memory utilization0.90; extra vLLM context8192 eager single sequence utilization0.80. Different model tokenizers and kernel settings prevent strict apples-to-apples hardware comparisons. TensorFold Qwen3.8-Flash-Next uses context 262144, 5 server slots, int8 KV, MLX 4-bit weights, MTP drafting on; the published trials are still one request at a time.",
     "engine_profiles": {
       "Ollama": {
         "version": "0.32.14",
@@ -57,6 +59,22 @@
         "text_only": true,
         "kv_cache_dtype": "engine default",
         "decode_formula": "(completion_tokens - 1) / (last_stream_content_time - first_stream_content_time)"
+      },
+      "TensorFold": {
+        "version": "0.3.6.3",
+        "checkpoint": "Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP",
+        "revision": "dadefa8066e3be900a0d148d0f5a2f4eb1cf6534",
+        "maximum_context": 262144,
+        "server_parallel_slots": 5,
+        "single_benchmark_request": true,
+        "kv_cache_dtype": "int8",
+        "weight_quantization": "MLX 4-bit, group size 32",
+        "mtp_drafts": 6,
+        "mtp_confidence": 0.6,
+        "vision_loaded": true,
+        "request": "text only, temperature 0, thinking off, seed 20260928",
+        "ngram_tables": "read from SSD, not resident",
+        "decode_formula": "usage.completion_tokens / tensorfold.decode_s"
       }
     },
     "scope": "Single-request text throughput; excludes answer quality, vision, tools, long context and concurrent serving. Three short measured trials do not establish long-duration thermal stability. CPU background services remained running; some trials overlapped authorized dashboard work and BF16 download.",
@@ -1694,6 +1712,80 @@
         0
       ],
       "format": "safetensors"
+    },
+    {
+      "model": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "kind": "generation",
+      "status": "ok",
+      "trial_count": 3,
+      "parameter_size": "125B",
+      "quantization_metadata": "MLX 4-bit, group 32",
+      "family": "qwen3.8",
+      "manifest_digest": "dadefa8066e3be900a0d148d0f5a2f4eb1cf6534",
+      "tag_disk_gib": 105.45650386624038,
+      "load_s": null,
+      "loaded_allocated_gib": 102.6376953125,
+      "loaded_gpu_allocated_gib": 102.6376953125,
+      "decode_measurement": "engine usage.completion_tokens / tensorfold.decode_s",
+      "decode_tps": {
+        "mean": 55.507229328092315,
+        "median": 55.92205863078335,
+        "min": 54.083745299361986,
+        "max": 56.51588405413162,
+        "sample_sd": 1.268024938000605,
+        "cv_percent": 2.284432052094618
+      },
+      "prefill_tps": {
+        "mean": 1900.0193306812077,
+        "median": 1899.8716302952505,
+        "min": 1894.1979522184301,
+        "max": 1905.9884095299421,
+        "sample_sd": 5.8966161869885685,
+        "cv_percent": 0.31034506290388497
+      },
+      "ttft_s": {
+        "mean": 0.47084256129649776,
+        "median": 0.47179022495402023,
+        "min": 0.4687770799500868,
+        "max": 0.47196037898538634,
+        "sample_sd": 0.001790781391704865,
+        "cv_percent": 0.3803354961738853
+      },
+      "end_to_end_tps": {
+        "mean": 50.360573469211005,
+        "median": 50.694169832162224,
+        "min": 49.20466644874923,
+        "max": 51.18288412672156,
+        "sample_sd": 1.0304373806259515,
+        "cv_percent": 2.046119235032006
+      },
+      "output_tokens": [
+        256,
+        256,
+        256
+      ],
+      "prompt_tokens": [
+        888,
+        888,
+        888
+      ],
+      "resources": {
+        "sample_count": 2,
+        "host_peak_unavailable_gib": 109.8376579284668,
+        "gpu_temperature_max_c": 53.0,
+        "gpu_power_mean_w": 34.925,
+        "gpu_power_max_w": 35.07,
+        "gpu_util_mean_percent": 89.0,
+        "note": "Host memory and GPU allocation are the loaded server. Power and utilization are two samples during a follow-up 128-token generation, not the three ranked trials."
+      },
+      "thinking_characters": [
+        0,
+        0,
+        0
+      ],
+      "format": "safetensors",
+      "active_parameters": "6B"
     }
   ]
 }

@@ -613,6 +613,9 @@
           return {key: 'additional_vLLM_and_Qwen_BF16', profile: profiles.additional_vLLM_and_Qwen_BF16, inferred: true, summary: 'Additional vLLM profile', why: 'Recorded precision is not fp8. The published protocol groups the other vLLM runs, including Qwen BF16, under the additional eager profile. The snapshot does not store a profile id on the row.'};
         }
       }
+      if (model.engine === 'TensorFold' && profiles.TensorFold) {
+        return {key: 'TensorFold', profile: profiles.TensorFold, inferred: false, summary: 'TensorFold profile', why: 'The engine recorded on this row is TensorFold, so the published TensorFold profile is the match.'};
+      }
       return {key: '', profile: null, inferred: false, summary: 'Profile not recorded', why: 'No published profile could be matched from the engine and precision without guessing.'};
     }
     function engineVersion(model) {
@@ -1096,7 +1099,7 @@
     function comparisonNotes(models) {
       const notes = [];
       const engines = new Set(models.map(model => model.engine));
-      if (engines.size > 1) notes.push({level:'warn', text:'These rows use more than one engine. Ollama and vLLM publish different output formulas, so a numeric gap mixes the model with the measurement.'});
+      if (engines.size > 1) notes.push({level:'warn', text:'These rows use more than one engine. Ollama, vLLM, and TensorFold publish different output formulas, so a numeric gap mixes the model with the measurement.'});
       const profiles = new Set(models.map(model => profileFor(model).key).filter(Boolean));
       if (profiles.size > 1) notes.push({level:'warn', text:'The published profile matches differ. Context length, sequence limit, KV cache, eager mode, or memory utilization may differ. Profile ids are not stored on each row.'});
       if (models.some(model => model.metadata?.thinking_returned) && models.some(model => !model.metadata?.thinking_returned)) notes.push({level:'warn', text:'At least one row includes returned reasoning tokens in its generated-token count. The other rows do not have that flag.'});
@@ -1208,8 +1211,9 @@
         <div class="method-grid">
           <article class="panel"><h2>Ollama output formula</h2><blockquote class="quote">${esc(basis.Ollama || 'Not recorded')}</blockquote><p class="fine">Row field measurement_basis is shown on each model. Engine version on the host record: ${esc(currentRun.system?.ollama_version || 'not recorded')}.</p></article>
           <article class="panel"><h2>vLLM output formula</h2><blockquote class="quote">${esc(basis.vLLM || 'Not recorded')}</blockquote><p class="fine">This is a stream estimate, recorded as distinct from engine-native decode. Engine version on the host record: ${esc(currentRun.system?.vllm_version || 'not recorded')}.</p></article>
+          <article class="panel"><h2>TensorFold output formula</h2><blockquote class="quote">${esc(basis.TensorFold || 'Not recorded')}</blockquote><p class="fine">Engine-reported completion tokens divided by tensorfold.decode_s. MTP drafting was on, so accepted draft tokens are included. Engine version on the host record: ${esc(currentRun.system?.tensorfold_version || 'not recorded')}.</p></article>
         </div>
-        <div class="panel section-gap"><h2>How this page assigns a profile</h2><p>Ollama rows use the Ollama profile. A vLLM row uses the existing FP8 profile only when its recorded precision is fp8 and it is the only such row. Every other vLLM row uses the additional eager profile. That rule is necessary because the snapshot does not store a profile id on the model.</p></div>
+        <div class="panel section-gap"><h2>How this page assigns a profile</h2><p>Ollama rows use the Ollama profile. TensorFold rows use the TensorFold profile. A vLLM row uses the existing FP8 profile only when its recorded precision is fp8 and it is the only such row. Every other vLLM row uses the additional eager profile. That rule is necessary because the snapshot does not store a profile id on the model.</p></div>
         <div class="profile-grid section-gap">${Object.entries(profiles).map(([key, profile]) => profileCard(key, profile)).join('') || '<p>No engine profiles are in this snapshot.</p>'}</div>
         <div class="stack section-gap">${quotes.map(([label, value]) => `<article class="panel"><h2>${esc(label)}</h2><blockquote class="quote">${esc(value)}</blockquote></article>`).join('')}</div>
         <article class="panel section-gap"><h2>Coverage in this file</h2><p>${esc(coverageLine())}</p><p class="fine">Unknown quantization: ${issues.unknown.length}. Patched runtime: ${issues.patched.length}. Reasoning tokens included: ${issues.reasoning.length}. Incomplete or failed: ${issues.bad.length}. Size not recorded: ${issues.sizeUnknown.length}.</p>${receipt ? `<p class="fine">BF16 install receipt state: ${esc(receipt.state)}. Verified: ${esc(receipt.verified)}. Repo: ${esc(receipt.repo_id || 'not recorded')}. Revision: ${esc(receipt.revision || 'not recorded')}.</p>` : '<p class="fine">No BF16 install receipt is in this snapshot.</p>'}

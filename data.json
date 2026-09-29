@@ -18,9 +18,10 @@
         "warmup_basis": "First request after load. Ollama load_duration retained in raw warmup; vLLM startup_to_ready_s retained in model metadata. Warmup is excluded from ranked medians.",
         "decode_basis": {
           "Ollama": "engine eval_count / (eval_duration nanoseconds / 1e9)",
-          "vLLM": "stream estimate (completion_tokens - 1) / (last-content time - first-content time); not engine-native decode"
+          "vLLM": "stream estimate (completion_tokens - 1) / (last-content time - first-content time); not engine-native decode",
+          "TensorFold": "engine usage.completion_tokens / tensorfold.decode_s. MTP drafting was enabled: up to 6 drafts a round, stop before a draft under confidence 0.60. Accepted drafts count as output tokens. This is not a vLLM stream estimate."
         },
-        "configuration_caveat": "Ollama context8192; existing FP8 vLLM service context262144 and GPU memory utilization0.90; extra vLLM context8192 eager single sequence utilization0.80. Different model tokenizers and kernel settings prevent strict apples-to-apples hardware comparisons.",
+        "configuration_caveat": "Ollama context8192; existing FP8 vLLM service context262144 and GPU memory utilization0.90; extra vLLM context8192 eager single sequence utilization0.80. Different model tokenizers and kernel settings prevent strict apples-to-apples hardware comparisons. TensorFold Qwen3.8-Flash-Next uses context 262144, 5 server slots, int8 KV, MLX 4-bit weights, MTP drafting on; the published trials are still one request at a time.",
         "engine_profiles": {
           "Ollama": {
             "version": "0.32.14",
@@ -53,6 +54,22 @@
             "text_only": true,
             "kv_cache_dtype": "engine default",
             "decode_formula": "(completion_tokens - 1) / (last_stream_content_time - first_stream_content_time)"
+          },
+          "TensorFold": {
+            "version": "0.3.6.3",
+            "checkpoint": "Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP",
+            "revision": "dadefa8066e3be900a0d148d0f5a2f4eb1cf6534",
+            "maximum_context": 262144,
+            "server_parallel_slots": 5,
+            "single_benchmark_request": true,
+            "kv_cache_dtype": "int8",
+            "weight_quantization": "MLX 4-bit, group size 32",
+            "mtp_drafts": 6,
+            "mtp_confidence": 0.6,
+            "vision_loaded": true,
+            "request": "text only, temperature 0, thinking off, seed 20260928",
+            "ngram_tables": "read from SSD, not resident",
+            "decode_formula": "usage.completion_tokens / tensorfold.decode_s"
           }
         },
         "scope": "Single-request text throughput; excludes answer quality, vision, tools, long context and concurrent serving. Three short measured trials do not establish long-duration thermal stability. CPU background services remained running; some trials overlapped authorized dashboard work and BF16 download.",
@@ -65,7 +82,8 @@
         "driver": "580.178.04",
         "cuda_driver_reported": "13.0",
         "ollama_version": "0.32.14",
-        "vllm_version": "0.24.0"
+        "vllm_version": "0.24.0",
+        "tensorfold_version": "0.3.6.3"
       },
       "models": [
         {
@@ -24949,6 +24967,216 @@
               "error": null
             }
           ]
+        },
+        {
+          "id": "3ac63ddd35a51e2282183d9b",
+          "run_id": "spark-token-benchmark-20260928",
+          "name": "Qwen3.8-Flash-Next",
+          "engine": "TensorFold",
+          "format": "safetensors",
+          "quantization": "MLX 4-bit, group 32",
+          "parameters": "125B",
+          "digest": "dadefa8066e3be900a0d148d0f5a2f4eb1cf6534",
+          "kind": "generation",
+          "status": "ok",
+          "error": null,
+          "resources": [
+            {
+              "time": 1790704800,
+              "model": "Qwen3.8-Flash-Next",
+              "phase": "measured",
+              "memory_kib": {
+                "MemTotal": 127598612,
+                "MemAvailable": 12425480,
+                "SwapTotal": 16777212,
+                "SwapFree": 15413088
+              },
+              "gpu": "52, 34.78, 88, 2411, [N/A]"
+            },
+            {
+              "time": 1790704801,
+              "model": "Qwen3.8-Flash-Next",
+              "phase": "measured",
+              "memory_kib": {
+                "MemTotal": 127598612,
+                "MemAvailable": 12425480,
+                "SwapTotal": 16777212,
+                "SwapFree": 15413088
+              },
+              "gpu": "53, 35.07, 90, 2411, [N/A]"
+            }
+          ],
+          "metadata": {
+            "measurement_basis": "engine usage.completion_tokens / tensorfold.decode_s",
+            "thinking_returned": false,
+            "digest_kind": "huggingface_snapshot_revision",
+            "parameters_note": "Checkpoint README: language-model parameters 125B total / 6B active. N-gram embedding is 51B and is read from SSD, not resident. MTP draft layer is 4B. Recorded size is the 125B language-model total.",
+            "source_sha256": null,
+            "checkpoint": {
+              "repo_id": "Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP",
+              "revision": "dadefa8066e3be900a0d148d0f5a2f4eb1cf6534",
+              "quantization": "MLX 4-bit, group size 32, affine"
+            },
+            "result": {
+              "status": "ok",
+              "startup_to_ready_s": 240.7,
+              "startup_note": "First container start on 2026-09-29, including one-time CUDA kernel compile. These trials ran later against the already loaded server and are not a cold start."
+            },
+            "server": {
+              "container": "qwen38-flash-next-tf",
+              "image": "tensorfold-qwen38:v0.3.6.3",
+              "tensorfold_version": "0.3.6.3",
+              "host": "0.0.0.0",
+              "port": 8888,
+              "parallel_slots": 5,
+              "context_tokens": 262144,
+              "kv_dtype": "int8",
+              "mtp_drafts": 6,
+              "mtp_confidence": 0.6,
+              "vision": true,
+              "request_concurrency": 1,
+              "temperature": 0,
+              "thinking": false,
+              "seed_sent": 20260928
+            },
+            "resources_note": "GPU temperature, power, and utilization are from a 128-token follow-up generation on the same loaded server immediately after the three trials. nvidia-smi memory.used reports [N/A] on this GB10. Compute-app allocation at sample time was 105101 MiB.",
+            "protocol_match": "Same essay prompts, 16-token warmup, three 256-token measured trials, temperature 0, thinking off, concurrency 1, as the 2026-09-28 SparkBench run. Prompt text is not included. Context window of this server is 262144, not 8192. MTP drafting was on.",
+            "separate_long_context_bench": {
+              "note": "Different prompts from tools/bench.py on the same server. Do not mix these into the ranked median.",
+              "prefill_tok_s": {
+                "860": 1633,
+                "3211": 2152,
+                "12638": 2421,
+                "50308": 2335
+              },
+              "prefill_ttft_s": {
+                "860": 0.53,
+                "3211": 1.5,
+                "12638": 5.25,
+                "50308": 21.64
+              },
+              "decode_code_greedy_median_tok_s": 69.9,
+              "decode_chat_sampled_median_tok_s": 58.0
+            }
+          },
+          "trials": [
+            {
+              "id": "3ac63ddd35a51e2282183d9b:warmup:0",
+              "phase": "warmup",
+              "trial": "0",
+              "decode_tps": 45.83213978802635,
+              "prefill_tps": 1872.2327640733713,
+              "ttft_s": 0.4907760509522632,
+              "wall_s": 0.8398006499628536,
+              "end_to_end_tps": 19.052140529669412,
+              "input_tokens": 888,
+              "output_tokens": 16,
+              "prompt_hash": "129b74e37f77c5de3a25f69b9a1e2237346e61ae4deb670bd5b09f3569878858",
+              "raw": {
+                "stats": {
+                  "prompt_tokens": 888,
+                  "completion_tokens": 16,
+                  "prefill_s": 0.4743,
+                  "decode_s": 0.3491,
+                  "drafted": 13,
+                  "accepted": 6,
+                  "cached": 0,
+                  "rounds": 9,
+                  "done_reason": "length"
+                },
+                "decode_formula": "usage.completion_tokens / tensorfold.decode_s"
+              }
+            },
+            {
+              "id": "3ac63ddd35a51e2282183d9b:measured:1",
+              "phase": "measured",
+              "trial": "1",
+              "decode_tps": 55.92205863078335,
+              "prefill_tps": 1899.8716302952505,
+              "ttft_s": 0.47179022495402023,
+              "wall_s": 5.049890369002242,
+              "end_to_end_tps": 50.694169832162224,
+              "input_tokens": 888,
+              "output_tokens": 256,
+              "prompt_hash": "8dfe1e4bb528b92ddcaf171976e2ef7997879574d08d25f23afd578aaffa86c3",
+              "raw": {
+                "stats": {
+                  "prompt_tokens": 888,
+                  "completion_tokens": 256,
+                  "prefill_s": 0.4674,
+                  "decode_s": 4.5778,
+                  "drafted": 246,
+                  "accepted": 144,
+                  "cached": 0,
+                  "rounds": 111,
+                  "done_reason": "length"
+                },
+                "decode_formula": "usage.completion_tokens / tensorfold.decode_s"
+              }
+            },
+            {
+              "id": "3ac63ddd35a51e2282183d9b:measured:2",
+              "phase": "measured",
+              "trial": "2",
+              "decode_tps": 56.51588405413162,
+              "prefill_tps": 1894.1979522184301,
+              "ttft_s": 0.47196037898538634,
+              "wall_s": 5.001672030950431,
+              "end_to_end_tps": 51.18288412672156,
+              "input_tokens": 888,
+              "output_tokens": 256,
+              "prompt_hash": "e4a56e1680d9619c55fbfe634294f00a27e14537f3dff1aabe32d89ca104e769",
+              "raw": {
+                "stats": {
+                  "prompt_tokens": 888,
+                  "completion_tokens": 256,
+                  "prefill_s": 0.4688,
+                  "decode_s": 4.5297,
+                  "drafted": 270,
+                  "accepted": 150,
+                  "cached": 0,
+                  "rounds": 105,
+                  "done_reason": "length"
+                },
+                "decode_formula": "usage.completion_tokens / tensorfold.decode_s"
+              }
+            },
+            {
+              "id": "3ac63ddd35a51e2282183d9b:measured:3",
+              "phase": "measured",
+              "trial": "3",
+              "decode_tps": 54.083745299361986,
+              "prefill_tps": 1905.9884095299421,
+              "ttft_s": 0.4687770799500868,
+              "wall_s": 5.202758568979334,
+              "end_to_end_tps": 49.20466644874923,
+              "input_tokens": 888,
+              "output_tokens": 256,
+              "prompt_hash": "ac72b59885bad04acc89f5bafe77c74111342cd0be83e168f848fb9d0d141029",
+              "raw": {
+                "stats": {
+                  "prompt_tokens": 888,
+                  "completion_tokens": 256,
+                  "prefill_s": 0.4659,
+                  "decode_s": 4.7334,
+                  "drafted": 256,
+                  "accepted": 140,
+                  "cached": 0,
+                  "rounds": 115,
+                  "done_reason": "length"
+                },
+                "decode_formula": "usage.completion_tokens / tensorfold.decode_s"
+              }
+            }
+          ],
+          "history": [
+            {
+              "sha256": "dadefa8066e3be900a0d148d0f5a2f4eb1cf6534",
+              "observed_utc": "2026-09-29T17:58:00+00:00",
+              "status": "ok",
+              "error": null
+            }
+          ]
         }
       ],
       "artifacts": {
@@ -24968,12 +25196,15 @@
   "live": null,
   "ingestion_errors": [],
   "latest_event": {
-    "event": "suite_complete"
+    "event": "model_added",
+    "model": "Qwen3.8-Flash-Next",
+    "engine": "TensorFold",
+    "utc": "2026-09-29T18:08:59.917747+00:00"
   },
-  "archive_updated_utc": "2026-09-28T09:37:55.854583+00:00",
+  "archive_updated_utc": "2026-09-29T18:08:59.917747+00:00",
   "publication": {
     "kind": "read-only benchmark snapshot",
-    "generated_utc": "2026-09-28T09:39:29.873992+00:00",
+    "generated_utc": "2026-09-29T18:08:59.917747+00:00",
     "source": "NVIDIA DGX Spark benchmark, September 28 2026"
   }
 }
