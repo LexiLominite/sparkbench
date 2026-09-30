@@ -1403,7 +1403,10 @@
         "gpu_power_max_w": 31.69,
         "gpu_util_mean_percent": 96.0
       },
-      "format": "safetensors"
+      "format": "safetensors",
+      "parameter_size": "27B",
+      "tag_disk_gib": 28.74701017141342,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim."
     },
     {
       "model": "nvidia_Nemotron-3-Nano-Omni-30B-A3B-Reasoning-NVFP4",
@@ -1459,7 +1462,11 @@
         0,
         0
       ],
-      "format": "safetensors"
+      "format": "safetensors",
+      "tag_disk_gib": 20.87003941833973,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+      "parameter_size": "31B",
+      "active_parameters": "3B"
     },
     {
       "model": "nvidia_Gemma-4-31B-IT-NVFP4",
@@ -1520,7 +1527,10 @@
         "patch_scope": "Excluded unquantized LM head + unquantized embedding only; actual tied Parameter reused; quantized LM heads untouched",
         "original_sha256": "90bc72a4758c44fd631dda30a5e8695369bf6e3fe5e1d9b7edc80356abfcd110",
         "patched_sha256": "d1f5739ac9ee8033b65ddeb7f31937956954b638f138169edb9187e066528857"
-      }
+      },
+      "tag_disk_gib": 30.392294570803642,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+      "parameter_size": "30.7B"
     },
     {
       "model": "nvidia_NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
@@ -1576,7 +1586,11 @@
         0,
         0
       ],
-      "format": "safetensors"
+      "format": "safetensors",
+      "tag_disk_gib": 74.80191891640425,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+      "parameter_size": "120B",
+      "active_parameters": "12B"
     },
     {
       "model": "nvidia_Qwen3.5-122B-A10B-NVFP4",
@@ -1599,7 +1613,9 @@
         "gpu_util_mean_percent": null
       },
       "thinking_characters": [],
-      "format": "safetensors"
+      "format": "safetensors",
+      "parameter_size": "122B",
+      "active_parameters": "10B"
     },
     {
       "model": "ThreatMon-qwen36-secura",
@@ -1655,7 +1671,9 @@
         0,
         0
       ],
-      "format": "safetensors"
+      "format": "safetensors",
+      "tag_disk_gib": 51.74708217382431,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim."
     },
     {
       "model": "Qwen3.8-27B-BF16",
@@ -1711,7 +1729,9 @@
         0,
         0
       ],
-      "format": "safetensors"
+      "format": "safetensors",
+      "tag_disk_gib": 51.7470825240016,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim."
     },
     {
       "model": "Qwen3.8-Flash-Next",
@@ -1804,7 +1824,8 @@
       "decode_tps": null,
       "prefill_tps": null,
       "ttft_s": null,
-      "end_to_end_tps": null
+      "end_to_end_tps": null,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim."
     }
   ]
 }

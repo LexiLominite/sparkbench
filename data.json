@@ -7687,7 +7687,7 @@
           "engine": "vLLM",
           "format": "safetensors",
           "quantization": "fp8",
-          "parameters": "unknown",
+          "parameters": "27B",
           "digest": "",
           "kind": "generation",
           "status": "ok",
@@ -9373,7 +9373,32 @@
               "startup_to_ready_s": 180.96802551602013,
               "status": "ok",
               "checkpoint": {}
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": null,
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 7,
+                "present_shards": 7,
+                "missing_shards": [],
+                "present_weight_bytes": 30866867136,
+                "weight_bytes": 30866867136,
+                "weight_gib": 28.74701017141342,
+                "index_declared_total_size": 30866867136,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+                "index_sha256": "e773856674c35cf98a90a4317b891251bed49a0d8af3988932796489210921aa"
+              },
+              "parameters": {
+                "total_b": 27,
+                "active_b": null,
+                "source": "https://huggingface.co/orcarouter/Qwen3.8-27B-Uncensored-FP8",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "b547c8d9a1d094b307a6010759027aef4a7b720b867d8c50a27ad159df7fde78"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage."
           },
           "trials": [
             {
@@ -9457,7 +9482,7 @@
           "engine": "vLLM",
           "format": "safetensors",
           "quantization": "NVFP4 + FP8 (mixed)",
-          "parameters": "unknown",
+          "parameters": "31B",
           "digest": "",
           "kind": "generation",
           "status": "ok",
@@ -11241,7 +11266,33 @@
                   "I64": 24
                 }
               }
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": null,
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 3,
+                "present_shards": 3,
+                "missing_shards": [],
+                "present_weight_bytes": 22409034192,
+                "weight_bytes": 22409034192,
+                "weight_gib": 20.87003941833973,
+                "index_declared_total_size": 22405484880,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "59d8f791406c35ca36f44b4558ad2cb8ce8d737470fb2b05ab9d3d26b0f7c311",
+                "index_sha256": "4e4bf04e5d0d2accb35a6937a480511788c5c07b00c4398f036dffa15cb79909"
+              },
+              "parameters": {
+                "total_b": 31,
+                "active_b": 3,
+                "source": "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-NVFP4",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "51f0f8221bd5334b19a5e8d5a8d87344ef99aee18b7270495986129fa69fa2de",
+                "note": "Local model card describes the 31B hybrid MoE backbone and approximately 3B active per token."
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage. Local model card describes the 31B hybrid MoE backbone and approximately 3B active per token."
           },
           "trials": [
             {
@@ -11322,7 +11373,8 @@
               "status": "ok",
               "error": null
             }
-          ]
+          ],
+          "active_parameters": "3B"
         },
         {
           "id": "4e461a72e0d9336cf4aa3f81",
@@ -11331,7 +11383,7 @@
           "engine": "vLLM",
           "format": "safetensors",
           "quantization": "NVFP4",
-          "parameters": "unknown",
+          "parameters": "30.7B",
           "digest": "",
           "kind": "generation",
           "status": "ok",
@@ -14378,7 +14430,32 @@
                 "status": "error",
                 "error": "Container exited during startup: 1"
               }
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": null,
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 4,
+                "present_shards": 4,
+                "missing_shards": [],
+                "present_weight_bytes": 32633477808,
+                "weight_bytes": 32633477808,
+                "weight_gib": 30.392294570803642,
+                "index_declared_total_size": 32633255032,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "aa03a6a490fb743b8186f09c60ec39a30fdbaf7c3a18dfef8e52a62c2beb9ae4",
+                "index_sha256": "aff5569bed013db014afe23db3986434729bb33d9f817017cc0617cd479212b9"
+              },
+              "parameters": {
+                "total_b": 30.7,
+                "active_b": null,
+                "source": "https://huggingface.co/nvidia/Gemma-4-31B-IT-NVFP4",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "892a023119d33a23dac8764e469bbc1728e49294aba63bcb90d2899131fa093d"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage."
           },
           "trials": [
             {
@@ -14474,7 +14551,7 @@
           "engine": "vLLM",
           "format": "safetensors",
           "quantization": "NVFP4 + FP8 (mixed)",
-          "parameters": "unknown",
+          "parameters": "120B",
           "digest": "",
           "kind": "generation",
           "status": "ok",
@@ -18438,7 +18515,32 @@
                   "U8": 40961
                 }
               }
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": null,
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 17,
+                "present_shards": 17,
+                "missing_shards": [],
+                "present_weight_bytes": 80317948856,
+                "weight_bytes": 80317948856,
+                "weight_gib": 74.80191891640425,
+                "index_declared_total_size": 80297329824,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "14a1ad3ab6ec49e09e9c30f8686c8e3ca5b5338ee0eb0c79dff4f285fc29778d",
+                "index_sha256": "e0ca77ceed3a9511db61dc0ae6dbed2f71e6f6ee9f345fe3352f5cfe50cd094f"
+              },
+              "parameters": {
+                "total_b": 120,
+                "active_b": 12,
+                "source": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "4ea83df2c6f00a9238cb08bab7267bbf187d9442d4f8b2fe1463b9a63f4a8283"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage."
           },
           "trials": [
             {
@@ -18519,7 +18621,8 @@
               "status": "ok",
               "error": null
             }
-          ]
+          ],
+          "active_parameters": "12B"
         },
         {
           "id": "4481e71193f50a9bd596bd95",
@@ -18528,7 +18631,7 @@
           "engine": "vLLM",
           "format": "safetensors",
           "quantization": "NVFP4",
-          "parameters": "unknown",
+          "parameters": "122B",
           "digest": "",
           "kind": "generation",
           "status": "incomplete",
@@ -18618,7 +18721,35 @@
                   "U8": 28230
                 }
               }
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": null,
+              "checkpoint": {
+                "status": "incomplete",
+                "expected_shards": 9,
+                "present_shards": 7,
+                "missing_shards": [
+                  "model-00001-of-00009.safetensors",
+                  "model-00002-of-00009.safetensors"
+                ],
+                "present_weight_bytes": 63492385200,
+                "weight_bytes": null,
+                "weight_gib": null,
+                "index_declared_total_size": 83474870752,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "4bbd5a6e8662d412cb6e57efeee5dfd4f8e13dc07e2b43398994f85a58f9993d",
+                "index_sha256": "b0f1f40086d4c60f765c4c0f19a05bed95b39e072be8f18a68c55dd69dccadb7"
+              },
+              "parameters": {
+                "total_b": 122,
+                "active_b": 10,
+                "source": "https://huggingface.co/nvidia/Qwen3.5-122B-A10B-NVFP4",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "6c097541d3758ef76f255b81861b6b56e27036cd7fd239435aa9cdcdca1eafff"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage."
           },
           "trials": [],
           "history": [
@@ -18634,7 +18765,8 @@
               "status": "incomplete",
               "error": "Missing weight shards: model-00001-of-00009.safetensors, model-00002-of-00009.safetensors"
             }
-          ]
+          ],
+          "active_parameters": "10B"
         },
         {
           "id": "cffdb11ae6c79397d6aa9e33",
@@ -21115,7 +21247,32 @@
                 },
                 "stored_parameter_count": 27781427952
               }
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": null,
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 15,
+                "present_shards": 15,
+                "missing_shards": [],
+                "present_weight_bytes": 55563006400,
+                "weight_bytes": 55563006400,
+                "weight_gib": 51.74708217382431,
+                "index_declared_total_size": 55562855904.0,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "60b8858f86a2c3142f9899cc69a9a62a6b0fbce226606ecb7492650232d8f1d2",
+                "index_sha256": "a8ad2c26fb707ff8c245806315b03e3b4b74595528492423af5dae0ce39b4d9b"
+              },
+              "parameters": {
+                "total_b": 27.7,
+                "active_b": null,
+                "source": "https://huggingface.co/ThreatMon/qwen36-secura",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "1723355a7d40bdf78fdeef4606b076d1163447e73bece27bf741502019fa16a3"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage."
           },
           "trials": [
             {
@@ -24891,7 +25048,32 @@
                   "BF16": 1199
                 }
               }
-            }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 18,
+                "present_shards": 18,
+                "missing_shards": [],
+                "present_weight_bytes": 55563006776,
+                "weight_bytes": 55563006776,
+                "weight_gib": 51.7470825240016,
+                "index_declared_total_size": 55562855904.0,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab",
+                "index_sha256": "77042094076611b69791a610065f28b7013b8c621795fa86ddccc8bac7d1b9df"
+              },
+              "parameters": {
+                "total_b": 27,
+                "active_b": null,
+                "source": "https://huggingface.co/Qwen/Qwen3.8-27B",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage."
           },
           "trials": [
             {
@@ -25199,7 +25381,7 @@
               "all_shards_present": true,
               "weight_bytes": 132680249378
             },
-            "parameters_note": "NVIDIA model card: 125B language-model total / 6B active, plus 51B n-gram embedding and 4B MTP. These auxiliary modules are not added to the displayed language-model parameter count.",
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage. Primary model card verified by parent; language-model total excludes additional 51B n-gram embedding and 4B MTP layer.",
             "quantization_note": "Routed experts use NVFP4; other main-model layers remain BF16; MTP experts and n-gram embedding use FP8. Header dtypes BF16/F8_E4M3/U8 verified locally.",
             "runtime_preflight": {
               "version": "0.24.0",
@@ -25208,11 +25390,37 @@
               "inference_attempted": false
             },
             "source": "https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4",
-            "inventory_observed_utc": "2026-09-30T12:43:44.024814+00:00"
+            "inventory_observed_utc": "2026-09-30T12:43:44.024814+00:00",
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 11,
+                "present_shards": 11,
+                "missing_shards": [],
+                "present_weight_bytes": 132680249378,
+                "weight_bytes": 132680249378,
+                "weight_gib": 123.5681114513427,
+                "index_declared_total_size": 132639846394,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "deef67a61f3311faf051b23dc4192f442c7fee4f9cd2f38cbcbe4da55c763a80",
+                "index_sha256": "660414e8300728ba80062e6a3c81cb76a65e2ab136ac9e9ceb450ba0c51c3c0d"
+              },
+              "parameters": {
+                "total_b": 125,
+                "active_b": 6,
+                "source": "https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "e3ed0cb89950ef0f41e8df344ba1cc15c67e1baf91e1cb5305a7344e58a8d975",
+                "note": "Primary model card verified by parent; language-model total excludes additional 51B n-gram embedding and 4B MTP layer."
+              }
+            }
           },
           "resources": {},
           "history": [],
-          "trials": []
+          "trials": [],
+          "active_parameters": "6B"
         }
       ],
       "artifacts": {
