@@ -24,8 +24,18 @@ Ollama decode uses engine output-token count divided by engine decode duration. 
 
 ## Archive schema
 
-`workloads.json` is a versioned archive with `profiles`, `results`, and `long_context` arrays. A workload result identifies `model_id`, `model_name`, `engine`, `workload`, `status`, `trial_count`, numeric `metrics`, safe `trials`, `protocol`, and `provenance`. A `preferred` record selects the new controlled observation without deleting older supplemental evidence. Statistics include median, mean, observed minimum and maximum, sample standard deviation and variation when individual trials are available.
+`workloads.json` is a versioned archive with `profiles`, `results`, `long_context`, and `startup_observations` arrays. A workload result identifies `model_id`, `model_name`, `engine`, `workload`, `status`, `trial_count`, numeric `metrics`, safe `trials`, `protocol`, and `provenance`. A `preferred` record selects the new controlled observation without deleting older supplemental evidence. Statistics include median, mean, observed minimum and maximum, sample standard deviation and variation when individual trials are available.
 
 First-token latency, input prefill, end-to-end rate and startup observations represent different parts of inference. Model memory and host memory are also different measurements. Board power and temperature are short samples, not wall power or long-duration thermal stability. Model details explain the relevant basis rather than treating these values as interchangeable.
 
 The public site is a published snapshot. Refresh reloads this archive and does not start an inference request on Spark.
+
+## Completed 30 September coding/chat release
+
+The controlled suite completed all 54 mapped profiles: 45 successful three-trial measurements, three failed chat profiles, and six unavailable profiles. The Qwen3.6 35B base, fast and agent chat runs each encountered a CUDA illegal-memory-access error in the installed Ollama runtime; their successful coding measurements are retained. The unavailable profiles cover the embedding model, incomplete 122B checkpoint and the Flash NVFP4 checkpoint unsupported by the installed vLLM build. Separate TensorFold compatibility checks add four unavailable coding/chat observations for the BF16 and mixed NVFP4 configurations, outside the 54-profile suite. Two earlier rounded TensorFold observations remain archived separately.
+
+Native Ollama timing fields retain engine durations in nanoseconds, together with engine prompt/output counts. The interface converts durations to seconds for display. These fields supplement the unchanged decode median and client first-token latency; they do not replace either formula.
+
+Startup observations identify the model and engine. vLLM startup-to-observed-ready covers the launch request through the first successful readiness observation, before warmup, with readiness polled every five seconds. This includes launch, initialization, weight loading and any compilation or tuning, and is not a pure disk-transfer rate. Native weight-loading seconds and weight allocation GiB come from engine logs and use a separate window. Ollama's first coding warmup after explicit unload records its native load duration. Already loaded services and unsupported checkpoints have no new startup measurement. Null values mean not measured, not zero.
+
+The final private runner receipt verifies restoration of the same BF16 container object and its original configuration, a successful inference smoke request, no temporary benchmark inference container, no loaded Ollama models, and release of the shared inference-maintenance lock. Raw prompts and response text remain private on Spark.

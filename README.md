@@ -8,7 +8,7 @@ Qwen3.8-Flash-Next on TensorFold was measured on 29 September 2026 against the s
 
 Ollama uses engine generation duration. vLLM uses client-observed stream timing. Server configurations differ; measurements are not answer-quality rankings or a controlled engine comparison. GPT-OSS output counts include returned reasoning. Gemma 4 31B uses an explicitly recorded temporary vLLM runtime patch. The Qwen3.5 122B checkpoint is incomplete and has no speed claim.
 
-The supplemental workload archive adds coding, chat and variable-context prefill observations. Each result carries its workload, model, engine, timing basis, protocol and source. Results from different prompts or sampling settings are kept as separate observations. Missing measurements are shown as unmeasured. Generation speed is not a coding-correctness or writing-quality score.
+The supplemental workload archive adds coding, chat and variable-context prefill observations. The 30 September controlled coding/chat suite completed all 54 mapped profiles: 45 successful, three failed and six unavailable. Separate runtime compatibility checks and legacy observations remain outside that count. Workload details also retain startup observations and native Ollama timing fields when measured. Each result carries its workload, model, engine, timing basis, protocol and source. Results from different prompts or sampling settings are kept as separate observations. Missing measurements are shown as unmeasured. Generation speed is not a coding-correctness or writing-quality score.
 
 The public data export excludes private host paths, process commands, environment variables, prompt and response text. The full raw evidence, SQLite history and runnable benchmark protocol remain on the Spark.
 

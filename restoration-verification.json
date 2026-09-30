@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-09-30T14:53:30.803057+00:00",
+  "model_name": "Qwen3.8-27B-BF16",
+  "status": "verified",
+  "container_id_unchanged": true,
+  "config_unchanged": true,
+  "hostconfig_unchanged": true,
+  "model_identity_restored": true,
+  "generation_smoke_ok": true,
+  "generation_smoke_ranked": false,
+  "generation_smoke_output_tokens": 2,
+  "generation_smoke_wall_s": 1.521019980951678,
+  "generation_smoke_response_sha256": "5314fec201298b23833465c94d27a34bda0ef01ef838ba7cfcacbb6e106ff522",
+  "ollama_loaded_model_count": 0,
+  "benchmark_temporary_container_count": 0,
+  "maintenance_lease_released": true
+}

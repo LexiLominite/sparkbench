@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_utc": "2026-09-30T14:29:29.158758+00:00",
+  "updated_utc": "2026-09-30T14:57:27.560087+00:00",
   "scope": "Text generation speed and serving measurements. No coding correctness, writing quality, vision accuracy or tool-use quality scores are claimed.",
   "profiles": [
     {
@@ -571,6 +571,15 @@
             "gpu_power_w": 36.9,
             "gpu_utilization_percent": 84.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 1167780614,
+            "load_duration": 138323877,
+            "prompt_eval_duration": 44801000,
+            "eval_duration": 968290000,
+            "prompt_eval_count": 874,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -597,6 +606,15 @@
             "gpu_power_w": 37.63,
             "gpu_utilization_percent": 85.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 1180413070,
+            "load_duration": 138211171,
+            "prompt_eval_duration": 45574000,
+            "eval_duration": 975263000,
+            "prompt_eval_count": 874,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -623,6 +641,15 @@
             "gpu_power_w": 37.29,
             "gpu_utilization_percent": 83.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 1182503397,
+            "load_duration": 141323913,
+            "prompt_eval_duration": 45179000,
+            "eval_duration": 974569000,
+            "prompt_eval_count": 874,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -669,6 +696,15 @@
           "gpu_power_w": 17.77,
           "gpu_utilization_percent": 6.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 3808265326,
+          "load_duration": 3501958624,
+          "prompt_eval_duration": 192248000,
+          "eval_duration": 102614000,
+          "prompt_eval_count": 874,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -739,6 +775,15 @@
             "gpu_power_w": 37.49,
             "gpu_utilization_percent": 83.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 1254303309,
+            "load_duration": 191594520,
+            "prompt_eval_duration": 61314000,
+            "eval_duration": 981660000,
+            "prompt_eval_count": 1126,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -765,6 +810,15 @@
             "gpu_power_w": 37.35,
             "gpu_utilization_percent": 60.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 1201415007,
+            "load_duration": 129864975,
+            "prompt_eval_duration": 62009000,
+            "eval_duration": 986901000,
+            "prompt_eval_count": 1126,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -791,6 +845,15 @@
             "gpu_power_w": 38.49,
             "gpu_utilization_percent": 85.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 1178761930,
+            "load_duration": 127499356,
+            "prompt_eval_duration": 62486000,
+            "eval_duration": 966800000,
+            "prompt_eval_count": 1126,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -837,6 +900,15 @@
           "gpu_power_w": 32.82,
           "gpu_utilization_percent": 83.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 315316939,
+          "load_duration": 163066015,
+          "prompt_eval_duration": 62195000,
+          "eval_duration": 58885000,
+          "prompt_eval_count": 1126,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -949,6 +1021,15 @@
             "gpu_power_w": 42.22,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11150357771,
+            "load_duration": 376690006,
+            "prompt_eval_duration": 529712000,
+            "eval_duration": 10177634000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -975,6 +1056,15 @@
             "gpu_power_w": 42.81,
             "gpu_utilization_percent": 93.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11186088974,
+            "load_duration": 388860361,
+            "prompt_eval_duration": 531086000,
+            "eval_duration": 10195654000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1001,6 +1091,15 @@
             "gpu_power_w": 43.21,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11162632965,
+            "load_duration": 370351637,
+            "prompt_eval_duration": 531357999,
+            "eval_duration": 10190658000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -1047,6 +1146,15 @@
           "gpu_power_w": 49.54,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2392.0
+        },
+        "native_timing": {
+          "total_duration": 6461058112,
+          "load_duration": 5206879531,
+          "prompt_eval_duration": 630593000,
+          "eval_duration": 616786000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -1117,6 +1225,15 @@
             "gpu_power_w": 43.46,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11312661395,
+            "load_duration": 373841427,
+            "prompt_eval_duration": 670171000,
+            "eval_duration": 10193489000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1143,6 +1260,15 @@
             "gpu_power_w": 43.73,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11373221775,
+            "load_duration": 349409720,
+            "prompt_eval_duration": 675109000,
+            "eval_duration": 10269567000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1169,6 +1295,15 @@
             "gpu_power_w": 45.32,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11418862774,
+            "load_duration": 376338854,
+            "prompt_eval_duration": 675255000,
+            "eval_duration": 10292354000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -1215,6 +1350,15 @@
           "gpu_power_w": 56.73,
           "gpu_utilization_percent": 94.0,
           "gpu_clock_mhz": 2392.0
+        },
+        "native_timing": {
+          "total_duration": 1759839123,
+          "load_duration": 402126871,
+          "prompt_eval_duration": 673902000,
+          "eval_duration": 607464000,
+          "prompt_eval_count": 1154,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -1285,6 +1429,15 @@
             "gpu_power_w": 35.84,
             "gpu_utilization_percent": 93.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11072950227,
+            "load_duration": 259506685,
+            "prompt_eval_duration": 452992000,
+            "eval_duration": 10322673000,
+            "prompt_eval_count": 933,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1311,6 +1464,15 @@
             "gpu_power_w": 36.18,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 10967108932,
+            "load_duration": 258167461,
+            "prompt_eval_duration": 450132000,
+            "eval_duration": 10204404000,
+            "prompt_eval_count": 933,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1337,6 +1499,15 @@
             "gpu_power_w": 36.13,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11019460789,
+            "load_duration": 246321748,
+            "prompt_eval_duration": 450945000,
+            "eval_duration": 10273486000,
+            "prompt_eval_count": 933,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -1383,6 +1554,15 @@
           "gpu_power_w": 45.76,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 6738720077,
+          "load_duration": 5518471197,
+          "prompt_eval_duration": 589360000,
+          "eval_duration": 615978000,
+          "prompt_eval_count": 933,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -1453,6 +1633,15 @@
             "gpu_power_w": 36.26,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11162652216,
+            "load_duration": 198788280,
+            "prompt_eval_duration": 573194000,
+            "eval_duration": 10333628000,
+            "prompt_eval_count": 1185,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1479,6 +1668,15 @@
             "gpu_power_w": 36.38,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11173018680,
+            "load_duration": 233831632,
+            "prompt_eval_duration": 569339000,
+            "eval_duration": 10313022000,
+            "prompt_eval_count": 1185,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1505,6 +1703,15 @@
             "gpu_power_w": 36.53,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 11131261202,
+            "load_duration": 211094104,
+            "prompt_eval_duration": 570349000,
+            "eval_duration": 10284990000,
+            "prompt_eval_count": 1185,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -1551,6 +1758,15 @@
           "gpu_power_w": 47.35,
           "gpu_utilization_percent": 92.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 1506043426,
+          "load_duration": 269644968,
+          "prompt_eval_duration": 571586000,
+          "eval_duration": 618517000,
+          "prompt_eval_count": 1185,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -1621,6 +1837,15 @@
             "gpu_power_w": 64.25,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 13037417971,
+            "load_duration": 278593196,
+            "prompt_eval_duration": 1285229000,
+            "eval_duration": 11403316000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1647,6 +1872,15 @@
             "gpu_power_w": 66.14,
             "gpu_utilization_percent": 93.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 12143008202,
+            "load_duration": 245123483,
+            "prompt_eval_duration": 1285297000,
+            "eval_duration": 10538292000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1673,6 +1907,15 @@
             "gpu_power_w": 67.79,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 10903182262,
+            "load_duration": 279184402,
+            "prompt_eval_duration": 1281007000,
+            "eval_duration": 9270761000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -1719,6 +1962,15 @@
           "gpu_power_w": 65.53,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 9205336673,
+          "load_duration": 7255725559,
+          "prompt_eval_duration": 1309290000,
+          "eval_duration": 622530000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -1789,6 +2041,15 @@
             "gpu_power_w": 70.06,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12929550503,
+            "load_duration": 254492846,
+            "prompt_eval_duration": 1629158000,
+            "eval_duration": 10945021000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1815,6 +2076,15 @@
             "gpu_power_w": 70.36,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13989008934,
+            "load_duration": 230489908,
+            "prompt_eval_duration": 1626347000,
+            "eval_duration": 12027392000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1841,6 +2111,15 @@
             "gpu_power_w": 71.59,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13456534173,
+            "load_duration": 290993071,
+            "prompt_eval_duration": 1627260000,
+            "eval_duration": 11432511000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -1887,6 +2166,15 @@
           "gpu_power_w": 68.21,
           "gpu_utilization_percent": 93.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 2681457587,
+          "load_duration": 250313782,
+          "prompt_eval_duration": 1628139000,
+          "eval_duration": 730550000,
+          "prompt_eval_count": 1155,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -1957,6 +2245,15 @@
             "gpu_power_w": 67.9,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13021274498,
+            "load_duration": 249852431,
+            "prompt_eval_duration": 1279656000,
+            "eval_duration": 11421585000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -1983,6 +2280,15 @@
             "gpu_power_w": 69.55,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12047865477,
+            "load_duration": 247912519,
+            "prompt_eval_duration": 1278658000,
+            "eval_duration": 10449409000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2009,6 +2315,15 @@
             "gpu_power_w": 70.98,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 10860596345,
+            "load_duration": 263407917,
+            "prompt_eval_duration": 1274946000,
+            "eval_duration": 9250571000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -2055,6 +2370,15 @@
           "gpu_power_w": 70.4,
           "gpu_utilization_percent": 82.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 7854212542,
+          "load_duration": 5918377458,
+          "prompt_eval_duration": 1310319000,
+          "eval_duration": 619023000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -2125,6 +2449,15 @@
             "gpu_power_w": 70.91,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12908815629,
+            "load_duration": 258710643,
+            "prompt_eval_duration": 1624840000,
+            "eval_duration": 10925691000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2151,6 +2484,15 @@
             "gpu_power_w": 69.16,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13993426017,
+            "load_duration": 229955284,
+            "prompt_eval_duration": 1631178000,
+            "eval_duration": 12032188000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2177,6 +2519,15 @@
             "gpu_power_w": 69.88,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13486080114,
+            "load_duration": 218724388,
+            "prompt_eval_duration": 1620364000,
+            "eval_duration": 11548926000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -2223,6 +2574,15 @@
           "gpu_power_w": 70.57,
           "gpu_utilization_percent": 93.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 2686169351,
+          "load_duration": 257729087,
+          "prompt_eval_duration": 1624452000,
+          "eval_duration": 732240000,
+          "prompt_eval_count": 1155,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -2659,6 +3019,15 @@
             "gpu_power_w": 65.32,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 13035776908,
+            "load_duration": 244321361,
+            "prompt_eval_duration": 1282067000,
+            "eval_duration": 11437057000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2685,6 +3054,15 @@
             "gpu_power_w": 68.0,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 12186098860,
+            "load_duration": 224217341,
+            "prompt_eval_duration": 1278232000,
+            "eval_duration": 10606033000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2711,6 +3089,15 @@
             "gpu_power_w": 71.56,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 10910733377,
+            "load_duration": 219210069,
+            "prompt_eval_duration": 1276649000,
+            "eval_duration": 9335655000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -2757,6 +3144,15 @@
           "gpu_power_w": 64.9,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 9305666847,
+          "load_duration": 7304483729,
+          "prompt_eval_duration": 1356961000,
+          "eval_duration": 625099000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -2827,6 +3223,15 @@
             "gpu_power_w": 71.23,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12904303815,
+            "load_duration": 254139389,
+            "prompt_eval_duration": 1627058000,
+            "eval_duration": 10911246000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2853,6 +3258,15 @@
             "gpu_power_w": 69.29,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 14091429023,
+            "load_duration": 222800476,
+            "prompt_eval_duration": 1631691000,
+            "eval_duration": 12133271000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -2879,6 +3293,15 @@
             "gpu_power_w": 69.86,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13583956481,
+            "load_duration": 247772357,
+            "prompt_eval_duration": 1625607000,
+            "eval_duration": 11605538000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -2925,6 +3348,15 @@
           "gpu_power_w": 70.7,
           "gpu_utilization_percent": 68.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 2681442168,
+          "load_duration": 240203753,
+          "prompt_eval_duration": 1632685000,
+          "eval_duration": 732746000,
+          "prompt_eval_count": 1155,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -2995,6 +3427,15 @@
             "gpu_power_w": 68.94,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13015706186,
+            "load_duration": 229787515,
+            "prompt_eval_duration": 1287910000,
+            "eval_duration": 11421716000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3021,6 +3462,15 @@
             "gpu_power_w": 70.37,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12193447890,
+            "load_duration": 239366103,
+            "prompt_eval_duration": 1276922000,
+            "eval_duration": 10604173000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3047,6 +3497,15 @@
             "gpu_power_w": 71.61,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 10883800549,
+            "load_duration": 202974812,
+            "prompt_eval_duration": 1286389000,
+            "eval_duration": 9321534000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -3093,6 +3552,15 @@
           "gpu_power_w": 69.04,
           "gpu_utilization_percent": 95.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 8096999578,
+          "load_duration": 6164842019,
+          "prompt_eval_duration": 1308323000,
+          "eval_duration": 617872000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -3163,6 +3631,15 @@
             "gpu_power_w": 70.7,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12963169786,
+            "load_duration": 255401783,
+            "prompt_eval_duration": 1630568000,
+            "eval_duration": 10979432000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3189,6 +3666,15 @@
             "gpu_power_w": 70.08,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 14056501448,
+            "load_duration": 264084741,
+            "prompt_eval_duration": 1640980000,
+            "eval_duration": 12038554000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3215,6 +3701,15 @@
             "gpu_power_w": 69.91,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13616183022,
+            "load_duration": 273292195,
+            "prompt_eval_duration": 1628636000,
+            "eval_duration": 11610179000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -3261,6 +3756,15 @@
           "gpu_power_w": 71.02,
           "gpu_utilization_percent": 95.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 2722583455,
+          "load_duration": 281552822,
+          "prompt_eval_duration": 1633529000,
+          "eval_duration": 736096000,
+          "prompt_eval_count": 1155,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -3331,6 +3835,15 @@
             "gpu_power_w": 68.95,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12988173529,
+            "load_duration": 232707477,
+            "prompt_eval_duration": 1283618000,
+            "eval_duration": 11399177000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3357,6 +3870,15 @@
             "gpu_power_w": 71.29,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12069685151,
+            "load_duration": 226429246,
+            "prompt_eval_duration": 1284874000,
+            "eval_duration": 10484056000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3383,6 +3905,15 @@
             "gpu_power_w": 72.19,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 10821690940,
+            "load_duration": 204217266,
+            "prompt_eval_duration": 1286859000,
+            "eval_duration": 9256599000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -3429,6 +3960,15 @@
           "gpu_power_w": 70.06,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 8134877383,
+          "load_duration": 6191987994,
+          "prompt_eval_duration": 1322560000,
+          "eval_duration": 615367000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -3499,6 +4039,15 @@
             "gpu_power_w": 71.39,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 12927371857,
+            "load_duration": 209589225,
+            "prompt_eval_duration": 1633516000,
+            "eval_duration": 10981840000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3525,6 +4074,15 @@
             "gpu_power_w": 70.53,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 14070535733,
+            "load_duration": 226206480,
+            "prompt_eval_duration": 1634065000,
+            "eval_duration": 12104477000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3551,6 +4109,15 @@
             "gpu_power_w": 70.95,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 13550702856,
+            "load_duration": 272686633,
+            "prompt_eval_duration": 1630336000,
+            "eval_duration": 11541127000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -3597,6 +4164,15 @@
           "gpu_power_w": 71.43,
           "gpu_utilization_percent": 91.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 2711043714,
+          "load_duration": 261791335,
+          "prompt_eval_duration": 1634872000,
+          "eval_duration": 735810000,
+          "prompt_eval_count": 1155,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -3667,6 +4243,15 @@
             "gpu_power_w": 45.77,
             "gpu_utilization_percent": 92.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4267497746,
+            "load_duration": 350765604,
+            "prompt_eval_duration": 357539000,
+            "eval_duration": 3514479000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3693,6 +4278,15 @@
             "gpu_power_w": 45.63,
             "gpu_utilization_percent": 91.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4384258285,
+            "load_duration": 385149083,
+            "prompt_eval_duration": 355207000,
+            "eval_duration": 3594995000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3719,6 +4313,15 @@
             "gpu_power_w": 45.2,
             "gpu_utilization_percent": 91.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4094311106,
+            "load_duration": 343699068,
+            "prompt_eval_duration": 355654000,
+            "eval_duration": 3340415000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -3765,6 +4368,15 @@
           "gpu_power_w": 39.43,
           "gpu_utilization_percent": 2.0,
           "gpu_clock_mhz": 2392.0
+        },
+        "native_timing": {
+          "total_duration": 9868107694,
+          "load_duration": 8921050026,
+          "prompt_eval_duration": 731820000,
+          "eval_duration": 209380000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -3835,6 +4447,15 @@
             "gpu_power_w": 45.4,
             "gpu_utilization_percent": 92.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4825142316,
+            "load_duration": 382327737,
+            "prompt_eval_duration": 485323000,
+            "eval_duration": 3904879000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3861,6 +4482,15 @@
             "gpu_power_w": 45.42,
             "gpu_utilization_percent": 93.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4437920404,
+            "load_duration": 317107305,
+            "prompt_eval_duration": 484981000,
+            "eval_duration": 3576901000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -3887,6 +4517,15 @@
             "gpu_power_w": 45.09,
             "gpu_utilization_percent": 88.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4655563019,
+            "load_duration": 373242935,
+            "prompt_eval_duration": 483613000,
+            "eval_duration": 3744278000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -3933,6 +4572,15 @@
           "gpu_power_w": 46.82,
           "gpu_utilization_percent": 0.0,
           "gpu_clock_mhz": 2392.0
+        },
+        "native_timing": {
+          "total_duration": 1099601656,
+          "load_duration": 340992070,
+          "prompt_eval_duration": 488813000,
+          "eval_duration": 221830000,
+          "prompt_eval_count": 1154,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -4003,6 +4651,15 @@
             "gpu_power_w": 45.02,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 27678795577,
+            "load_duration": 369069517,
+            "prompt_eval_duration": 1412971000,
+            "eval_duration": 25744085000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4029,6 +4686,15 @@
             "gpu_power_w": 45.18,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 27765420879,
+            "load_duration": 423935202,
+            "prompt_eval_duration": 1416458000,
+            "eval_duration": 25756165000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4055,6 +4721,15 @@
             "gpu_power_w": 45.42,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 27634740487,
+            "load_duration": 339913480,
+            "prompt_eval_duration": 1420234000,
+            "eval_duration": 25713791000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -4101,6 +4776,15 @@
           "gpu_power_w": 44.94,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 10801113190,
+          "load_duration": 7778710892,
+          "prompt_eval_duration": 1478384000,
+          "eval_duration": 1518303000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -4171,6 +4855,15 @@
             "gpu_power_w": 45.53,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 28215609941,
+            "load_duration": 398504775,
+            "prompt_eval_duration": 1675285000,
+            "eval_duration": 25956050000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4197,6 +4890,15 @@
             "gpu_power_w": 45.32,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 28295153963,
+            "load_duration": 367510388,
+            "prompt_eval_duration": 1674950000,
+            "eval_duration": 26056006000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4223,6 +4925,15 @@
             "gpu_power_w": 45.49,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 28208663859,
+            "load_duration": 360832433,
+            "prompt_eval_duration": 1675262000,
+            "eval_duration": 25985962000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -4269,6 +4980,15 @@
           "gpu_power_w": 45.63,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 3765698929,
+          "load_duration": 405736004,
+          "prompt_eval_duration": 1674603000,
+          "eval_duration": 1525567000,
+          "prompt_eval_count": 1154,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -4339,6 +5059,15 @@
             "gpu_power_w": 44.95,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 27572471978,
+            "load_duration": 365328713,
+            "prompt_eval_duration": 1319059000,
+            "eval_duration": 25726099000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4365,6 +5094,15 @@
             "gpu_power_w": 44.84,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 27746856873,
+            "load_duration": 345109699,
+            "prompt_eval_duration": 1319467000,
+            "eval_duration": 25919060000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4391,6 +5129,15 @@
             "gpu_power_w": 45.09,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 27748274451,
+            "load_duration": 383783238,
+            "prompt_eval_duration": 1324078000,
+            "eval_duration": 25880938000,
+            "prompt_eval_count": 904,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -4437,6 +5184,15 @@
           "gpu_power_w": 44.02,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 9700001962,
+          "load_duration": 6801014660,
+          "prompt_eval_duration": 1368501000,
+          "eval_duration": 1522244000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -4507,6 +5263,15 @@
             "gpu_power_w": 44.98,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 28352139024,
+            "load_duration": 381688664,
+            "prompt_eval_duration": 1682601000,
+            "eval_duration": 26101898000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4533,6 +5298,15 @@
             "gpu_power_w": 45.1,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 28293151679,
+            "load_duration": 385909336,
+            "prompt_eval_duration": 1674348000,
+            "eval_duration": 26041925000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4559,6 +5333,15 @@
             "gpu_power_w": 45.23,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 28350187589,
+            "load_duration": 378273572,
+            "prompt_eval_duration": 1676320000,
+            "eval_duration": 26103775000,
+            "prompt_eval_count": 1155,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -4605,6 +5388,15 @@
           "gpu_power_w": 44.83,
           "gpu_utilization_percent": 94.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 3766227763,
+          "load_duration": 385765436,
+          "prompt_eval_duration": 1675932000,
+          "eval_duration": 1536649000,
+          "prompt_eval_count": 1154,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -4675,6 +5467,15 @@
             "gpu_power_w": 41.29,
             "gpu_utilization_percent": 85.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4275444245,
+            "load_duration": 263746567,
+            "prompt_eval_duration": 411568000,
+            "eval_duration": 3563635000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4701,6 +5502,15 @@
             "gpu_power_w": 41.71,
             "gpu_utilization_percent": 83.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4428680715,
+            "load_duration": 301129959,
+            "prompt_eval_duration": 410748000,
+            "eval_duration": 3681501000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4727,6 +5537,15 @@
             "gpu_power_w": 42.93,
             "gpu_utilization_percent": 85.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4330058719,
+            "load_duration": 262363484,
+            "prompt_eval_duration": 413383000,
+            "eval_duration": 3614560000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -4773,6 +5592,15 @@
           "gpu_power_w": 43.46,
           "gpu_utilization_percent": 2.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 8088995587,
+          "load_duration": 7257760596,
+          "prompt_eval_duration": 606672000,
+          "eval_duration": 219669000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -4875,6 +5703,15 @@
             "gpu_power_w": 41.08,
             "gpu_utilization_percent": 81.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4446292183,
+            "load_duration": 280889447,
+            "prompt_eval_duration": 411437000,
+            "eval_duration": 3717674000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4901,6 +5738,15 @@
             "gpu_power_w": 40.7,
             "gpu_utilization_percent": 85.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4368619212,
+            "load_duration": 264250940,
+            "prompt_eval_duration": 414950000,
+            "eval_duration": 3652528000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -4927,6 +5773,15 @@
             "gpu_power_w": 40.4,
             "gpu_utilization_percent": 78.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4501447954,
+            "load_duration": 292200065,
+            "prompt_eval_duration": 412871000,
+            "eval_duration": 3761581000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -4973,6 +5828,15 @@
           "gpu_power_w": 43.36,
           "gpu_utilization_percent": 84.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 7303499356,
+          "load_duration": 6479116095,
+          "prompt_eval_duration": 589316000,
+          "eval_duration": 227795000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -5075,6 +5939,15 @@
             "gpu_power_w": 41.65,
             "gpu_utilization_percent": 86.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4310444677,
+            "load_duration": 297446410,
+            "prompt_eval_duration": 415490000,
+            "eval_duration": 3562250000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5101,6 +5974,15 @@
             "gpu_power_w": 40.98,
             "gpu_utilization_percent": 82.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4374213292,
+            "load_duration": 274581978,
+            "prompt_eval_duration": 415495000,
+            "eval_duration": 3649904000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5127,6 +6009,15 @@
             "gpu_power_w": 41.84,
             "gpu_utilization_percent": 83.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 4372137728,
+            "load_duration": 268182025,
+            "prompt_eval_duration": 414138000,
+            "eval_duration": 3655384000,
+            "prompt_eval_count": 903,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -5173,6 +6064,15 @@
           "gpu_power_w": 42.99,
           "gpu_utilization_percent": 79.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 7322663287,
+          "load_duration": 6509027764,
+          "prompt_eval_duration": 589138000,
+          "eval_duration": 220163000,
+          "prompt_eval_count": 903,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -5275,6 +6175,15 @@
             "gpu_power_w": 34.88,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 41858239733,
+            "load_duration": 161034581,
+            "prompt_eval_duration": 1039717000,
+            "eval_duration": 40627472000,
+            "prompt_eval_count": 866,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5301,6 +6210,15 @@
             "gpu_power_w": 36.18,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42045501416,
+            "load_duration": 118635138,
+            "prompt_eval_duration": 1044118999,
+            "eval_duration": 40845677000,
+            "prompt_eval_count": 866,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5327,6 +6245,15 @@
             "gpu_power_w": 36.9,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42104227005,
+            "load_duration": 136616568,
+            "prompt_eval_duration": 1047967000,
+            "eval_duration": 40882327000,
+            "prompt_eval_count": 866,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -5373,6 +6300,15 @@
           "gpu_power_w": 32.3,
           "gpu_utilization_percent": 95.0,
           "gpu_clock_mhz": 2411.0
+        },
+        "native_timing": {
+          "total_duration": 11266110049,
+          "load_duration": 7757596639,
+          "prompt_eval_duration": 1100878000,
+          "eval_duration": 2403587000,
+          "prompt_eval_count": 866,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -5443,6 +6379,15 @@
             "gpu_power_w": 37.29,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42591530336,
+            "load_duration": 146621676,
+            "prompt_eval_duration": 1442781000,
+            "eval_duration": 40964421000,
+            "prompt_eval_count": 1118,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5469,6 +6414,15 @@
             "gpu_power_w": 38.35,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42616960819,
+            "load_duration": 159331882,
+            "prompt_eval_duration": 1439393000,
+            "eval_duration": 40975622000,
+            "prompt_eval_count": 1118,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5495,6 +6449,15 @@
             "gpu_power_w": 39.0,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42581347137,
+            "load_duration": 139777215,
+            "prompt_eval_duration": 1442160000,
+            "eval_duration": 40956014000,
+            "prompt_eval_count": 1118,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -5541,6 +6504,15 @@
           "gpu_power_w": 37.01,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 4042775965,
+          "load_duration": 144667754,
+          "prompt_eval_duration": 1444130000,
+          "eval_duration": 2417340000,
+          "prompt_eval_count": 1118,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -5611,6 +6583,15 @@
             "gpu_power_w": 39.22,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42039249960,
+            "load_duration": 168093266,
+            "prompt_eval_duration": 1056944999,
+            "eval_duration": 40783343000,
+            "prompt_eval_count": 874,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5637,6 +6618,15 @@
             "gpu_power_w": 39.9,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42067626559,
+            "load_duration": 179307282,
+            "prompt_eval_duration": 1058013999,
+            "eval_duration": 40792817000,
+            "prompt_eval_count": 874,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5663,6 +6653,15 @@
             "gpu_power_w": 39.75,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42094190831,
+            "load_duration": 165768351,
+            "prompt_eval_duration": 1052494999,
+            "eval_duration": 40835184000,
+            "prompt_eval_count": 874,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -5709,6 +6708,15 @@
           "gpu_power_w": 37.22,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 10993554155,
+          "load_duration": 7491586085,
+          "prompt_eval_duration": 1076603000,
+          "eval_duration": 2409653000,
+          "prompt_eval_count": 874,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -5779,6 +6787,15 @@
             "gpu_power_w": 40.45,
             "gpu_utilization_percent": 96.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42459151627,
+            "load_duration": 168576900,
+            "prompt_eval_duration": 1447168000,
+            "eval_duration": 40805614000,
+            "prompt_eval_count": 1126,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5805,6 +6822,15 @@
             "gpu_power_w": 40.61,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42529590160,
+            "load_duration": 177939079,
+            "prompt_eval_duration": 1446634000,
+            "eval_duration": 40861498000,
+            "prompt_eval_count": 1126,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5831,6 +6857,15 @@
             "gpu_power_w": 40.66,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 42512083295,
+            "load_duration": 181330397,
+            "prompt_eval_duration": 1446241000,
+            "eval_duration": 40841830000,
+            "prompt_eval_count": 1126,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -5877,6 +6912,15 @@
           "gpu_power_w": 40.25,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2405.0
+        },
+        "native_timing": {
+          "total_duration": 4069300693,
+          "load_duration": 164838357,
+          "prompt_eval_duration": 1450927000,
+          "eval_duration": 2415504000,
+          "prompt_eval_count": 1126,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -5947,6 +6991,15 @@
             "gpu_power_w": 46.55,
             "gpu_utilization_percent": 92.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 6996027967,
+            "load_duration": 314950810,
+            "prompt_eval_duration": 534697000,
+            "eval_duration": 6129257000,
+            "prompt_eval_count": 896,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5973,6 +7026,15 @@
             "gpu_power_w": 46.19,
             "gpu_utilization_percent": 91.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 7092183699,
+            "load_duration": 316775976,
+            "prompt_eval_duration": 532225000,
+            "eval_duration": 6225095000,
+            "prompt_eval_count": 896,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -5999,6 +7061,15 @@
             "gpu_power_w": 46.53,
             "gpu_utilization_percent": 92.0,
             "gpu_clock_mhz": 2405.0
+          },
+          "native_timing": {
+            "total_duration": 7148224044,
+            "load_duration": 360872493,
+            "prompt_eval_duration": 536935000,
+            "eval_duration": 6231548000,
+            "prompt_eval_count": 896,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -6046,6 +7117,15 @@
           "gpu_power_w": 49.97,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 12974625915,
+          "load_duration": 11665954294,
+          "prompt_eval_duration": 924197000,
+          "eval_duration": 373927000,
+          "prompt_eval_count": 896,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -6116,6 +7196,15 @@
             "gpu_power_w": 47.66,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 7208526380,
+            "load_duration": 334679229,
+            "prompt_eval_duration": 749722000,
+            "eval_duration": 6107859000,
+            "prompt_eval_count": 1147,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -6142,6 +7231,15 @@
             "gpu_power_w": 47.97,
             "gpu_utilization_percent": 94.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 7209052584,
+            "load_duration": 349510220,
+            "prompt_eval_duration": 751166000,
+            "eval_duration": 6088433000,
+            "prompt_eval_count": 1147,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         },
         {
@@ -6168,6 +7266,15 @@
             "gpu_power_w": 47.88,
             "gpu_utilization_percent": 95.0,
             "gpu_clock_mhz": 2398.0
+          },
+          "native_timing": {
+            "total_duration": 7147825488,
+            "load_duration": 302050089,
+            "prompt_eval_duration": 751751000,
+            "eval_duration": 6072415000,
+            "prompt_eval_count": 1147,
+            "eval_count": 256,
+            "duration_unit": "ns"
           }
         }
       ],
@@ -6215,6 +7322,15 @@
           "gpu_power_w": 55.35,
           "gpu_utilization_percent": 96.0,
           "gpu_clock_mhz": 2398.0
+        },
+        "native_timing": {
+          "total_duration": 1520571251,
+          "load_duration": 363488446,
+          "prompt_eval_duration": 771197000,
+          "eval_duration": 369987000,
+          "prompt_eval_count": 1147,
+          "eval_count": 16,
+          "duration_unit": "ns"
         }
       }
     },
@@ -7193,6 +8309,696 @@
       }
     },
     {
+      "model_id": "fb2b3b03ceb79448612c5448",
+      "model_name": "nvidia_NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+      "engine": "vLLM",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 14.92013113294985,
+          "mean": 14.920069820532936,
+          "min": 14.912957031389416,
+          "max": 14.92712129725954,
+          "sample_sd": 0.007082331983127874,
+          "cv_percent": 0.04746849088722896
+        },
+        "ttft_s": {
+          "median": 0.6256529719685204,
+          "mean": 0.640426110321035,
+          "min": 0.6225683479569852,
+          "max": 0.6730570110375993,
+          "sample_sd": 0.02830124533485837,
+          "cv_percent": 4.41912734018159
+        },
+        "prefill_tps": null,
+        "end_to_end_tps": {
+          "median": 14.445398414560202,
+          "mean": 14.437511694854342,
+          "min": 14.411017169661399,
+          "max": 14.456119500341423,
+          "sample_sd": 0.0235627952285306,
+          "cv_percent": 0.16320537587462938
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "c9d2a9aaf7289548c6ab40ed3c52853ed756997f5131bad35f85f1e03bff641f",
+          "reasoning_sha256": null,
+          "prompt_tokens": 875,
+          "output_tokens": 256,
+          "decode_tps": 14.92013113294985,
+          "ttft_s": 0.6730570110375993,
+          "prefill_tps": null,
+          "end_to_end_tps": 14.411017169661399,
+          "wall_s": 17.764186732005328,
+          "stream_span_s": 17.09100260096602,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 12321344,
+            "swap_free_kib": 12480256,
+            "gpu_temperature_c": 67.0,
+            "gpu_power_w": 31.57,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "9e19f31e5df71202e84586c5b92d20d3c6c48b1ea3130623ec4f997943758c65",
+          "reasoning_sha256": null,
+          "prompt_tokens": 875,
+          "output_tokens": 256,
+          "decode_tps": 14.92712129725954,
+          "ttft_s": 0.6256529719685204,
+          "prefill_tps": null,
+          "end_to_end_tps": 14.456119500341423,
+          "wall_s": 17.708763405971695,
+          "stream_span_s": 17.08299912099028,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 12366260,
+            "swap_free_kib": 12480260,
+            "gpu_temperature_c": 69.0,
+            "gpu_power_w": 32.02,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "76b570cc4a1e2c844d581e7714ead87a1ae689d8112337fe1516a14abd7ce699",
+          "reasoning_sha256": null,
+          "prompt_tokens": 875,
+          "output_tokens": 256,
+          "decode_tps": 14.912957031389416,
+          "ttft_s": 0.6225683479569852,
+          "prefill_tps": null,
+          "end_to_end_tps": 14.445398414560202,
+          "wall_s": 17.721906495979056,
+          "stream_span_s": 17.099224484001752,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 12214820,
+            "swap_free_kib": 12483372,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 32.2,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "stream estimate (completion_tokens - 1) / (last generated-content timestamp - first generated-content timestamp)",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "vLLM 0.24.0 on ARM64, eager execution, context 8192, max sequences 1, GPU memory utilization 0.80, language model only, DeepGEMM disabled. Prefix cache not disabled.",
+          "Decode is a streaming estimate, includes generated reasoning when present; prefill is unavailable because per-request engine timing is not exposed. No correctness or quality score."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T14:34:24.277044+00:00",
+        "finished_at": "2026-09-30T14:35:20.848038+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "e78b78af4532e398216139b7b104521837a8a01f67d0feb9ac4fbdeed409a81a",
+        "reasoning_sha256": null,
+        "prompt_tokens": 875,
+        "output_tokens": 16,
+        "decode_tps": 17.406903759195412,
+        "ttft_s": 2.3646815789979883,
+        "prefill_tps": null,
+        "end_to_end_tps": 4.958874368837882,
+        "wall_s": 3.22653868800262,
+        "stream_span_s": 0.8617270599934272,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 12288500,
+          "swap_free_kib": 12480228,
+          "gpu_temperature_c": 64.0,
+          "gpu_power_w": 30.88,
+          "gpu_utilization_percent": 95.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "fb2b3b03ceb79448612c5448",
+      "model_name": "nvidia_NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+      "engine": "vLLM",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 14.915434231032073,
+          "mean": 14.90837003148685,
+          "min": 14.8942125899824,
+          "max": 14.915463273446075,
+          "sample_sd": 0.012260712594681433,
+          "cv_percent": 0.08224046336914431
+        },
+        "ttft_s": {
+          "median": 0.7392459670081735,
+          "mean": 0.7505678186619965,
+          "min": 0.7371597720193677,
+          "max": 0.7752977169584483,
+          "sample_sd": 0.02144210704892286,
+          "cv_percent": 2.856784758923816
+        },
+        "prefill_tps": null,
+        "end_to_end_tps": {
+          "median": 14.333592073022599,
+          "mean": 14.337567326384113,
+          "min": 14.3242579101997,
+          "max": 14.354851995930039,
+          "sample_sd": 0.01567965241594988,
+          "cv_percent": 0.10936061926695229
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "fd132eb69133cc189e67d4a9b9f204c33958043dac9ef7d3f4e7138b2041cd67",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1191,
+          "output_tokens": 256,
+          "decode_tps": 14.915463273446075,
+          "ttft_s": 0.7752977169584483,
+          "prefill_tps": null,
+          "end_to_end_tps": 14.3242579101997,
+          "wall_s": 17.871780974965077,
+          "stream_span_s": 17.096351305022836,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 12248672,
+            "swap_free_kib": 12483380,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 33.31,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "63f241a144673e72e91246679d56a711e3104d9ed443f1d13d7326bd788184ce",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1191,
+          "output_tokens": 256,
+          "decode_tps": 14.915434231032073,
+          "ttft_s": 0.7371597720193677,
+          "prefill_tps": null,
+          "end_to_end_tps": 14.354851995930039,
+          "wall_s": 17.833691359031945,
+          "stream_span_s": 17.096384593984112,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 12307884,
+            "swap_free_kib": 12483400,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 32.51,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "61727f897d4f4c68d075f3f9a921b11c5bec8a922d8c8b908177bfc572fa0118",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1191,
+          "output_tokens": 256,
+          "decode_tps": 14.8942125899824,
+          "ttft_s": 0.7392459670081735,
+          "prefill_tps": null,
+          "end_to_end_tps": 14.333592073022599,
+          "wall_s": 17.86014271201566,
+          "stream_span_s": 17.120743943960406,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 12289524,
+            "swap_free_kib": 12483476,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 32.33,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "stream estimate (completion_tokens - 1) / (last generated-content timestamp - first generated-content timestamp)",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "vLLM 0.24.0 on ARM64, eager execution, context 8192, max sequences 1, GPU memory utilization 0.80, language model only, DeepGEMM disabled. Prefix cache not disabled.",
+          "Decode is a streaming estimate, includes generated reasoning when present; prefill is unavailable because per-request engine timing is not exposed. No correctness or quality score."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T14:35:20.853754+00:00",
+        "finished_at": "2026-09-30T14:36:16.353836+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "4cc1f4fca03feb312e418bab2b30e93dee46c8b4ad59e579bdb849012a770647",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1191,
+        "output_tokens": 16,
+        "decode_tps": 15.532038322818924,
+        "ttft_s": 0.8166987069998868,
+        "prefill_tps": null,
+        "end_to_end_tps": 8.975838630447926,
+        "wall_s": 1.782563241024036,
+        "stream_span_s": 0.9657457500579767,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 12211296,
+          "swap_free_kib": 12483380,
+          "gpu_temperature_c": 70.0,
+          "gpu_power_w": 33.34,
+          "gpu_utilization_percent": 96.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "4481e71193f50a9bd596bd95",
+      "model_name": "nvidia_Qwen3.5-122B-A10B-NVFP4",
+      "engine": "vLLM",
+      "workload": "coding",
+      "status": "unavailable",
+      "preferred": true,
+      "trial_count": 0,
+      "metrics": {},
+      "trials": [],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "notes": [
+          "Checkpoint incomplete: weight shards missing. No inference was launched."
+        ]
+      },
+      "provenance": {
+        "source": "Local installed-model inventory inspection",
+        "measured_at": "2026-09-30T14:36:22.612406+00:00"
+      }
+    },
+    {
+      "model_id": "4481e71193f50a9bd596bd95",
+      "model_name": "nvidia_Qwen3.5-122B-A10B-NVFP4",
+      "engine": "vLLM",
+      "workload": "chat",
+      "status": "unavailable",
+      "preferred": true,
+      "trial_count": 0,
+      "metrics": {},
+      "trials": [],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "notes": [
+          "Checkpoint incomplete: weight shards missing. No inference was launched."
+        ]
+      },
+      "provenance": {
+        "source": "Local installed-model inventory inspection",
+        "measured_at": "2026-09-30T14:36:22.612422+00:00"
+      }
+    },
+    {
+      "model_id": "cffdb11ae6c79397d6aa9e33",
+      "model_name": "ThreatMon-qwen36-secura",
+      "engine": "vLLM",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 4.306660701024366,
+          "mean": 4.306734731981826,
+          "min": 4.3056452858402565,
+          "max": 4.307898209080855,
+          "sample_sd": 0.0011282846356321658,
+          "cv_percent": 0.026198145598648567
+        },
+        "ttft_s": {
+          "median": 1.003614037996158,
+          "mean": 1.0847073896438815,
+          "min": 1.0030805709538981,
+          "max": 1.2474275599815883,
+          "sample_sd": 0.1409200536574569,
+          "cv_percent": 12.991527024050434
+        },
+        "prefill_tps": null,
+        "end_to_end_tps": {
+          "median": 4.2505330840138,
+          "mean": 4.245847380896794,
+          "min": 4.235527863504948,
+          "max": 4.251481195171634,
+          "sample_sd": 0.008949528372621779,
+          "cv_percent": 0.21078309156584638
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "de7d3e6f7134d639e30fc081ef1d55853239da49d68d4340361d2f225a0c92f3",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 4.307898209080855,
+          "ttft_s": 1.2474275599815883,
+          "prefill_tps": null,
+          "end_to_end_tps": 4.235527863504948,
+          "wall_s": 60.441108700004406,
+          "stream_span_s": 59.19359920400893,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 18412356,
+            "swap_free_kib": 11252552,
+            "gpu_temperature_c": 67.0,
+            "gpu_power_w": 35.13,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "09b3d4e0c157d259d4dc459793744794c64bdb1f8faa82efa6769b8c3a01022e",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 4.3056452858402565,
+          "ttft_s": 1.0030805709538981,
+          "prefill_tps": null,
+          "end_to_end_tps": 4.2505330840138,
+          "wall_s": 60.22773965995293,
+          "stream_span_s": 59.22457217704505,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 18395408,
+            "swap_free_kib": 11252640,
+            "gpu_temperature_c": 69.0,
+            "gpu_power_w": 35.71,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "8166227598d565fc34be23ab15af4b20de996c0d7308f99f6c0ac9e7f1b86c4d",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 4.306660701024366,
+          "ttft_s": 1.003614037996158,
+          "prefill_tps": null,
+          "end_to_end_tps": 4.251481195171634,
+          "wall_s": 60.21430843695998,
+          "stream_span_s": 59.21060833497904,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 18431480,
+            "swap_free_kib": 11252712,
+            "gpu_temperature_c": 71.0,
+            "gpu_power_w": 36.08,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "stream estimate (completion_tokens - 1) / (last generated-content timestamp - first generated-content timestamp)",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "vLLM 0.24.0 on ARM64, eager execution, context 8192, max sequences 1, GPU memory utilization 0.80, language model only, DeepGEMM disabled. Prefix cache not disabled.",
+          "Decode is a streaming estimate, includes generated reasoning when present; prefill is unavailable because per-request engine timing is not exposed. No correctness or quality score."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T14:39:13.637250+00:00",
+        "finished_at": "2026-09-30T14:43:05.181256+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "269e2de3cf115b9a45d5ec5145eb9d6f783d6ef8ccd28991e52236bd0cac03fb",
+        "reasoning_sha256": null,
+        "prompt_tokens": 903,
+        "output_tokens": 16,
+        "decode_tps": 4.539222578010896,
+        "ttft_s": 47.23546148900641,
+        "prefill_tps": null,
+        "end_to_end_tps": 0.3165802093152023,
+        "wall_s": 50.540114414005075,
+        "stream_span_s": 3.3045306199928746,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 18239468,
+          "swap_free_kib": 11252428,
+          "gpu_temperature_c": 60.0,
+          "gpu_power_w": 33.25,
+          "gpu_utilization_percent": 95.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "cffdb11ae6c79397d6aa9e33",
+      "model_name": "ThreatMon-qwen36-secura",
+      "engine": "vLLM",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 4.305624632218122,
+          "mean": 4.305581888310916,
+          "min": 4.305095960133071,
+          "max": 4.306025072581553,
+          "sample_sd": 0.00046602871873247686,
+          "cv_percent": 0.010823826623706382
+        },
+        "ttft_s": {
+          "median": 1.1400240460061468,
+          "mean": 1.1616069040028378,
+          "min": 1.1397515370044857,
+          "max": 1.205045128997881,
+          "sample_sd": 0.037618853096937827,
+          "cv_percent": 3.2385183806419526
+        },
+        "prefill_tps": null,
+        "end_to_end_tps": {
+          "median": 4.240886985449953,
+          "mean": 4.239313433475627,
+          "min": 4.235795782976713,
+          "max": 4.241257532000215,
+          "sample_sd": 0.003052003433952722,
+          "cv_percent": 0.0719928705873139
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "fda0e2d7f84da2196d87cd2e877a2be688b46fc2aa924eadae034a2e33ed9af3",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 4.305095960133071,
+          "ttft_s": 1.205045128997881,
+          "prefill_tps": null,
+          "end_to_end_tps": 4.235795782976713,
+          "wall_s": 60.437285722990055,
+          "stream_span_s": 59.23212917003548,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 18402100,
+            "swap_free_kib": 11252896,
+            "gpu_temperature_c": 72.0,
+            "gpu_power_w": 38.18,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "d0de97f6673425a401d98464921e4aa1420a9a812d40524b67ed6fe9e99116bf",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 4.306025072581553,
+          "ttft_s": 1.1400240460061468,
+          "prefill_tps": null,
+          "end_to_end_tps": 4.241257532000215,
+          "wall_s": 60.359456615988165,
+          "stream_span_s": 59.21934863401111,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 18414832,
+            "swap_free_kib": 11252924,
+            "gpu_temperature_c": 73.0,
+            "gpu_power_w": 38.43,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "60138e3a4c9000cf7a4835c892417fbd11ac8ee6186b393604dc52623ae6bb50",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 4.305624632218122,
+          "ttft_s": 1.1397515370044857,
+          "prefill_tps": null,
+          "end_to_end_tps": 4.240886985449953,
+          "wall_s": 60.36473050998757,
+          "stream_span_s": 59.224856271001045,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 18435764,
+            "swap_free_kib": 11255616,
+            "gpu_temperature_c": 74.0,
+            "gpu_power_w": 38.74,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "stream estimate (completion_tokens - 1) / (last generated-content timestamp - first generated-content timestamp)",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "vLLM 0.24.0 on ARM64, eager execution, context 8192, max sequences 1, GPU memory utilization 0.80, language model only, DeepGEMM disabled. Prefix cache not disabled.",
+          "Decode is a streaming estimate, includes generated reasoning when present; prefill is unavailable because per-request engine timing is not exposed. No correctness or quality score."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T14:43:05.191386+00:00",
+        "finished_at": "2026-09-30T14:46:11.062620+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "369cfa066f257a8f38494646dab9fc56fa39dbcf40ddf85c7b252b947fa5628b",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1155,
+        "output_tokens": 16,
+        "decode_tps": 4.499771960585526,
+        "ttft_s": 1.2389485010062344,
+        "prefill_tps": null,
+        "end_to_end_tps": 3.499132071882531,
+        "wall_s": 4.572562473011203,
+        "stream_span_s": 3.333502259978559,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 18426312,
+          "swap_free_kib": 11252712,
+          "gpu_temperature_c": 71.0,
+          "gpu_power_w": 37.6,
+          "gpu_utilization_percent": 95.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
       "id": "runtime-preflight-53a9600a2732a06bacffb715-coding",
       "model_id": "53a9600a2732a06bacffb715",
       "model_name": "Qwen3.8-27B-BF16",
@@ -7367,12 +9173,426 @@
       }
     }
   ],
+  "startup_observations": [
+    {
+      "model_id": "3e5cadd6550c81efb281a531",
+      "model_name": "Qwen3.8-27B-BF16",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Not measured",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Already loaded service or unsupported checkpoint: startup was not measured."
+      ]
+    },
+    {
+      "model_id": "a00a43ed5f40e0f58535724d",
+      "model_name": "Qwen3.8-27B-Uncensored",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": 206.206739,
+      "loading_requested_utc": "2026-09-30T13:59:31.254269+00:00",
+      "observed_ready_utc": "2026-09-30T14:02:57.461008+00:00",
+      "startup_basis": "model_loading event timestamp to first workload provenance measured_at, after API models readiness poll and before warmup; 5 second polling granularity",
+      "engine_weight_loading_s": 118.955096,
+      "engine_weight_allocation_gib": 27.64,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Observed launch-request to API-readiness window, sampled every 5 seconds; includes container launch, weight loading, compilation, tuning and server initialization. Stops before benchmark warmup.",
+        "Native engine weight loading is a separate log measurement; it is not generation throughput."
+      ]
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Not measured",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Already loaded service: startup was not measured."
+      ]
+    },
+    {
+      "model_id": "cffdb11ae6c79397d6aa9e33",
+      "model_name": "ThreatMon-qwen36-secura",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": 170.990124,
+      "loading_requested_utc": "2026-09-30T14:36:22.647126+00:00",
+      "observed_ready_utc": "2026-09-30T14:39:13.637250+00:00",
+      "startup_basis": "model_loading event timestamp to first workload provenance measured_at, after API models readiness poll and before warmup; 5 second polling granularity",
+      "engine_weight_loading_s": 63.476193,
+      "engine_weight_allocation_gib": 50.22,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Observed launch-request to API-readiness window, sampled every 5 seconds; includes container launch, weight loading, compilation, tuning and server initialization. Stops before benchmark warmup.",
+        "Native engine weight loading is a separate log measurement; it is not generation throughput."
+      ]
+    },
+    {
+      "model_id": "d9d5421f860c52cca2153213",
+      "model_name": "agent:qwen3.6-35b-a3b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 6.509027764,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "a3f8d85e21634cf5483210da",
+      "model_name": "coder:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 6.191987994,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "19d4ae9eef8203f97e3edf0b",
+      "model_name": "default:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 6.164842019,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "45aacd41980f4d42af22259e",
+      "model_name": "falak-orion-tools:30.7b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 6.80101466,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "70b929b0c5eae55489ca1a61",
+      "model_name": "falak-orion:30.7b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 7.778710892,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "a3970634602fd833c99dd8cb",
+      "model_name": "fast:qwen3.6-35b-a3b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 6.479116095,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "b3e95b6f55932d5f36fd8f1f",
+      "model_name": "gemma4:12b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 5.206879531,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "90754966a874c02349de25a9",
+      "model_name": "gemma4:26b",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 8.921050026,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "c6dcb0b5499b4f4cd647e9f8",
+      "model_name": "gpt-oss:120b-a5.1b-mxfp4",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 11.665954294,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "4e461a72e0d9336cf4aa3f81",
+      "model_name": "nvidia_Gemma-4-31B-IT-NVFP4",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": 376.440517,
+      "loading_requested_utc": "2026-09-30T14:12:32.492812+00:00",
+      "observed_ready_utc": "2026-09-30T14:18:48.933329+00:00",
+      "startup_basis": "model_loading event timestamp to first workload provenance measured_at, after API models readiness poll and before warmup; 5 second polling granularity",
+      "engine_weight_loading_s": 215.159674,
+      "engine_weight_allocation_gib": 30.1,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Observed launch-request to API-readiness window, sampled every 5 seconds; includes container launch, weight loading, compilation, tuning and server initialization. Stops before benchmark warmup.",
+        "Native engine weight loading is a separate log measurement; it is not generation throughput."
+      ]
+    },
+    {
+      "model_id": "fb2b3b03ceb79448612c5448",
+      "model_name": "nvidia_NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": 687.396653,
+      "loading_requested_utc": "2026-09-30T14:22:56.880391+00:00",
+      "observed_ready_utc": "2026-09-30T14:34:24.277044+00:00",
+      "startup_basis": "model_loading event timestamp to first workload provenance measured_at, after API models readiness poll and before warmup; 5 second polling granularity",
+      "engine_weight_loading_s": 468.302568,
+      "engine_weight_allocation_gib": 69.59,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Observed launch-request to API-readiness window, sampled every 5 seconds; includes container launch, weight loading, compilation, tuning and server initialization. Stops before benchmark warmup.",
+        "Native engine weight loading is a separate log measurement; it is not generation throughput."
+      ]
+    },
+    {
+      "model_id": "0b41ed1554d756d8079d553a",
+      "model_name": "nvidia_Nemotron-3-Nano-Omni-30B-A3B-Reasoning-NVFP4",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": 256.216647,
+      "loading_requested_utc": "2026-09-30T14:07:25.352610+00:00",
+      "observed_ready_utc": "2026-09-30T14:11:41.569257+00:00",
+      "startup_basis": "model_loading event timestamp to first workload provenance measured_at, after API models readiness poll and before warmup; 5 second polling granularity",
+      "engine_weight_loading_s": 118.633782,
+      "engine_weight_allocation_gib": 18.86,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Observed launch-request to API-readiness window, sampled every 5 seconds; includes container launch, weight loading, compilation, tuning and server initialization. Stops before benchmark warmup.",
+        "Native engine weight loading is a separate log measurement; it is not generation throughput."
+      ]
+    },
+    {
+      "model_id": "4481e71193f50a9bd596bd95",
+      "model_name": "nvidia_Qwen3.5-122B-A10B-NVFP4",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Not measured",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Already loaded service or unsupported checkpoint: startup was not measured."
+      ]
+    },
+    {
+      "model_id": "13918e4b5ed00452e714648d",
+      "model_name": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "vLLM",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Not measured",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Already loaded service or unsupported checkpoint: startup was not measured."
+      ]
+    },
+    {
+      "model_id": "bad49f0e37fd49ba1bab73cb",
+      "model_name": "qwen3-embedding:8b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "2d211055cc21d88a893c4eb5",
+      "model_name": "qwen3.6:35b-a3b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 7.257760596,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "b5933bec206e932c1d79a04e",
+      "model_name": "qwen3.8:27b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 7.304483729,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "ddada72121df7b98d9e6e8af",
+      "model_name": "qwen3:0.6b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 3.501958624,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "b0643df8ade1e49de42e4898",
+      "model_name": "qwythos:9b-v2-q8_0",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 5.518471197,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "3770880d2d75be52907e4902",
+      "model_name": "reasoning:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 7.255725559,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "0de87fa21ba8f1fdf9966599",
+      "model_name": "trendyol-cyber-tools:32.8b-q8_0",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 7.491586085,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "5cc54b0699b3419b6c7f8470",
+      "model_name": "trendyol-cyber:32.8b-q8_0",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 7.757596639,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    },
+    {
+      "model_id": "66ddf93713ec981238c85413",
+      "model_name": "vision:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "server_startup_to_observed_ready_s": null,
+      "loading_requested_utc": null,
+      "observed_ready_utc": null,
+      "startup_basis": "Server startup not measured; native engine load_duration from cold coding warmup after explicit model unload",
+      "engine_weight_loading_s": null,
+      "engine_weight_allocation_gib": null,
+      "cold_warmup_native_load_s": 5.918377458,
+      "notes": [
+        "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
+      ]
+    }
+  ],
   "suite": {
     "protocol_id": "sparkbench-workloads-v1",
-    "status": "in_progress",
-    "successful_workload_profiles": 41,
+    "status": "complete",
+    "attempted_workload_profiles": 54,
+    "mapped_model_configurations": 27,
+    "successful_workload_profiles": 45,
     "failed_workload_profiles": 3,
-    "unavailable_workload_profiles": 4,
-    "note": "Completed observations only. The site reloads published snapshots; it does not query the active benchmark runner."
+    "unavailable_workload_profiles": 6,
+    "note": "All mapped profiles reached a terminal status; original serving configuration restored and verified. The site is a published snapshot."
   }
 }
