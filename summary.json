@@ -281,7 +281,7 @@
       "status": "ok",
       "trial_count": 3,
       "parameter_size": "8.95B",
-      "quantization_metadata": "unknown",
+      "quantization_metadata": "Q8_0",
       "family": "qwen35",
       "manifest_digest": "4baf90abeabc81c832e09d329be8288edfaa7eca83128914b87559844ca7dc75",
       "tag_disk_gib": 9.972383708693087,
@@ -785,7 +785,7 @@
       "status": "ok",
       "trial_count": 3,
       "parameter_size": "30.7B",
-      "quantization_metadata": "unknown",
+      "quantization_metadata": "Q4_K_M",
       "family": "gemma4",
       "manifest_digest": "b53e72575a77988ed1483011bf5fe5ecfceda553c8c86f8b5b60247c9e1c57b1",
       "tag_disk_gib": 18.15763161331415,
@@ -1145,7 +1145,7 @@
       "status": "ok",
       "trial_count": 3,
       "parameter_size": "32.8B",
-      "quantization_metadata": "unknown",
+      "quantization_metadata": "Q8_0",
       "family": "qwen3",
       "manifest_digest": "ed3624f623ac00dbe5b6d454abb21be56a4e95f5cec29e5c1ef77e7d29b9dfce",
       "tag_disk_gib": 32.42652456834912,
@@ -1826,6 +1826,68 @@
       "ttft_s": null,
       "end_to_end_tps": null,
       "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim."
+    },
+    {
+      "model": "Qwen3.8-27B-BF16",
+      "engine": "TensorFold",
+      "status": "unavailable",
+      "trial_count": 0,
+      "decode_measurement": "No throughput measured; installed TensorFold CUDA pre-load check rejects the full BF16 checkpoint.",
+      "decode_tps": {
+        "median": null,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "stdev": null,
+        "cv_percent": null
+      },
+      "ttft_s": {
+        "median": null,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "stdev": null,
+        "cv_percent": null
+      },
+      "end_to_end_tps": {
+        "median": null,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "stdev": null,
+        "cv_percent": null
+      },
+      "startup_to_ready_s": null,
+      "output_tokens": [
+        256,
+        256,
+        256
+      ],
+      "prompt_tokens": [
+        888,
+        888,
+        888
+      ],
+      "resources": {},
+      "thinking_characters": [
+        0,
+        0,
+        0
+      ],
+      "format": "safetensors",
+      "tag_disk_gib": 51.7470825240016,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+      "prefill_tps": {
+        "median": null,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "stdev": null,
+        "cv_percent": null
+      },
+      "loaded_allocated_gib": null,
+      "loaded_gpu_allocated_gib": null,
+      "load_s": null
     }
   ]
 }

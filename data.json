@@ -813,7 +813,7 @@
           "name": "qwythos:9b-v2-q8_0",
           "engine": "Ollama",
           "format": "gguf",
-          "quantization": "unknown",
+          "quantization": "Q8_0",
           "parameters": "8.95B",
           "digest": "4baf90abeabc81c832e09d329be8288edfaa7eca83128914b87559844ca7dc75",
           "kind": "generation",
@@ -1069,6 +1069,12 @@
             "result": {
               "status": "ok",
               "checkpoint": {}
+            },
+            "quantization_audit": {
+              "details_quantization_level": "Q8_0",
+              "general_file_type": 7,
+              "general_quantization_version": 2,
+              "basis": "Direct details.quantization_level from Ollama show, accompanied by general.file_type metadata. No filename or tag inference."
             }
           },
           "trials": [
@@ -3458,7 +3464,7 @@
           "name": "falak-orion:30.7b-q4_K_M",
           "engine": "Ollama",
           "format": "gguf",
-          "quantization": "unknown",
+          "quantization": "Q4_K_M",
           "parameters": "30.7B",
           "digest": "b53e72575a77988ed1483011bf5fe5ecfceda553c8c86f8b5b60247c9e1c57b1",
           "kind": "generation",
@@ -4002,6 +4008,12 @@
             "result": {
               "status": "ok",
               "checkpoint": {}
+            },
+            "quantization_audit": {
+              "details_quantization_level": "Q4_K_M",
+              "general_file_type": 15,
+              "general_quantization_version": 2,
+              "basis": "Direct details.quantization_level from Ollama show, accompanied by general.file_type metadata. No filename or tag inference."
             }
           },
           "trials": [
@@ -5529,7 +5541,7 @@
           "name": "trendyol-cyber:32.8b-q8_0",
           "engine": "Ollama",
           "format": "gguf",
-          "quantization": "unknown",
+          "quantization": "Q8_0",
           "parameters": "32.8B",
           "digest": "ed3624f623ac00dbe5b6d454abb21be56a4e95f5cec29e5c1ef77e7d29b9dfce",
           "kind": "generation",
@@ -6313,6 +6325,12 @@
             "result": {
               "status": "ok",
               "checkpoint": {}
+            },
+            "quantization_audit": {
+              "details_quantization_level": "Q8_0",
+              "general_file_type": 7,
+              "general_quantization_version": 2,
+              "basis": "Direct details.quantization_level from Ollama show, accompanied by general.file_type metadata. No filename or tag inference."
             }
           },
           "trials": [
@@ -25421,6 +25439,92 @@
           "history": [],
           "trials": [],
           "active_parameters": "6B"
+        },
+        {
+          "id": "53a9600a2732a06bacffb715",
+          "run_id": "spark-token-benchmark-20260928",
+          "name": "Qwen3.8-27B-BF16",
+          "engine": "TensorFold",
+          "format": "safetensors",
+          "quantization": "BF16 (unquantized)",
+          "parameters": "27781427952",
+          "digest": "",
+          "kind": "generation",
+          "status": "unavailable",
+          "error": "Installed TensorFold 0.3.6.3 CUDA pre-load check rejects this unquantized full-BF16 checkpoint (quant_method=None). The qwen3_5 CUDA family accepts mlx, exl3, modelopt, and compressed-tensors weight methods. No GPU inference or throughput was measured. The same BF16 weights are served and measured through vLLM.",
+          "resources": {},
+          "metadata": {
+            "checkpoint": {
+              "architecture": [
+                "Qwen3_5ForConditionalGeneration"
+              ],
+              "model_type": "qwen3_5",
+              "quantization": null,
+              "expected": 18,
+              "missing": [],
+              "bytes": 55563006776,
+              "dtype_declared": "bfloat16",
+              "quantization_config_present": false,
+              "stored_tensor_element_counts_by_dtype": {
+                "BF16": 27781427952
+              },
+              "tensor_counts_by_dtype": {
+                "BF16": 1199
+              }
+            },
+            "inventory_audit": {
+              "audited_utc": "2026-09-30T13:07:07.393107+00:00",
+              "checkpoint_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+              "checkpoint": {
+                "status": "complete",
+                "expected_shards": 18,
+                "present_shards": 18,
+                "missing_shards": [],
+                "present_weight_bytes": 55563006776,
+                "weight_bytes": 55563006776,
+                "weight_gib": 51.7470825240016,
+                "index_declared_total_size": 55562855904.0,
+                "size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+                "config_sha256": "191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab",
+                "index_sha256": "77042094076611b69791a610065f28b7013b8c621795fa86ddccc8bac7d1b9df"
+              },
+              "parameters": {
+                "total_b": 27,
+                "active_b": null,
+                "source": "https://huggingface.co/Qwen/Qwen3.8-27B",
+                "basis": "Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+                "card_sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641"
+              }
+            },
+            "parameters_note": "Stored tensor count is retained where known. Documented parameter count from checkpoint model card; nominal counts, not derived from filenames or quantized storage.",
+            "compatibility": {
+              "checked_at": "2026-09-30T13:44:01.259630+00:00",
+              "runtime": "TensorFold",
+              "version": "0.3.6.3",
+              "backend": "cuda",
+              "weight_precision": "BF16",
+              "model_type": "qwen3_5",
+              "accepted_formats": [
+                "mlx",
+                "exl3",
+                "modelopt",
+                "compressed-tensors"
+              ],
+              "test": "Installed CUDA engine pre-load compatibility check; no GPU allocation",
+              "status": "unsupported",
+              "reason": "Installed TensorFold 0.3.6.3 CUDA pre-load check rejects this unquantized full-BF16 checkpoint (quant_method=None). The qwen3_5 CUDA family accepts mlx, exl3, modelopt, and compressed-tensors weight methods. No GPU inference or throughput was measured. The same BF16 weights are served and measured through vLLM.",
+              "receipt_sha256": "fdc0b45650b3603d809d851822c3a230b2272d8741ba2aae3d929e388678647a"
+            },
+            "measurement_basis": "No generation: installed runtime pre-load compatibility check only."
+          },
+          "trials": [],
+          "history": [
+            {
+              "observed_utc": "2026-09-30T13:44:01.259630+00:00",
+              "status": "unavailable",
+              "error": "Installed TensorFold 0.3.6.3 CUDA pre-load check rejects this unquantized full-BF16 checkpoint (quant_method=None). The qwen3_5 CUDA family accepts mlx, exl3, modelopt, and compressed-tensors weight methods. No GPU inference or throughput was measured. The same BF16 weights are served and measured through vLLM."
+            }
+          ]
         }
       ],
       "artifacts": {
