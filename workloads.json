@@ -1,0 +1,2303 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-09-30T12:24:07.431178+00:00",
+  "scope": "Text generation speed and serving measurements. No coding correctness, writing quality, vision accuracy or tool-use quality scores are claimed.",
+  "profiles": [
+    {
+      "id": "sparkbench-writing-20260928",
+      "label": "Original writing suite",
+      "description": "The original essay prompts: 16-token warmup, three measured requests capped at 256 output tokens, temperature 0, thinking off where supported, one request at a time. Flash was added on 29 September against its already loaded server. Engine timing formulas and server profiles differ."
+    },
+    {
+      "id": "tensorfold-supplementary-20260929",
+      "label": "Archived supplementary TensorFold tests",
+      "description": "Separate coding, sampled chat and variable-context tests. Rounded results with incomplete trial metadata; shown separately from the controlled writing suite."
+    },
+    {
+      "id": "coding",
+      "label": "Coding",
+      "description": "Python job queue implementation with validation, retry, recovery, and tests; throughput only, no correctness score."
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "description": "Conversational explanation of planning a home computer lab; throughput only, no response quality score."
+    }
+  ],
+  "results": [
+    {
+      "id": "tensorfold-supplementary-20260929-coding",
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "ok",
+      "trial_count": null,
+      "preferred": false,
+      "metrics": {
+        "decode_tps": {
+          "median": 69.9
+        }
+      },
+      "trials": [],
+      "protocol": {
+        "id": "tensorfold-supplementary-20260929",
+        "prompt_family": "coding",
+        "sampling": "Greedy decoding",
+        "timing_basis": "Token rate reported by the separate TensorFold tools/bench.py run; per-trial timing is not in the curated archive.",
+        "notes": "Different prompts and sampling from the original writing suite. The sample count, output lengths and first-token timings are not recorded here. Do not combine this result with the 55.922 writing median."
+      },
+      "provenance": {
+        "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
+        "measured_at": "2026-09-29",
+        "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    },
+    {
+      "id": "tensorfold-supplementary-20260929-chat",
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "ok",
+      "trial_count": null,
+      "preferred": false,
+      "metrics": {
+        "decode_tps": {
+          "median": 58.0
+        }
+      },
+      "trials": [],
+      "protocol": {
+        "id": "tensorfold-supplementary-20260929",
+        "prompt_family": "chat",
+        "sampling": "Sampled decoding; exact temperature is not recorded in this export",
+        "timing_basis": "Token rate reported by the separate TensorFold tools/bench.py run; per-trial timing is not in the curated archive.",
+        "notes": "Different prompts and sampling from the original writing suite. The sample count, output lengths and first-token timings are not recorded here. Do not combine this result with the 55.922 writing median."
+      },
+      "provenance": {
+        "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
+        "measured_at": "2026-09-29",
+        "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 69.84612026628834,
+          "mean": 70.7697272936308,
+          "min": 65.90803769115905,
+          "max": 76.55502392344498,
+          "sample_sd": 5.383248685815915,
+          "cv_percent": 7.606711077859986
+        },
+        "ttft_s": {
+          "median": 0.4990539280115627,
+          "mean": 0.4992753830156289,
+          "min": 0.4976668580202386,
+          "max": 0.5011053630150855,
+          "sample_sd": 0.001729916439894198,
+          "cv_percent": 0.34648542642849395
+        },
+        "prefill_tps": {
+          "median": 1824.2424242424242,
+          "mean": 1824.131513159028,
+          "min": 1818.3648811921064,
+          "max": 1829.787234042553,
+          "sample_sd": 5.711984078351598,
+          "cv_percent": 0.31313444437235743
+        },
+        "end_to_end_tps": {
+          "median": 61.44574883936512,
+          "mean": 62.15554997990198,
+          "min": 58.41850986955911,
+          "max": 66.60239123078169,
+          "sample_sd": 4.13785473137617,
+          "cv_percent": 6.657257047382169
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "297fc2d9be2b725996a2e804348b14f84f51f7cfd1a865ac92692bd7b37fd313",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 69.84612026628834,
+          "ttft_s": 0.5011053630150855,
+          "prefill_tps": 1818.3648811921064,
+          "end_to_end_tps": 61.44574883936512,
+          "wall_s": 4.166276835021563,
+          "stream_span_s": 3.6647070999606512,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10822364,
+            "swap_free_kib": 15590920,
+            "gpu_temperature_c": 53.0,
+            "gpu_power_w": 35.49,
+            "gpu_utilization_percent": 90.0,
+            "gpu_clock_mhz": 2405.0
+          },
+          "tensorfold": {
+            "prefill_s": 0.4966,
+            "decode_s": 3.6652,
+            "rounds": 82,
+            "drafts": true,
+            "drafted": 261,
+            "accepted": 173,
+            "cached": 0,
+            "min_rows": 2
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "85bc748016a1d34aa95adef74b7d7b96d4e423f2135fcd18361b6f7c41a95958",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 65.90803769115905,
+          "ttft_s": 0.4976668580202386,
+          "prefill_tps": 1829.787234042553,
+          "end_to_end_tps": 58.41850986955911,
+          "wall_s": 4.3821727149770595,
+          "stream_span_s": 3.8840894529712386,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10718680,
+            "swap_free_kib": 15590920,
+            "gpu_temperature_c": 55.0,
+            "gpu_power_w": 35.23,
+            "gpu_utilization_percent": 87.0,
+            "gpu_clock_mhz": 2405.0
+          },
+          "tensorfold": {
+            "prefill_s": 0.4935,
+            "decode_s": 3.8842,
+            "rounds": 86,
+            "drafts": true,
+            "drafted": 276,
+            "accepted": 169,
+            "cached": 0,
+            "min_rows": 2
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "5b70164a10faf4be789bfb1905eb311ee690cd756258c1b29ceb3b440bf55c7d",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 76.55502392344498,
+          "ttft_s": 0.4990539280115627,
+          "prefill_tps": 1824.2424242424242,
+          "end_to_end_tps": 66.60239123078169,
+          "wall_s": 3.843705838022288,
+          "stream_span_s": 3.344291027984582,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10551876,
+            "swap_free_kib": 15590920,
+            "gpu_temperature_c": 56.0,
+            "gpu_power_w": 35.92,
+            "gpu_utilization_percent": 90.0,
+            "gpu_clock_mhz": 2405.0
+          },
+          "tensorfold": {
+            "prefill_s": 0.495,
+            "decode_s": 3.344,
+            "rounds": 74,
+            "drafts": true,
+            "drafted": 237,
+            "accepted": 181,
+            "cached": 0,
+            "min_rows": 2
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine completion_tokens / tensorfold.decode_s; includes MTP drafting",
+        "context_tokens": 262144,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Loaded server retained original configuration: TensorFold 0.3.6.3, 5 slots, int8 KV, MTP drafts 6, confidence 0.60. Only one request at a time.",
+          "Maximum context differs from 8192-token Ollama/vLLM setting; prompt payload remains same. Prefix cache not disabled. No correctness or quality score."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:14:10.177553+00:00",
+        "finished_at": "2026-09-30T12:14:23.367857+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "e0619488b21ea31de8588a6fc1e8b2b595c1f4d96d6e58b5f60414c171a211e4",
+        "reasoning_sha256": null,
+        "prompt_tokens": 903,
+        "output_tokens": 16,
+        "decode_tps": 88.05723720418271,
+        "ttft_s": 0.5079576119896956,
+        "prefill_tps": 1790.2458366375893,
+        "end_to_end_tps": 23.18170759516577,
+        "wall_s": 0.6901993709616363,
+        "stream_span_s": 0.18214628600981086,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 10883448,
+          "swap_free_kib": 15590920,
+          "gpu_temperature_c": 55.0,
+          "gpu_power_w": 41.63,
+          "gpu_utilization_percent": 96.0,
+          "gpu_clock_mhz": 2411.0
+        },
+        "tensorfold": {
+          "prefill_s": 0.5044,
+          "decode_s": 0.1817,
+          "rounds": 4,
+          "drafts": true,
+          "drafted": 16,
+          "accepted": 11,
+          "cached": 0,
+          "min_rows": 2
+        }
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 54.94977247359835,
+          "mean": 54.780030031077516,
+          "min": 53.997047036490194,
+          "max": 55.393270583144,
+          "sample_sd": 0.7134209281008923,
+          "cv_percent": 1.302337599479515
+        },
+        "ttft_s": {
+          "median": 0.5763429950457066,
+          "mean": 0.5756534016885174,
+          "min": 0.5736355260014534,
+          "max": 0.5769816840183921,
+          "sample_sd": 0.001776470550639797,
+          "cv_percent": 0.30860072144610284
+        },
+        "prefill_tps": {
+          "median": 2018.5249912617965,
+          "mean": 2020.5299532747354,
+          "min": 2018.5249912617965,
+          "max": 2024.5398773006134,
+          "sample_sd": 3.472696073655882,
+          "cv_percent": 0.17187055643632385
+        },
+        "end_to_end_tps": {
+          "median": 48.91678869485486,
+          "mean": 48.77173479583642,
+          "min": 48.14094075477479,
+          "max": 49.25747493787963,
+          "sample_sd": 0.5722260224122415,
+          "cv_percent": 1.1732738743201148
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "7e0b460130945907b14f9bd813e4de86d688db3632823704280bd161ea287501",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 55.393270583144,
+          "ttft_s": 0.5763429950457066,
+          "prefill_tps": 2018.5249912617965,
+          "end_to_end_tps": 49.25747493787963,
+          "wall_s": 5.19718073902186,
+          "stream_span_s": 4.6207789439940825,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10598076,
+            "swap_free_kib": 15590920,
+            "gpu_temperature_c": 57.0,
+            "gpu_power_w": 35.66,
+            "gpu_utilization_percent": 88.0,
+            "gpu_clock_mhz": 2405.0
+          },
+          "tensorfold": {
+            "prefill_s": 0.5722,
+            "decode_s": 4.6215,
+            "rounds": 110,
+            "drafts": true,
+            "drafted": 255,
+            "accepted": 145,
+            "cached": 0,
+            "min_rows": 2
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "e5f8aac77a3499d8326d17eae7b8c9a94243296e08ee90241c6272504e5f3096",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 53.997047036490194,
+          "ttft_s": 0.5769816840183921,
+          "prefill_tps": 2018.5249912617965,
+          "end_to_end_tps": 48.14094075477479,
+          "wall_s": 5.317719097016379,
+          "stream_span_s": 4.740342113014776,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10593364,
+            "swap_free_kib": 15590920,
+            "gpu_temperature_c": 58.0,
+            "gpu_power_w": 35.86,
+            "gpu_utilization_percent": 88.0,
+            "gpu_clock_mhz": 2405.0
+          },
+          "tensorfold": {
+            "prefill_s": 0.5722,
+            "decode_s": 4.741,
+            "rounds": 115,
+            "drafts": true,
+            "drafted": 245,
+            "accepted": 140,
+            "cached": 0,
+            "min_rows": 2
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "7d7b3b0753740f7c317ac49c0d1549075cd270ca501e158d425ec98c4b8df6e6",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 54.94977247359835,
+          "ttft_s": 0.5736355260014534,
+          "prefill_tps": 2024.5398773006134,
+          "end_to_end_tps": 48.91678869485486,
+          "wall_s": 5.2333770639961585,
+          "stream_span_s": 4.659223438007757,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10598748,
+            "swap_free_kib": 15590920,
+            "gpu_temperature_c": 59.0,
+            "gpu_power_w": 35.83,
+            "gpu_utilization_percent": 89.0,
+            "gpu_clock_mhz": 2405.0
+          },
+          "tensorfold": {
+            "prefill_s": 0.5705,
+            "decode_s": 4.6588,
+            "rounds": 111,
+            "drafts": true,
+            "drafted": 250,
+            "accepted": 144,
+            "cached": 0,
+            "min_rows": 2
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine completion_tokens / tensorfold.decode_s; includes MTP drafting",
+        "context_tokens": 262144,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Loaded server retained original configuration: TensorFold 0.3.6.3, 5 slots, int8 KV, MTP drafts 6, confidence 0.60. Only one request at a time.",
+          "Maximum context differs from 8192-token Ollama/vLLM setting; prompt payload remains same. Prefix cache not disabled. No correctness or quality score."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:14:23.377136+00:00",
+        "finished_at": "2026-09-30T12:14:40.128145+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "086533a800440c310cf83e49779b62413edf5e7f0beb496ad2b46a2cd781ca86",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1155,
+        "output_tokens": 16,
+        "decode_tps": 51.15089514066496,
+        "ttft_s": 0.580962474050466,
+        "prefill_tps": 1998.2698961937717,
+        "end_to_end_tps": 17.895250032602345,
+        "wall_s": 0.8940920060267672,
+        "stream_span_s": 0.31303756299894303,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 10548248,
+          "swap_free_kib": 15590920,
+          "gpu_temperature_c": 61.0,
+          "gpu_power_w": 52.1,
+          "gpu_utilization_percent": 44.0,
+          "gpu_clock_mhz": 2392.0
+        },
+        "tensorfold": {
+          "prefill_s": 0.578,
+          "decode_s": 0.3128,
+          "rounds": 7,
+          "drafts": true,
+          "drafted": 19,
+          "accepted": 8,
+          "cached": 0,
+          "min_rows": 2
+        }
+      }
+    },
+    {
+      "model_id": "ddada72121df7b98d9e6e8af",
+      "model_name": "qwen3:0.6b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 262.68022069242915,
+          "mean": 263.1857071526515,
+          "min": 262.4932966799725,
+          "max": 264.38360408555286,
+          "sample_sd": 1.0416107444717932,
+          "cv_percent": 0.3957702550570666
+        },
+        "ttft_s": {
+          "median": 0.20680022303713486,
+          "mean": 0.20552798967886096,
+          "min": 0.20100358896888793,
+          "max": 0.20878015703056008,
+          "sample_sd": 0.0040413717959232,
+          "cv_percent": 1.9663364596899304
+        },
+        "prefill_tps": {
+          "median": 19345.27103300206,
+          "mean": 19343.78847029119,
+          "min": 19177.601263878525,
+          "max": 19508.49311399299,
+          "sample_sd": 165.4509069548644,
+          "cv_percent": 0.8553180118205346
+        },
+        "end_to_end_tps": {
+          "median": 216.74126258929235,
+          "mean": 217.4001552120237,
+          "min": 216.36702805738736,
+          "max": 219.0921749893914,
+          "sample_sd": 1.4772308778488572,
+          "cv_percent": 0.6794985387237462
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "f2f02d13a60282ef99e453cf3987d7b4178f15654415aaefe9cd95999ecf572d",
+          "reasoning_sha256": null,
+          "prompt_tokens": 874,
+          "output_tokens": 256,
+          "decode_tps": 264.38360408555286,
+          "ttft_s": 0.20100358896888793,
+          "prefill_tps": 19508.49311399299,
+          "end_to_end_tps": 219.0921749893914,
+          "wall_s": 1.168457978987135,
+          "stream_span_s": 0.9673709170310758,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 118269640,
+            "swap_free_kib": 15591216,
+            "gpu_temperature_c": 58.0,
+            "gpu_power_w": 36.9,
+            "gpu_utilization_percent": 84.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "2f96f2a98000a346aebd4cc96445a6311ff0a0e335ef136cc148133e3ef49fc3",
+          "reasoning_sha256": null,
+          "prompt_tokens": 874,
+          "output_tokens": 256,
+          "decode_tps": 262.4932966799725,
+          "ttft_s": 0.20680022303713486,
+          "prefill_tps": 19177.601263878525,
+          "end_to_end_tps": 216.74126258929235,
+          "wall_s": 1.1811318109976128,
+          "stream_span_s": 0.9742765309638344,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 118200064,
+            "swap_free_kib": 15591216,
+            "gpu_temperature_c": 59.0,
+            "gpu_power_w": 37.63,
+            "gpu_utilization_percent": 85.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "e75dc8f7452edbabec6039eae0bf1fbce790c52828dc483a2bd55805320fc773",
+          "reasoning_sha256": null,
+          "prompt_tokens": 874,
+          "output_tokens": 256,
+          "decode_tps": 262.68022069242915,
+          "ttft_s": 0.20878015703056008,
+          "prefill_tps": 19345.27103300206,
+          "end_to_end_tps": 216.36702805738736,
+          "wall_s": 1.1831747299875133,
+          "stream_span_s": 0.9740970499697141,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 118149156,
+            "swap_free_kib": 15591216,
+            "gpu_temperature_c": 60.0,
+            "gpu_power_w": 37.29,
+            "gpu_utilization_percent": 83.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:14:42.149396+00:00",
+        "finished_at": "2026-09-30T12:14:49.596146+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "f072b98570b39df23e00734fe7f09528011d5ddc1888f22bae4be20ae8210bd4",
+        "reasoning_sha256": null,
+        "prompt_tokens": 874,
+        "output_tokens": 16,
+        "decode_tps": 155.92414290447698,
+        "ttft_s": 3.7091857189661823,
+        "prefill_tps": 4546.211143939078,
+        "end_to_end_tps": 4.200902691167775,
+        "wall_s": 3.8087052179616876,
+        "stream_span_s": 0.0989471260108985,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 118338660,
+          "swap_free_kib": 15591184,
+          "gpu_temperature_c": 57.0,
+          "gpu_power_w": 17.77,
+          "gpu_utilization_percent": 6.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "ddada72121df7b98d9e6e8af",
+      "model_name": "qwen3:0.6b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 260.7827557402767,
+          "mean": 261.6572238371294,
+          "min": 259.39785246949793,
+          "max": 264.7910633016136,
+          "sample_sd": 2.800928704773165,
+          "cv_percent": 1.0704572431436579
+        },
+        "ttft_s": {
+          "median": 0.2165452369954437,
+          "mean": 0.2345545960124582,
+          "min": 0.2131261540343985,
+          "max": 0.2739923970075324,
+          "sample_sd": 0.03419689521826411,
+          "cv_percent": 14.579503364942706
+        },
+        "prefill_tps": {
+          "median": 18158.654388879033,
+          "mean": 18181.058444703165,
+          "min": 18020.03648817335,
+          "max": 18364.484457057115,
+          "sample_sd": 173.3134648694836,
+          "cv_percent": 0.953263889429806
+        },
+        "end_to_end_tps": {
+          "median": 212.9469528004876,
+          "mean": 211.33988723174116,
+          "min": 204.00250605791467,
+          "max": 217.0702028368212,
+          "sample_sd": 6.680431841060037,
+          "cv_percent": 3.160989592908566
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "00beaa3e252816caa103b4f92bd86c0787a31325da0467326646793441a538a0",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1126,
+          "output_tokens": 256,
+          "decode_tps": 260.7827557402767,
+          "ttft_s": 0.2739923970075324,
+          "prefill_tps": 18364.484457057115,
+          "end_to_end_tps": 204.00250605791467,
+          "wall_s": 1.2548865450080484,
+          "stream_span_s": 0.9808392039849423,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 117998696,
+            "swap_free_kib": 15591216,
+            "gpu_temperature_c": 60.0,
+            "gpu_power_w": 37.49,
+            "gpu_utilization_percent": 83.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "b20824b19f1f2862f9eaed8192f5ede864c32528b128417d8e23b5c481edb88f",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1126,
+          "output_tokens": 256,
+          "decode_tps": 259.39785246949793,
+          "ttft_s": 0.2165452369954437,
+          "prefill_tps": 18158.654388879033,
+          "end_to_end_tps": 212.9469528004876,
+          "wall_s": 1.2021773339947686,
+          "stream_span_s": 0.9855278719915077,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 117895432,
+            "swap_free_kib": 15591216,
+            "gpu_temperature_c": 60.0,
+            "gpu_power_w": 37.35,
+            "gpu_utilization_percent": 60.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "cb3f8ec74154244925d1fd1f4cc07e14edece747283e204c1bf48673d608e34c",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1126,
+          "output_tokens": 256,
+          "decode_tps": 264.7910633016136,
+          "ttft_s": 0.2131261540343985,
+          "prefill_tps": 18020.03648817335,
+          "end_to_end_tps": 217.0702028368212,
+          "wall_s": 1.1793419670430012,
+          "stream_span_s": 0.9660169790149666,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 117793888,
+            "swap_free_kib": 15591216,
+            "gpu_temperature_c": 61.0,
+            "gpu_power_w": 38.49,
+            "gpu_utilization_percent": 85.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:14:49.605397+00:00",
+        "finished_at": "2026-09-30T12:14:53.660367+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "579535d6dc42c09594380c1f35624b394ae48089b9e21899ba6135dfa8de9af8",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1126,
+        "output_tokens": 16,
+        "decode_tps": 271.71605672072684,
+        "ttft_s": 0.2576795700006187,
+        "prefill_tps": 18104.349224214166,
+        "end_to_end_tps": 50.59400364439585,
+        "wall_s": 0.3162430099910125,
+        "stream_span_s": 0.058442590991035104,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 118075408,
+          "swap_free_kib": 15591216,
+          "gpu_temperature_c": 60.0,
+          "gpu_power_w": 32.82,
+          "gpu_utilization_percent": 83.0,
+          "gpu_clock_mhz": 2398.0
+        }
+      }
+    },
+    {
+      "model_id": "bad49f0e37fd49ba1bab73cb",
+      "model_name": "qwen3-embedding:8b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "coding",
+      "status": "unavailable",
+      "preferred": true,
+      "trial_count": 0,
+      "metrics": {},
+      "trials": [],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "notes": [
+          "Embedding-only model; coding/chat output throughput is inapplicable."
+        ]
+      },
+      "provenance": {
+        "source": "Local installed-model inventory inspection",
+        "measured_at": "2026-09-30T12:14:53.919876+00:00"
+      }
+    },
+    {
+      "model_id": "bad49f0e37fd49ba1bab73cb",
+      "model_name": "qwen3-embedding:8b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "chat",
+      "status": "unavailable",
+      "preferred": true,
+      "trial_count": 0,
+      "metrics": {},
+      "trials": [],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "notes": [
+          "Embedding-only model; coding/chat output throughput is inapplicable."
+        ]
+      },
+      "provenance": {
+        "source": "Local installed-model inventory inspection",
+        "measured_at": "2026-09-30T12:14:53.919891+00:00"
+      }
+    },
+    {
+      "model_id": "b3e95b6f55932d5f36fd8f1f",
+      "model_name": "gemma4:12b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 25.121047139448695,
+          "mean": 25.12765946820831,
+          "min": 25.10873750717708,
+          "max": 25.15319375799916,
+          "sample_sd": 0.022953904417502655,
+          "cv_percent": 0.09134915429168441
+        },
+        "ttft_s": {
+          "median": 0.9736546719796024,
+          "mean": 0.9792751019898182,
+          "min": 0.9730102010071278,
+          "max": 0.9911604329827242,
+          "sample_sd": 0.010298041334000866,
+          "cv_percent": 1.0515984030509884
+        },
+        "prefill_tps": {
+          "median": 1702.1725294961645,
+          "mean": 1703.3538192292467,
+          "min": 1701.301197500181,
+          "max": 1706.5877306913947,
+          "sample_sd": 2.8343327910753677,
+          "cv_percent": 0.16639718413628704
+        },
+        "end_to_end_tps": {
+          "median": 22.93140319868842,
+          "mean": 22.924079726208333,
+          "min": 22.883914773591584,
+          "max": 22.956921206344997,
+          "sample_sd": 0.03705009774237579,
+          "cv_percent": 0.16162087283276044
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "ad2605587cdae5c8f658e4c3b53f1b4cd14a135266fb27feb7d13bd0b81b04ef",
+          "reasoning_sha256": null,
+          "prompt_tokens": 904,
+          "output_tokens": 256,
+          "decode_tps": 25.15319375799916,
+          "ttft_s": 0.9736546719796024,
+          "prefill_tps": 1706.5877306913947,
+          "end_to_end_tps": 22.956921206344997,
+          "wall_s": 11.151321106997784,
+          "stream_span_s": 10.17760365002323,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 109397176,
+            "swap_free_kib": 15592752,
+            "gpu_temperature_c": 64.0,
+            "gpu_power_w": 42.22,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "ff08908500d7b079859dfb3d4520d5753c8b85b782acd5413365c6c53a273b3e",
+          "reasoning_sha256": null,
+          "prompt_tokens": 904,
+          "output_tokens": 256,
+          "decode_tps": 25.10873750717708,
+          "ttft_s": 0.9911604329827242,
+          "prefill_tps": 1702.1725294961645,
+          "end_to_end_tps": 22.883914773591584,
+          "wall_s": 11.186897107982077,
+          "stream_span_s": 10.195322784013115,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 109044596,
+            "swap_free_kib": 15592752,
+            "gpu_temperature_c": 66.0,
+            "gpu_power_w": 42.81,
+            "gpu_utilization_percent": 93.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "adcdc443a7512f90223f2f35995bc988f6924d23de232f22f61abc06486c9991",
+          "reasoning_sha256": null,
+          "prompt_tokens": 904,
+          "output_tokens": 256,
+          "decode_tps": 25.121047139448695,
+          "ttft_s": 0.9730102010071278,
+          "prefill_tps": 1701.301197500181,
+          "end_to_end_tps": 22.93140319868842,
+          "wall_s": 11.16373026900692,
+          "stream_span_s": 10.190551299019717,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 108712104,
+            "swap_free_kib": 15592752,
+            "gpu_temperature_c": 68.0,
+            "gpu_power_w": 43.21,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:14:53.936443+00:00",
+        "finished_at": "2026-09-30T12:15:34.007458+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "0ae31ea8b7af83f84d95d7212cf880d00b2a628f54afcd734bc409e9ac754f6c",
+        "reasoning_sha256": null,
+        "prompt_tokens": 903,
+        "output_tokens": 16,
+        "decode_tps": 25.940926026206824,
+        "ttft_s": 5.847850472026039,
+        "prefill_tps": 1431.9854486174127,
+        "end_to_end_tps": 2.476162544568479,
+        "wall_s": 6.461611349019222,
+        "stream_span_s": 0.6137016439461149,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 109762084,
+          "swap_free_kib": 15591216,
+          "gpu_temperature_c": 61.0,
+          "gpu_power_w": 49.54,
+          "gpu_utilization_percent": 96.0,
+          "gpu_clock_mhz": 2392.0
+        }
+      }
+    },
+    {
+      "model_id": "b3e95b6f55932d5f36fd8f1f",
+      "model_name": "gemma4:12b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 24.928022768632797,
+          "mean": 24.971641972327525,
+          "min": 24.872832784414527,
+          "max": 25.114070363935255,
+          "sample_sd": 0.1263956828435079,
+          "cv_percent": 0.5061568758016556
+        },
+        "ttft_s": {
+          "median": 1.1207770089968108,
+          "mean": 1.117435793004309,
+          "min": 1.1044399220263585,
+          "max": 1.127090447989758,
+          "sample_sd": 0.011689070743051855,
+          "cv_percent": 1.0460619586584856
+        },
+        "prefill_tps": {
+          "median": 1710.834842966099,
+          "mean": 1714.9135040725973,
+          "min": 1710.4649354688227,
+          "max": 1723.4407337828704,
+          "sample_sd": 7.38711329194013,
+          "cv_percent": 0.43075719413236435
+        },
+        "end_to_end_tps": {
+          "median": 22.50790425809851,
+          "mean": 22.51762622262123,
+          "min": 22.417134791898977,
+          "max": 22.627839617866208,
+          "sample_sd": 0.10568830761775878,
+          "cv_percent": 0.46935812226772017
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "017117c8a95123a5306b71e4255694ac2658cb0eccccf08cb373c992fbc7ae3a",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 25.114070363935255,
+          "ttft_s": 1.1207770089968108,
+          "prefill_tps": 1723.4407337828704,
+          "end_to_end_tps": 22.627839617866208,
+          "wall_s": 11.31349719298305,
+          "stream_span_s": 10.192624519986566,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 108057148,
+            "swap_free_kib": 15592752,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 43.46,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "f84b47e76513c0f64a0ca035498a10ff3bcd8d1413129cbb553908a54ea9193e",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 24.928022768632797,
+          "ttft_s": 1.1044399220263585,
+          "prefill_tps": 1710.834842966099,
+          "end_to_end_tps": 22.50790425809851,
+          "wall_s": 11.373782164009754,
+          "stream_span_s": 10.269218368979637,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 107732144,
+            "swap_free_kib": 15592752,
+            "gpu_temperature_c": 71.0,
+            "gpu_power_w": 43.73,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "2ae3171e1d18d32b7a32f69ed67a7aecd80ca76f98bb854f573faafa1ce301ea",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 24.872832784414527,
+          "ttft_s": 1.127090447989758,
+          "prefill_tps": 1710.4649354688227,
+          "end_to_end_tps": 22.417134791898977,
+          "wall_s": 11.419835870037787,
+          "stream_span_s": 10.292533355997875,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 107321924,
+            "swap_free_kib": 15592768,
+            "gpu_temperature_c": 71.0,
+            "gpu_power_w": 45.32,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:15:34.008408+00:00",
+        "finished_at": "2026-09-30T12:16:09.981881+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "11ed2f1b5e22ebe3d0ac938c6e008a3a14f6491ec59ea49d5d3497ba38a84f70",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1154,
+        "output_tokens": 16,
+        "decode_tps": 26.339009389856848,
+        "ttft_s": 1.1536792300175875,
+        "prefill_tps": 1712.41515828711,
+        "end_to_end_tps": 9.088193249583739,
+        "wall_s": 1.7605259440024383,
+        "stream_span_s": 0.6067731449729763,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 108343364,
+          "swap_free_kib": 15592752,
+          "gpu_temperature_c": 68.0,
+          "gpu_power_w": 56.73,
+          "gpu_utilization_percent": 94.0,
+          "gpu_clock_mhz": 2392.0
+        }
+      }
+    },
+    {
+      "model_id": "b0643df8ade1e49de42e4898",
+      "model_name": "qwythos:9b-v2-q8_0",
+      "engine": "Ollama",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 24.918513540583984,
+          "mean": 24.935166368337175,
+          "min": 24.799778119485136,
+          "max": 25.0872074449424,
+          "sample_sd": 0.14443646280402164,
+          "cv_percent": 0.5792480413823424
+        },
+        "ttft_s": {
+          "median": 0.7519756729598157,
+          "mean": 0.7547642799909227,
+          "min": 0.7475119580049068,
+          "max": 0.7648052090080455,
+          "sample_sd": 0.008977548632273954,
+          "cv_percent": 1.1894506497289359
+        },
+        "prefill_tps": {
+          "median": 2068.9884575724313,
+          "mean": 2067.1176045990587,
+          "min": 2059.63902232269,
+          "max": 2072.7253339020554,
+          "sample_sd": 6.740768192427394,
+          "cv_percent": 0.3260950502975782
+        },
+        "end_to_end_tps": {
+          "median": 23.230463893338378,
+          "mean": 23.229702752598595,
+          "min": 23.117817100506162,
+          "max": 23.34082726395124,
+          "sample_sd": 0.11150703005357758,
+          "cv_percent": 0.4800191859583904
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "852e4bad4ebe85c5d7756ce9aa839aab3a8a22ef2d6304387548a45990b998d1",
+          "reasoning_sha256": null,
+          "prompt_tokens": 933,
+          "output_tokens": 256,
+          "decode_tps": 24.799778119485136,
+          "ttft_s": 0.7519756729598157,
+          "prefill_tps": 2059.63902232269,
+          "end_to_end_tps": 23.117817100506162,
+          "wall_s": 11.07370989600895,
+          "stream_span_s": 10.321453933021985,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 109696396,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 68.0,
+            "gpu_power_w": 35.84,
+            "gpu_utilization_percent": 93.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "7090512c8117a4492537a3963a193e1831ac82a918525b1183bd3ee8b42926bf",
+          "reasoning_sha256": null,
+          "prompt_tokens": 933,
+          "output_tokens": 256,
+          "decode_tps": 25.0872074449424,
+          "ttft_s": 0.7648052090080455,
+          "prefill_tps": 2072.7253339020554,
+          "end_to_end_tps": 23.34082726395124,
+          "wall_s": 10.967906025995035,
+          "stream_span_s": 10.202994176011998,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 109433748,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 68.0,
+            "gpu_power_w": 36.18,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "19c50201b45c70f982ada9d6fce094060729ec4e212325219ab4b749bfafa927",
+          "reasoning_sha256": null,
+          "prompt_tokens": 933,
+          "output_tokens": 256,
+          "decode_tps": 24.918513540583984,
+          "ttft_s": 0.7475119580049068,
+          "prefill_tps": 2068.9884575724313,
+          "end_to_end_tps": 23.230463893338378,
+          "wall_s": 11.020012393011712,
+          "stream_span_s": 10.272442434041295,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 109290684,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 69.0,
+            "gpu_power_w": 36.13,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:16:10.599221+00:00",
+        "finished_at": "2026-09-30T12:16:50.510734+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "77ba29e5f1b6c83d7f1fdb4b19b2ab17cb7a19247ee51ea7526b02830fd9bb91",
+        "reasoning_sha256": null,
+        "prompt_tokens": 933,
+        "output_tokens": 16,
+        "decode_tps": 25.974953650942076,
+        "ttft_s": 6.113631307031028,
+        "prefill_tps": 1583.0731641102213,
+        "end_to_end_tps": 2.374180804634534,
+        "wall_s": 6.73916660802206,
+        "stream_span_s": 0.6156763029866852,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 109955204,
+          "swap_free_kib": 15592808,
+          "gpu_temperature_c": 67.0,
+          "gpu_power_w": 45.76,
+          "gpu_utilization_percent": 96.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "b0643df8ade1e49de42e4898",
+      "model_name": "qwythos:9b-v2-q8_0",
+      "engine": "Ollama",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 24.822985929827357,
+          "mean": 24.829038213053835,
+          "min": 24.77348710443225,
+          "max": 24.890641604901898,
+          "sample_sd": 0.0588112816070469,
+          "cv_percent": 0.23686492043065505
+        },
+        "ttft_s": {
+          "median": 0.8480037519475445,
+          "mean": 0.8473747039679438,
+          "min": 0.830258629983291,
+          "max": 0.8638617299729958,
+          "sample_sd": 0.01681037947965495,
+          "cv_percent": 1.9838188939247456
+        },
+        "prefill_tps": {
+          "median": 2077.675247962213,
+          "mean": 2075.4663824118866,
+          "min": 2067.3628823749027,
+          "max": 2081.3610168985438,
+          "sample_sd": 7.255774100676773,
+          "cv_percent": 0.34959728387625744
+        },
+        "end_to_end_tps": {
+          "median": 22.932390623811248,
+          "mean": 22.946756654142984,
+          "min": 22.910725451364133,
+          "max": 22.99715388725357,
+          "sample_sd": 0.044969498031365074,
+          "cv_percent": 0.19597322056947833
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "91ea7c7a0b5fd705176836a01b9bbc1603afdd2d629e088eed60b733b0e2be39",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1185,
+          "output_tokens": 256,
+          "decode_tps": 24.77348710443225,
+          "ttft_s": 0.830258629983291,
+          "prefill_tps": 2067.3628823749027,
+          "end_to_end_tps": 22.932390623811248,
+          "wall_s": 11.163249580014963,
+          "stream_span_s": 10.332928565039765,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 108743044,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 69.0,
+            "gpu_power_w": 36.26,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "367bb42b51d02b00e6572b06b398605f5f4952794f40e32c459e6843c0415793",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1185,
+          "output_tokens": 256,
+          "decode_tps": 24.822985929827357,
+          "ttft_s": 0.8638617299729958,
+          "prefill_tps": 2081.3610168985438,
+          "end_to_end_tps": 22.910725451364133,
+          "wall_s": 11.173805933969561,
+          "stream_span_s": 10.309885420021601,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 108412148,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 36.38,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "a5d41690b30d25689d396c2717a28f690546ac98dc2cc72f48e6611f1a44dd9f",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1185,
+          "output_tokens": 256,
+          "decode_tps": 24.890641604901898,
+          "ttft_s": 0.8480037519475445,
+          "prefill_tps": 2077.675247962213,
+          "end_to_end_tps": 22.99715388725357,
+          "wall_s": 11.131812277948484,
+          "stream_span_s": 10.283755342010409,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 108064008,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 70.0,
+            "gpu_power_w": 36.53,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:16:50.519930+00:00",
+        "finished_at": "2026-09-30T12:17:25.606962+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "1461df20ebc8e5fb6e374fe9f74175ed8ca8827aba3453f969a1f9084b7a40f3",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1185,
+        "output_tokens": 16,
+        "decode_tps": 25.868326982120138,
+        "ttft_s": 0.8890752230072394,
+        "prefill_tps": 2073.178839229792,
+        "end_to_end_tps": 10.618309300726546,
+        "wall_s": 1.5068312239600345,
+        "stream_span_s": 0.617696528963279,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 109011556,
+          "swap_free_kib": 15592808,
+          "gpu_temperature_c": 69.0,
+          "gpu_power_w": 47.35,
+          "gpu_utilization_percent": 92.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "3770880d2d75be52907e4902",
+      "model_name": "reasoning:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 24.29236160850354,
+          "mean": 24.785223491577064,
+          "min": 22.44961027125794,
+          "max": 27.613698594969712,
+          "sample_sd": 2.61708553177273,
+          "cv_percent": 10.55905561094542
+        },
+        "ttft_s": {
+          "median": 1.6336800300050527,
+          "mean": 1.6246010290148358,
+          "min": 1.6047003220301121,
+          "max": 1.6354227350093424,
+          "sample_sd": 0.017256530910118185,
+          "cv_percent": 1.0622011559713593
+        },
+        "prefill_tps": {
+          "median": 702.5985252433613,
+          "mean": 703.358019854642,
+          "min": 702.5613535237381,
+          "max": 704.9141807968263,
+          "sample_sd": 1.3478030615301275,
+          "cv_percent": 0.19162404116877327
+        },
+        "end_to_end_tps": {
+          "median": 21.080626428897478,
+          "mean": 21.392780401461216,
+          "min": 19.619896472451934,
+          "max": 23.477818303034237,
+          "sample_sd": 1.9478116668870655,
+          "cv_percent": 9.104995378506395
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "78672833314ef530ecf048960fb8555ed0f38a55df5e06edd221f7d975358678",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 22.44961027125794,
+          "ttft_s": 1.6354227350093424,
+          "prefill_tps": 702.5985252433613,
+          "end_to_end_tps": 19.619896472451934,
+          "wall_s": 13.04797914501978,
+          "stream_span_s": 11.40248154301662,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 100520436,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 76.0,
+            "gpu_power_w": 64.25,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "fdc0a60ab647326db7287a929fc519060709a6969c559738e5ea85c9a23ca4e8",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 24.29236160850354,
+          "ttft_s": 1.6047003220301121,
+          "prefill_tps": 702.5613535237381,
+          "end_to_end_tps": 21.080626428897478,
+          "wall_s": 12.143851648026612,
+          "stream_span_s": 10.538555673963856,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 100299068,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 77.0,
+            "gpu_power_w": 66.14,
+            "gpu_utilization_percent": 93.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "f2a0f776d2500998113e2ea9b631b62071f42c163a2df375e421acbb2b0fab8f",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 27.613698594969712,
+          "ttft_s": 1.6336800300050527,
+          "prefill_tps": 704.9141807968263,
+          "end_to_end_tps": 23.477818303034237,
+          "wall_s": 10.903909243003,
+          "stream_span_s": 9.270137579995207,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 100178300,
+            "swap_free_kib": 15592808,
+            "gpu_temperature_c": 78.0,
+            "gpu_power_w": 67.79,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:17:26.149083+00:00",
+        "finished_at": "2026-09-30T12:18:11.558988+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "e0619488b21ea31de8588a6fc1e8b2b595c1f4d96d6e58b5f60414c171a211e4",
+        "reasoning_sha256": null,
+        "prompt_tokens": 903,
+        "output_tokens": 16,
+        "decode_tps": 25.701572614974378,
+        "ttft_s": 8.582874685991555,
+        "prefill_tps": 689.6867768026946,
+        "end_to_end_tps": 1.7380235878756105,
+        "wall_s": 9.205858948989771,
+        "stream_span_s": 0.6223686260054819,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 100723112,
+          "swap_free_kib": 15592808,
+          "gpu_temperature_c": 71.0,
+          "gpu_power_w": 65.53,
+          "gpu_utilization_percent": 96.0,
+          "gpu_clock_mhz": 2398.0
+        }
+      }
+    },
+    {
+      "model_id": "3770880d2d75be52907e4902",
+      "model_name": "reasoning:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 22.39228110080104,
+          "mean": 22.355553074838035,
+          "min": 21.284747350048953,
+          "max": 23.389630773664116,
+          "sample_sd": 1.0529222514843284,
+          "cv_percent": 4.709891309597836
+        },
+        "ttft_s": {
+          "median": 1.986458707950078,
+          "mean": 1.991723214974627,
+          "min": 1.963200481957756,
+          "max": 2.0255104550160468,
+          "sample_sd": 0.03148681408605632,
+          "cv_percent": 1.5808830187510485
+        },
+        "prefill_tps": {
+          "median": 709.7820876811327,
+          "mean": 709.6392704936036,
+          "min": 708.9551780735816,
+          "max": 710.1805457260966,
+          "sample_sd": 0.6250432247035723,
+          "cv_percent": 0.08807900727771326
+        },
+        "end_to_end_tps": {
+          "median": 19.023147712842032,
+          "mean": 19.04014040777342,
+          "min": 18.29910842407032,
+          "max": 19.79816508640791,
+          "sample_sd": 0.7496727839434033,
+          "cv_percent": 3.9373280232604704
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "109cd7219a1600ada92fd66bc11aa9108ae424abb54b4fdbdd5d14554cf5baf4",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 23.389630773664116,
+          "ttft_s": 1.986458707950078,
+          "prefill_tps": 708.9551780735816,
+          "end_to_end_tps": 19.79816508640791,
+          "wall_s": 12.930491228995379,
+          "stream_span_s": 10.943940777040552,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 99081764,
+            "swap_free_kib": 15592812,
+            "gpu_temperature_c": 82.0,
+            "gpu_power_w": 70.06,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "162f13263c56824f5aad9dd0dec5b6a162f5dac32f93c019664bc7bec2cba1c7",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 21.284747350048953,
+          "ttft_s": 1.963200481957756,
+          "prefill_tps": 710.1805457260966,
+          "end_to_end_tps": 18.29910842407032,
+          "wall_s": 13.989752618945204,
+          "stream_span_s": 12.026484968024306,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 98611896,
+            "swap_free_kib": 15592836,
+            "gpu_temperature_c": 81.0,
+            "gpu_power_w": 70.36,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "62e36a4ea03a6fe7add2a769ccdad3c7c987264ce7819f9bb3faf51b1093de4c",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 22.39228110080104,
+          "ttft_s": 2.0255104550160468,
+          "prefill_tps": 709.7820876811327,
+          "end_to_end_tps": 19.023147712842032,
+          "wall_s": 13.45728918601526,
+          "stream_span_s": 11.431658810004592,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 98097484,
+            "swap_free_kib": 15592836,
+            "gpu_temperature_c": 84.0,
+            "gpu_power_w": 71.59,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:18:11.563017+00:00",
+        "finished_at": "2026-09-30T12:18:54.733782+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "0089a01f267b0ab9e868b77c94763273445b18febf49b4b9ae4762f5b01da9b4",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1155,
+        "output_tokens": 16,
+        "decode_tps": 21.901307234275546,
+        "ttft_s": 1.9519476540153846,
+        "prefill_tps": 709.3988903895797,
+        "end_to_end_tps": 5.96547156047895,
+        "wall_s": 2.6821014630259015,
+        "stream_span_s": 0.7300828479928896,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 99620636,
+          "swap_free_kib": 15592812,
+          "gpu_temperature_c": 79.0,
+          "gpu_power_w": 68.21,
+          "gpu_utilization_percent": 93.0,
+          "gpu_clock_mhz": 2398.0
+        }
+      }
+    },
+    {
+      "model_id": "66ddf93713ec981238c85413",
+      "model_name": "vision:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 24.49899319664873,
+          "mean": 24.862220780621712,
+          "min": 22.413701776066983,
+          "max": 27.673967369149427,
+          "sample_sd": 2.6488769763356106,
+          "cv_percent": 10.654225138247574
+        },
+        "ttft_s": {
+          "median": 1.600298732984811,
+          "mean": 1.6036297023141135,
+          "min": 1.5992404879652895,
+          "max": 1.6113498859922402,
+          "sample_sd": 0.006706779976139416,
+          "cv_percent": 0.4182249784012616
+        },
+        "prefill_tps": {
+          "median": 706.2091661726591,
+          "mean": 706.710951034122,
+          "min": 705.6583956938427,
+          "max": 708.2652912358642,
+          "sample_sd": 1.373978575942079,
+          "cv_percent": 0.1944187470042104
+        },
+        "end_to_end_tps": {
+          "median": 21.246779515005702,
+          "mean": 21.491624832078106,
+          "min": 19.659274730164622,
+          "max": 23.56882025106399,
+          "sample_sd": 1.9662396768871517,
+          "cv_percent": 9.148864696132092
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "78672833314ef530ecf048960fb8555ed0f38a55df5e06edd221f7d975358678",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 22.413701776066983,
+          "ttft_s": 1.600298732984811,
+          "prefill_tps": 705.6583956938427,
+          "end_to_end_tps": 19.659274730164622,
+          "wall_s": 13.021843558002729,
+          "stream_span_s": 11.421444200037513,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 100856592,
+            "swap_free_kib": 15592836,
+            "gpu_temperature_c": 81.0,
+            "gpu_power_w": 67.9,
+            "gpu_utilization_percent": 96.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "fdc0a60ab647326db7287a929fc519060709a6969c559738e5ea85c9a23ca4e8",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 24.49899319664873,
+          "ttft_s": 1.5992404879652895,
+          "prefill_tps": 706.2091661726591,
+          "end_to_end_tps": 21.246779515005702,
+          "wall_s": 12.048884858959354,
+          "stream_span_s": 10.449543938040733,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 100502340,
+            "swap_free_kib": 15592836,
+            "gpu_temperature_c": 80.0,
+            "gpu_power_w": 69.55,
+            "gpu_utilization_percent": 96.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "f2a0f776d2500998113e2ea9b631b62071f42c163a2df375e421acbb2b0fab8f",
+          "reasoning_sha256": null,
+          "prompt_tokens": 903,
+          "output_tokens": 256,
+          "decode_tps": 27.673967369149427,
+          "ttft_s": 1.6113498859922402,
+          "prefill_tps": 708.2652912358642,
+          "end_to_end_tps": 23.56882025106399,
+          "wall_s": 10.86180798499845,
+          "stream_span_s": 9.250304449989926,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 100172076,
+            "swap_free_kib": 15592836,
+            "gpu_temperature_c": 82.0,
+            "gpu_power_w": 70.98,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2398.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:18:55.423777+00:00",
+        "finished_at": "2026-09-30T12:19:39.331045+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "e0619488b21ea31de8588a6fc1e8b2b595c1f4d96d6e58b5f60414c171a211e4",
+        "reasoning_sha256": null,
+        "prompt_tokens": 903,
+        "output_tokens": 16,
+        "decode_tps": 25.84718176869034,
+        "ttft_s": 7.23578984697815,
+        "prefill_tps": 689.1451623612265,
+        "end_to_end_tps": 2.03694593777292,
+        "wall_s": 7.854896736971568,
+        "stream_span_s": 0.6188380889943801,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 101070400,
+          "swap_free_kib": 15592836,
+          "gpu_temperature_c": 80.0,
+          "gpu_power_w": 70.4,
+          "gpu_utilization_percent": 82.0,
+          "gpu_clock_mhz": 2398.0
+        }
+      }
+    },
+    {
+      "model_id": "66ddf93713ec981238c85413",
+      "model_name": "vision:qwen3.8-27b-q4_K_M",
+      "engine": "Ollama",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 22.16656336701785,
+          "mean": 22.291279650379494,
+          "min": 21.27626330306674,
+          "max": 23.431012281053892,
+          "sample_sd": 1.0827748625803166,
+          "cv_percent": 4.857392126260832
+        },
+        "ttft_s": {
+          "median": 1.9625075789517723,
+          "mean": 1.9616900313024719,
+          "min": 1.9380297349998727,
+          "max": 1.9845327799557708,
+          "sample_sd": 0.02326229966408581,
+          "cv_percent": 1.185829529277911
+        },
+        "prefill_tps": {
+          "median": 710.8392210925383,
+          "mean": 710.5730845004279,
+          "min": 708.0772300754425,
+          "max": 712.8028023333029,
+          "sample_sd": 2.3740008014552534,
+          "cv_percent": 0.33409664019631524
+        },
+        "end_to_end_tps": {
+          "median": 18.981634810519935,
+          "mean": 19.035095388081942,
+          "min": 18.29347959995944,
+          "max": 19.83017175376645,
+          "sample_sd": 0.7697397085430596,
+          "cv_percent": 4.043792231401168
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "109cd7219a1600ada92fd66bc11aa9108ae424abb54b4fdbdd5d14554cf5baf4",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 23.431012281053892,
+          "ttft_s": 1.9845327799557708,
+          "prefill_tps": 710.8392210925383,
+          "end_to_end_tps": 19.83017175376645,
+          "wall_s": 12.909620913967956,
+          "stream_span_s": 10.924962197022978,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 99141256,
+            "swap_free_kib": 15592844,
+            "gpu_temperature_c": 82.0,
+            "gpu_power_w": 70.91,
+            "gpu_utilization_percent": 94.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "162f13263c56824f5aad9dd0dec5b6a162f5dac32f93c019664bc7bec2cba1c7",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 21.27626330306674,
+          "ttft_s": 1.9625075789517723,
+          "prefill_tps": 708.0772300754425,
+          "end_to_end_tps": 18.29347959995944,
+          "wall_s": 13.9940572049818,
+          "stream_span_s": 12.03147439303575,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 98630272,
+            "swap_free_kib": 15592844,
+            "gpu_temperature_c": 81.0,
+            "gpu_power_w": 69.16,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "62e36a4ea03a6fe7add2a769ccdad3c7c987264ce7819f9bb3faf51b1093de4c",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 22.16656336701785,
+          "ttft_s": 1.9380297349998727,
+          "prefill_tps": 712.8028023333029,
+          "end_to_end_tps": 18.981634810519935,
+          "wall_s": 13.486720324959606,
+          "stream_span_s": 11.54861770896241,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 98040612,
+            "swap_free_kib": 15592844,
+            "gpu_temperature_c": 83.0,
+            "gpu_power_w": 69.88,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "engine eval_count / eval_duration",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "Output limit 256; tokenizer and early stop behavior can vary. Prefix cache is not disabled. Throughput does not measure answer correctness or quality."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T12:19:39.340408+00:00",
+        "finished_at": "2026-09-30T12:20:22.532734+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "0089a01f267b0ab9e868b77c94763273445b18febf49b4b9ae4762f5b01da9b4",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1155,
+        "output_tokens": 16,
+        "decode_tps": 21.850759313886158,
+        "ttft_s": 1.9550872389809228,
+        "prefill_tps": 711.0090048828774,
+        "end_to_end_tps": 5.954474453080507,
+        "wall_s": 2.6870549409650266,
+        "stream_span_s": 0.731869941984769,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 99634988,
+          "swap_free_kib": 15592844,
+          "gpu_temperature_c": 82.0,
+          "gpu_power_w": 70.57,
+          "gpu_utilization_percent": 93.0,
+          "gpu_clock_mhz": 2398.0
+        }
+      }
+    }
+  ],
+  "long_context": [
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 860,
+      "prefill_tps": 1633,
+      "ttft_s": 0.53,
+      "protocol": {
+        "id": "tensorfold-supplementary-20260929",
+        "notes": "Supplementary long-context run. Exact per-trial data and cache controls are not in the curated export. Rounded reported values."
+      },
+      "provenance": {
+        "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
+        "measured_at": "2026-09-29",
+        "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 3211,
+      "prefill_tps": 2152,
+      "ttft_s": 1.5,
+      "protocol": {
+        "id": "tensorfold-supplementary-20260929",
+        "notes": "Supplementary long-context run. Exact per-trial data and cache controls are not in the curated export. Rounded reported values."
+      },
+      "provenance": {
+        "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
+        "measured_at": "2026-09-29",
+        "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 12638,
+      "prefill_tps": 2421,
+      "ttft_s": 5.25,
+      "protocol": {
+        "id": "tensorfold-supplementary-20260929",
+        "notes": "Supplementary long-context run. Exact per-trial data and cache controls are not in the curated export. Rounded reported values."
+      },
+      "provenance": {
+        "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
+        "measured_at": "2026-09-29",
+        "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 50308,
+      "prefill_tps": 2335,
+      "ttft_s": 21.64,
+      "protocol": {
+        "id": "tensorfold-supplementary-20260929",
+        "notes": "Supplementary long-context run. Exact per-trial data and cache controls are not in the curated export. Rounded reported values."
+      },
+      "provenance": {
+        "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
+        "measured_at": "2026-09-29",
+        "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    }
+  ],
+  "suite": {
+    "protocol_id": "sparkbench-workloads-v1",
+    "status": "in_progress",
+    "successful_workload_profiles": 12,
+    "failed_workload_profiles": 0,
+    "unavailable_workload_profiles": 2,
+    "note": "Completed observations only. The site reloads published snapshots; it does not query the active benchmark runner."
+  }
+}

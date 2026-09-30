@@ -1,8 +1,8 @@
 # DGX Spark measured model throughput
 
-Benchmark date: 28 September 2026. Hardware: NVIDIA GB10, approximately 121.69 GiB OS-visible unified memory. Ollama 0.32.14; vLLM 0.24.0. Driver 580.178.04; driver-reported CUDA 13.0.
+Original writing benchmark date: 28 September 2026, with Qwen3.8-Flash-Next added on 29 September 2026. Hardware: NVIDIA GB10, approximately 121.69 GiB OS-visible unified memory. Ollama 0.32.14; vLLM 0.24.0; TensorFold 0.3.6.3. Driver 580.178.04; driver-reported CUDA 13.0.
 
-Coverage: 25 entries, 24 successful including one embedding model, one incomplete checkpoint. Each successful generation entry received a 16-token warmup and three measured 256-token requests. Inference models were run sequentially. Temperature 0, seed 20260928, thinking disabled where supported.
+Writing snapshot coverage: 26 entries, 25 successful including one embedding model, one incomplete checkpoint. Each successful generation entry received a 16-token warmup and three measured 256-token requests. Inference models were run sequentially. Temperature 0, seed 20260928, thinking disabled where supported.
 
 These tables show arithmetic means and observed ranges. The interactive dashboard shows medians. This is throughput evidence, not an answer-quality ranking.
 
@@ -15,6 +15,7 @@ These tables show arithmetic means and observed ranges. The interactive dashboar
 | `qwen3.6:35b-a3b-q4_K_M` | Ollama | gguf | 72.48 | 71.59–73.04 | 0.780 | 0.722 |
 | `fast:qwen3.6-35b-a3b-q4_K_M` | Ollama | gguf | 71.06 | 69.02–72.35 | 1.784 | 0.715 |
 | `gemma4:26b` | Ollama | gguf | 70.52 | 69.47–71.53 | 1.032 | 0.786 |
+| `Qwen3.8-Flash-Next` | TensorFold | safetensors, MLX 4-bit | 55.51 | 54.08–56.52 | 1.268 | 0.471 |
 | `gpt-oss:120b-a5.1b-mxfp4` | Ollama | gguf | 42.74 | 42.02–43.33 | 0.663 | 0.923 |
 | `nvidia_Nemotron-3-Nano-Omni-30B-A3B-Reasoning-NVFP4` | vLLM | safetensors | 35.36 | 35.04–35.62 | 0.292 | 0.173 |
 | `qwythos:9b-v2-q8_0` | Ollama | gguf | 26.51 | 26.40–26.70 | 0.164 | 0.675 |
@@ -41,6 +42,7 @@ These tables show arithmetic means and observed ranges. The interactive dashboar
 ## Measurement and coverage limits
 
 - Ollama output rate is eval_count divided by engine generation duration. vLLM output rate is completion tokens minus one divided by the interval between first and last content chunks. These formulas differ.
+- TensorFold reports completion tokens divided by decode seconds. Qwen Flash used MTP drafting, and accepted draft tokens count as output. Its writing median is 55.922 tokens/s and first-token median is 0.471790 seconds. Its 69.9 tokens/s coding and 58.0 tokens/s sampled-chat observations came from separate prompts and are archived in `workloads.json` with their own protocol.
 - Ollama requests used context 8192 with its existing four parallel server slots and Q8_0 KV cache. The existing FP8 vLLM server kept context 262144, eight maximum sequences, FP8 KV and memory utilization 0.90. Additional vLLM models used eager execution, context 8192, one sequence and memory utilization 0.80. Full profiles are in data.json and summary.json.
 - Prefix caching was enabled; filesystem caches were not cleared. Load observations are not guaranteed cold-disk times. Shared prompt/tokenizer/template differences affect prefill and first-token measurements.
 - GPT-OSS returned reasoning despite the request to disable it; its generated-token rate includes reasoning.
@@ -55,3 +57,5 @@ These tables show arithmetic means and observed ranges. The interactive dashboar
 Source: [Qwen/Qwen3.8-27B](https://huggingface.co/Qwen/Qwen3.8-27B), revision `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`. All 18 weight shards and 19 LFS objects passed hash verification. All 1199 tensors are BF16, totaling 27,781,427,952 stored parameters including vision/auxiliary tensors; no quantization configuration. Repository assets total 55,586,114,863 bytes. The model ran successfully in unpatched vLLM and was unloaded after measurement.
 
 Statistics: [summary.json](summary.json). Dashboard dataset: [data.json](data.json).
+
+Supplemental workload observations: [workloads.json](workloads.json). Workload protocol and interpretation: [WORKLOADS.md](WORKLOADS.md).
