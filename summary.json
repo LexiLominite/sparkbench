@@ -1786,6 +1786,25 @@
       ],
       "format": "safetensors",
       "active_parameters": "6B"
+    },
+    {
+      "model": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "vLLM",
+      "kind": "generation",
+      "status": "unavailable",
+      "trial_count": 0,
+      "parameter_size": "125B",
+      "active_parameters": "6B",
+      "quantization_metadata": "NVFP4 + FP8 + BF16 (mixed)",
+      "format": "safetensors",
+      "manifest_digest": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "tag_disk_gib": 123.5681114513427,
+      "decode_measurement": "Not measured: installed engine architecture is unsupported",
+      "resources": {},
+      "decode_tps": null,
+      "prefill_tps": null,
+      "ttft_s": null,
+      "end_to_end_tps": null
     }
   ]
 }

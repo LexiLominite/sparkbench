@@ -2,7 +2,7 @@
 
 Measured token throughput from a personal NVIDIA DGX Spark, with model format, inference engine, precision, latency, per-trial statistics and a published protocol.
 
-This is a read-only snapshot of the benchmark performed on 28 September 2026. It contains 26 model entries, 25 successful entries including one embedding model, and one incomplete checkpoint. Aliases remain individually measured and can be grouped in the interface. The dashboard displays medians; the full report also includes means and observed ranges.
+This is a read-only snapshot of the benchmark performed on 28 September 2026. That writing snapshot contains 26 model entries, 25 successful entries including one embedding model, and one incomplete checkpoint. The expanded inventory also includes a complete Qwen3.8-Flash-Next NVFP4 checkpoint whose architecture is unsupported by the installed engine, bringing the site inventory to 27 entries. Aliases remain individually measured and can be grouped in the interface. The dashboard displays medians; the full report also includes means and observed ranges.
 
 Qwen3.8-Flash-Next on TensorFold was measured on 29 September 2026 against the server that was already loaded.
 
@@ -16,7 +16,7 @@ The public data export excludes private host paths, process commands, environmen
 
 Plain HTML, CSS and JavaScript plus `data.json`, `summary.json`, and `workloads.json`. GitHub Pages publishes the main branch root. The `CNAME` is `sparkbench.lexilominite.com`. No inference endpoint is exposed by this site.
 
-The interface provides workload-specific tables, search and engine filters, model comparisons, alias grouping, individual trial details, serving configuration, memory and power observations, and long-context prefill. JSON and CSV exports preserve measurement provenance.
+The interface compares writing, coding and chat rates side by side, with optional single-workload views. Search and advanced filters cover total/active parameter count, weight size on disk, engine, format and quantization. Model selections, alias grouping, individual trials, serving configuration, memory/power observations and long-context prefill remain available. JSON and CSV exports preserve measurement provenance. First-party preference cookies remember the chosen view, filters, sort and selected models; users can disable or clear that saved state.
 
 ## Updating results
 

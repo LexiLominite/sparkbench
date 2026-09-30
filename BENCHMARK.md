@@ -59,3 +59,7 @@ Source: [Qwen/Qwen3.8-27B](https://huggingface.co/Qwen/Qwen3.8-27B), revision `1
 Statistics: [summary.json](summary.json). Dashboard dataset: [data.json](data.json).
 
 Supplemental workload observations: [workloads.json](workloads.json). Workload protocol and interpretation: [WORKLOADS.md](WORKLOADS.md).
+
+## Additional installed checkpoint
+
+The inventory also contains `nvidia/Qwen3.8-Flash-Next-NVFP4`, revision `fc694b54fb0174e0913e6adf86691ef85a4ead47`. All 11 weight shards are present, totaling 132,680,249,378 bytes (123.57 GiB). The installed vLLM 0.24.0 registry does not contain `Qwen4ExpForConditionalGeneration`; no inference was launched and no speed is claimed. The [NVIDIA model card](https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4) records 125B language-model parameters, 6B active, and a mixed NVFP4/FP8/BF16 layout. This extra inventory entry does not change the original writing statistics.

@@ -25177,6 +25177,42 @@
               "error": null
             }
           ]
+        },
+        {
+          "id": "13918e4b5ed00452e714648d",
+          "run_id": "spark-token-benchmark-20260928",
+          "name": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+          "engine": "vLLM",
+          "format": "safetensors",
+          "quantization": "NVFP4 + FP8 + BF16 (mixed)",
+          "parameters": "125B",
+          "digest": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+          "kind": "generation",
+          "status": "unavailable",
+          "error": "All 11 weight shards are present, but the installed vLLM 0.24.0 registry does not support Qwen4ExpForConditionalGeneration. No inference was launched and no throughput is claimed.",
+          "metadata": {
+            "checkpoint": {
+              "repo_id": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+              "revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+              "architecture": "Qwen4ExpForConditionalGeneration",
+              "weight_files": 11,
+              "all_shards_present": true,
+              "weight_bytes": 132680249378
+            },
+            "parameters_note": "NVIDIA model card: 125B language-model total / 6B active, plus 51B n-gram embedding and 4B MTP. These auxiliary modules are not added to the displayed language-model parameter count.",
+            "quantization_note": "Routed experts use NVFP4; other main-model layers remain BF16; MTP experts and n-gram embedding use FP8. Header dtypes BF16/F8_E4M3/U8 verified locally.",
+            "runtime_preflight": {
+              "version": "0.24.0",
+              "build_commit": "ee0da84ab9e04ac7610e28580af62c365e898389",
+              "architecture_registered": false,
+              "inference_attempted": false
+            },
+            "source": "https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4",
+            "inventory_observed_utc": "2026-09-30T12:43:44.024814+00:00"
+          },
+          "resources": {},
+          "history": [],
+          "trials": []
         }
       ],
       "artifacts": {
@@ -25196,15 +25232,15 @@
   "live": null,
   "ingestion_errors": [],
   "latest_event": {
-    "event": "model_added",
-    "model": "Qwen3.8-Flash-Next",
-    "engine": "TensorFold",
-    "utc": "2026-09-29T18:08:59.917747+00:00"
+    "event": "model_inventory_added",
+    "model": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+    "engine": "vLLM",
+    "utc": "2026-09-30T12:43:44.024814+00:00"
   },
-  "archive_updated_utc": "2026-09-29T18:08:59.917747+00:00",
+  "archive_updated_utc": "2026-09-30T12:43:44.024814+00:00",
   "publication": {
     "kind": "read-only benchmark snapshot",
-    "generated_utc": "2026-09-29T18:08:59.917747+00:00",
+    "generated_utc": "2026-09-30T12:43:44.024814+00:00",
     "source": "NVIDIA DGX Spark benchmark, September 28 2026"
   }
 }

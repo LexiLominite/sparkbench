@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_utc": "2026-09-30T12:24:07.431178+00:00",
+  "updated_utc": "2026-09-30T12:47:24.207032+00:00",
   "scope": "Text generation speed and serving measurements. No coding correctness, writing quality, vision accuracy or tool-use quality scores are claimed.",
   "profiles": [
     {
@@ -2220,6 +2220,48 @@
           "gpu_clock_mhz": 2398.0
         }
       }
+    },
+    {
+      "model_id": "13918e4b5ed00452e714648d",
+      "model_name": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "vLLM",
+      "workload": "coding",
+      "status": "unavailable",
+      "preferred": true,
+      "trial_count": 0,
+      "metrics": {},
+      "trials": [],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "notes": [
+          "All 11 weight shards are present (132680249378 bytes; 123.57 GiB). Installed vLLM 0.24.0 build ee0da84ab9e04ac7610e28580af62c365e898389 has no registered Qwen4ExpForConditionalGeneration architecture. Checkpoint revision fc694b54fb0174e0913e6adf86691ef85a4ead47. No model load was attempted, no throughput was measured, and no replacement runtime was installed."
+        ]
+      },
+      "provenance": {
+        "source": "Local installed-model inventory inspection",
+        "measured_at": "2026-09-30T12:43:15.616644+00:00"
+      }
+    },
+    {
+      "model_id": "13918e4b5ed00452e714648d",
+      "model_name": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "vLLM",
+      "workload": "chat",
+      "status": "unavailable",
+      "preferred": true,
+      "trial_count": 0,
+      "metrics": {},
+      "trials": [],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "notes": [
+          "All 11 weight shards are present (132680249378 bytes; 123.57 GiB). Installed vLLM 0.24.0 build ee0da84ab9e04ac7610e28580af62c365e898389 has no registered Qwen4ExpForConditionalGeneration architecture. Checkpoint revision fc694b54fb0174e0913e6adf86691ef85a4ead47. No model load was attempted, no throughput was measured, and no replacement runtime was installed."
+        ]
+      },
+      "provenance": {
+        "source": "Local installed-model inventory inspection",
+        "measured_at": "2026-09-30T12:43:15.616653+00:00"
+      }
     }
   ],
   "long_context": [
@@ -2297,7 +2339,7 @@
     "status": "in_progress",
     "successful_workload_profiles": 12,
     "failed_workload_profiles": 0,
-    "unavailable_workload_profiles": 2,
+    "unavailable_workload_profiles": 4,
     "note": "Completed observations only. The site reloads published snapshots; it does not query the active benchmark runner."
   }
 }
