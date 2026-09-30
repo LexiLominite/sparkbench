@@ -1873,6 +1873,26 @@
       "loaded_gpu_allocated_gib": null,
       "load_s": null,
       "startup_to_ready_s": null
+    },
+    {
+      "kind": "generation",
+      "format": "safetensors",
+      "parameter_size": "125B",
+      "active_parameters": "6B",
+      "quantization_metadata": "NVFP4 + FP8 + BF16 (mixed)",
+      "manifest_digest": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "tag_disk_gib": 123.5681114513427,
+      "weight_size_basis": "Sum of logical safetensors file sizes by stat, including headers. Excludes temporary/incomplete download blobs. Missing shards prevent a full weight size claim.",
+      "model": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "TensorFold",
+      "status": "unavailable",
+      "trial_count": 0,
+      "resources": {},
+      "decode_measurement": "Installed TensorFold0.3.6.3 generic format check accepts ModelOpt, but its real qwen4_exp serving family check rejects this exact MIXED_PRECISION checkpoint. It contains NVFP4, FP8 and FP8_PB_WO layer algorithms; the installed family accepts NVFP4, W4A16_NVFP4 and MXFP8. This pre-load check runs before CUDA engine construction. No GPU allocation or throughput test was attempted.",
+      "decode_tps": null,
+      "ttft_s": null,
+      "prefill_tps": null,
+      "end_to_end_tps": null
     }
   ]
 }

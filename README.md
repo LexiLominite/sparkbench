@@ -2,7 +2,7 @@
 
 Measured token throughput from a personal NVIDIA DGX Spark, with model format, inference engine, precision, latency, per-trial statistics and a published protocol.
 
-This is a read-only snapshot of the benchmark performed on 28 September 2026. That writing snapshot contains 26 model entries, 25 successful entries including one embedding model, and one incomplete checkpoint. The expanded inventory also includes a complete Qwen3.8-Flash-Next NVFP4 checkpoint whose architecture is unsupported by the installed engine, and an unsupported full-BF16 TensorFold configuration, bringing the site inventory to 28 engine configurations. Aliases remain individually measured and can be grouped in the interface. The dashboard displays medians; the full report also includes means and observed ranges.
+This is a read-only snapshot of the benchmark performed on 28 September 2026. That writing snapshot contains 26 model entries, 25 successful entries including one embedding model, and one incomplete checkpoint. The expanded inventory also includes a complete Qwen3.8-Flash-Next NVFP4 checkpoint whose architecture is unsupported by the installed engine, an unsupported full-BF16 TensorFold configuration, and a separately checked TensorFold configuration for the mixed Flash NVFP4 checkpoint, bringing the site inventory to 29 engine configurations. Aliases remain individually measured and can be grouped in the interface. The dashboard displays medians; the full report also includes means and observed ranges.
 
 Qwen3.8-Flash-Next on TensorFold was measured on 29 September 2026 against the server that was already loaded.
 

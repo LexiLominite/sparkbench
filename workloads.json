@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_utc": "2026-09-30T14:20:01.023980+00:00",
+  "updated_utc": "2026-09-30T14:29:29.158758+00:00",
   "scope": "Text generation speed and serving measurements. No coding correctness, writing quality, vision accuracy or tool-use quality scores are claimed.",
   "profiles": [
     {
@@ -6867,6 +6867,332 @@
       }
     },
     {
+      "model_id": "4e461a72e0d9336cf4aa3f81",
+      "model_name": "nvidia_Gemma-4-31B-IT-NVFP4",
+      "engine": "vLLM",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 6.6954252907901015,
+          "mean": 6.696092984450932,
+          "min": 6.695408579903628,
+          "max": 6.6974450826590655,
+          "sample_sd": 0.001170981206835018,
+          "cv_percent": 0.017487529064398686
+        },
+        "ttft_s": {
+          "median": 0.5335241769789718,
+          "mean": 0.5923194696661085,
+          "min": 0.531882667040918,
+          "max": 0.7115515649784356,
+          "sample_sd": 0.10326128535489514,
+          "cv_percent": 17.433376858792723
+        },
+        "prefill_tps": null,
+        "end_to_end_tps": {
+          "median": 6.629088094139772,
+          "mean": 6.619411497942096,
+          "min": 6.5983711998505505,
+          "max": 6.6307751998359645,
+          "sample_sd": 0.018240948145404577,
+          "cv_percent": 0.27556752063345047
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "80a2b6df53a40d0568fc4b69613a20d7cbb2d7eb85800e68f9ef0c93d5656ee5",
+          "response_sha256": "883990b9460afff65fb003398a59c6584dc57cfa6d3bb382db03465807fbb201",
+          "reasoning_sha256": null,
+          "prompt_tokens": 904,
+          "output_tokens": 256,
+          "decode_tps": 6.695408579903628,
+          "ttft_s": 0.7115515649784356,
+          "prefill_tps": null,
+          "end_to_end_tps": 6.5983711998505505,
+          "wall_s": 38.797453530016355,
+          "stream_span_s": 38.085801181034185,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10691760,
+            "swap_free_kib": 11937784,
+            "gpu_temperature_c": 69.0,
+            "gpu_power_w": 35.8,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "9328899a881ac534190af21b721dcaacc32eb6fb21b686e19b7954e77c557233",
+          "response_sha256": "363e45f2595aec3f88e35ef9e594d235b5c58b7dd912cbbe335b3a752d85b5c2",
+          "reasoning_sha256": null,
+          "prompt_tokens": 904,
+          "output_tokens": 256,
+          "decode_tps": 6.6974450826590655,
+          "ttft_s": 0.5335241769789718,
+          "prefill_tps": null,
+          "end_to_end_tps": 6.6307751998359645,
+          "wall_s": 38.60785387601936,
+          "stream_span_s": 38.07422037102515,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10703128,
+            "swap_free_kib": 11937844,
+            "gpu_temperature_c": 71.0,
+            "gpu_power_w": 37.62,
+            "gpu_utilization_percent": 96.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "04c14f8bcc6f5e7b30ffc35ade0c9fdcaf4991f0aa665c8f606c2b7d4660da73",
+          "response_sha256": "1fae5131b5e6f80c793debde4cf2e56448ee988d0ed7c3a00873c50b1048d33e",
+          "reasoning_sha256": null,
+          "prompt_tokens": 904,
+          "output_tokens": 256,
+          "decode_tps": 6.6954252907901015,
+          "ttft_s": 0.531882667040918,
+          "prefill_tps": null,
+          "end_to_end_tps": 6.629088094139772,
+          "wall_s": 38.617679590999614,
+          "stream_span_s": 38.08570612396579,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10785772,
+            "swap_free_kib": 11937876,
+            "gpu_temperature_c": 72.0,
+            "gpu_power_w": 37.84,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "coding",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "stream estimate (completion_tokens - 1) / (last generated-content timestamp - first generated-content timestamp)",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "vLLM 0.24.0 on ARM64, eager execution, context 8192, max sequences 1, GPU memory utilization 0.80, language model only, DeepGEMM disabled. Prefix cache not disabled.",
+          "Decode is a streaming estimate, includes generated reasoning when present; prefill is unavailable because per-request engine timing is not exposed. No correctness or quality score.",
+          "Reuses verified temporary Gemma runtime patch for tied unquantized LM head and embedding; quantized heads untouched. Patch SHA256 d1f5739ac9ee8033b65ddeb7f31937956954b638f138169edb9187e066528857."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T14:18:48.933329+00:00",
+        "finished_at": "2026-09-30T14:20:50.017772+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "fd979a159d281f3d1e60655158235cd6430137c61a910904adb6daf17754c13f",
+        "response_sha256": "bb02f241b7dad6c4c2c83d0d45f3a0113105c896c207bd1bed88d13fae5138cf",
+        "reasoning_sha256": null,
+        "prompt_tokens": 903,
+        "output_tokens": 16,
+        "decode_tps": 7.006310555870183,
+        "ttft_s": 2.7467773059615865,
+        "prefill_tps": null,
+        "end_to_end_tps": 3.273437435914283,
+        "wall_s": 4.887828257982619,
+        "stream_span_s": 2.1409270800068043,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 10623744,
+          "swap_free_kib": 11937468,
+          "gpu_temperature_c": 66.0,
+          "gpu_power_w": 35.26,
+          "gpu_utilization_percent": 96.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
+      "model_id": "4e461a72e0d9336cf4aa3f81",
+      "model_name": "nvidia_Gemma-4-31B-IT-NVFP4",
+      "engine": "vLLM",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 6.677578113864333,
+          "mean": 6.677302177280262,
+          "min": 6.667884026175921,
+          "max": 6.686444391800532,
+          "sample_sd": 0.009283259060191925,
+          "cv_percent": 0.13902709228554186
+        },
+        "ttft_s": {
+          "median": 0.6643108180142008,
+          "mean": 0.6872798796587934,
+          "min": 0.6628289229702204,
+          "max": 0.734699897991959,
+          "sample_sd": 0.04107362422855651,
+          "cv_percent": 5.976258791243517
+        },
+        "prefill_tps": null,
+        "end_to_end_tps": {
+          "median": 6.585774610034239,
+          "mean": 6.584957054252715,
+          "min": 6.579725982904052,
+          "max": 6.589370569819854,
+          "sample_sd": 0.004873993463889934,
+          "cv_percent": 0.07401708809539158
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "fa1cb53685aeb717e2f2d1e2151f7ea17b6eadc3f0219dcf1ec13a9f5c97869b",
+          "response_sha256": "3090b257b7a2873725146f76062cf0074d16658045d4cf03abd46b7ac6c8b83c",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 6.686444391800532,
+          "ttft_s": 0.734699897991959,
+          "prefill_tps": null,
+          "end_to_end_tps": 6.585774610034239,
+          "wall_s": 38.87166129401885,
+          "stream_span_s": 38.136860947008245,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10721552,
+            "swap_free_kib": 11937968,
+            "gpu_temperature_c": 73.0,
+            "gpu_power_w": 38.17,
+            "gpu_utilization_percent": 96.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "7eb767168f8a42fa8dc8aee86a6d586970c0201de124c1edc6395c0b90b89300",
+          "response_sha256": "c51e129f865d25d52a3f56939301441bcb69301c1ada9ba3610f7de9a068d268",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 6.667884026175921,
+          "ttft_s": 0.6643108180142008,
+          "prefill_tps": null,
+          "end_to_end_tps": 6.579725982904052,
+          "wall_s": 38.90739533305168,
+          "stream_span_s": 38.243016674998216,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10641844,
+            "swap_free_kib": 11938664,
+            "gpu_temperature_c": 74.0,
+            "gpu_power_w": 38.43,
+            "gpu_utilization_percent": 95.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 256,
+          "prompt_sha256": "636489c51df668531a184b9effbcf96cc0e2e2e571297a259d8512838c35a2a5",
+          "response_sha256": "755dfd74ebd9abacbfb745676d9bcbd4c08423c0f07ffd2cfd1b3def70c2eaf2",
+          "reasoning_sha256": null,
+          "prompt_tokens": 1155,
+          "output_tokens": 256,
+          "decode_tps": 6.677578113864333,
+          "ttft_s": 0.6628289229702204,
+          "prefill_tps": null,
+          "end_to_end_tps": 6.589370569819854,
+          "wall_s": 38.85044820100302,
+          "stream_span_s": 38.187497870007064,
+          "finish_reason": "length",
+          "thinking_returned": false,
+          "resource_after": {
+            "memory_available_kib": 10686420,
+            "swap_free_kib": 11938744,
+            "gpu_temperature_c": 74.0,
+            "gpu_power_w": 38.6,
+            "gpu_utilization_percent": 96.0,
+            "gpu_clock_mhz": 2405.0
+          }
+        }
+      ],
+      "protocol": {
+        "id": "sparkbench-workloads-v1",
+        "prompt_family": "chat",
+        "sampling": "Three sequential measured trials; 16-token warmup excluded. Same task profile across model configurations. Prompt scenario number changes per trial.",
+        "timing_basis": "stream estimate (completion_tokens - 1) / (last generated-content timestamp - first generated-content timestamp)",
+        "context_tokens": 8192,
+        "temperature": 0,
+        "seed": 20260928,
+        "thinking": false,
+        "concurrency": 1,
+        "notes": [
+          "vLLM 0.24.0 on ARM64, eager execution, context 8192, max sequences 1, GPU memory utilization 0.80, language model only, DeepGEMM disabled. Prefix cache not disabled.",
+          "Decode is a streaming estimate, includes generated reasoning when present; prefill is unavailable because per-request engine timing is not exposed. No correctness or quality score.",
+          "Reuses verified temporary Gemma runtime patch for tied unquantized LM head and embedding; quantized heads untouched. Patch SHA256 d1f5739ac9ee8033b65ddeb7f31937956954b638f138169edb9187e066528857."
+        ]
+      },
+      "provenance": {
+        "source": "SparkBench controlled local workload suite",
+        "measured_at": "2026-09-30T14:20:50.023289+00:00",
+        "finished_at": "2026-09-30T14:22:49.740998+00:00"
+      },
+      "warmup": {
+        "trial": "warmup",
+        "ranked": false,
+        "output_limit": 16,
+        "prompt_sha256": "87eaea2b7d9fea95b6d275d7040aeb400500af961cc49bc6f229fbfa46e7bb7c",
+        "response_sha256": "bde302f433f241a192daaa0fd3034c26f97ac5bce6ed68d1638fbdf6a8de9f8e",
+        "reasoning_sha256": null,
+        "prompt_tokens": 1154,
+        "output_tokens": 16,
+        "decode_tps": 6.9554032554878145,
+        "ttft_s": 0.7790958270197734,
+        "prefill_tps": null,
+        "end_to_end_tps": 5.449934327676299,
+        "wall_s": 2.9358151929918677,
+        "stream_span_s": 2.1565967419883236,
+        "finish_reason": "length",
+        "thinking_returned": false,
+        "resource_after": {
+          "memory_available_kib": 10727880,
+          "swap_free_kib": 11937876,
+          "gpu_temperature_c": 72.0,
+          "gpu_power_w": 38.47,
+          "gpu_utilization_percent": 95.0,
+          "gpu_clock_mhz": 2405.0
+        }
+      }
+    },
+    {
       "id": "runtime-preflight-53a9600a2732a06bacffb715-coding",
       "model_id": "53a9600a2732a06bacffb715",
       "model_name": "Qwen3.8-27B-BF16",
@@ -6916,6 +7242,58 @@
         "source": "Installed TensorFold CUDA pre-load compatibility check",
         "measured_at": "2026-09-30T13:44:01.259630+00:00",
         "receipt_sha256": "fdc0b45650b3603d809d851822c3a230b2272d8741ba2aae3d929e388678647a"
+      }
+    },
+    {
+      "id": "runtime-preflight-dea7617f336ff5057d026e25-coding",
+      "model_id": "dea7617f336ff5057d026e25",
+      "model_name": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "unavailable",
+      "trial_count": 0,
+      "preferred": false,
+      "metrics": {},
+      "trials": [],
+      "error": "Installed TensorFold0.3.6.3 generic format check accepts ModelOpt, but its real qwen4_exp serving family check rejects this exact MIXED_PRECISION checkpoint. It contains NVFP4, FP8 and FP8_PB_WO layer algorithms; the installed family accepts NVFP4, W4A16_NVFP4 and MXFP8. This pre-load check runs before CUDA engine construction. No GPU allocation or throughput test was attempted.",
+      "protocol": {
+        "id": "sparkbench-runtime-preflight-v1",
+        "prompt_family": "coding",
+        "timing_basis": "No generation measured: installed runtime compatibility check only.",
+        "notes": [
+          "Installed TensorFold0.3.6.3 generic format check accepts ModelOpt, but its real qwen4_exp serving family check rejects this exact MIXED_PRECISION checkpoint. It contains NVFP4, FP8 and FP8_PB_WO layer algorithms; the installed family accepts NVFP4, W4A16_NVFP4 and MXFP8. This pre-load check runs before CUDA engine construction. No GPU allocation or throughput test was attempted."
+        ]
+      },
+      "provenance": {
+        "source": "Installed TensorFold CUDA pre-load compatibility check",
+        "measured_at": "2026-09-30T14:24:32.906469+00:00",
+        "receipt_sha256": "8e10186b8ea6699bde51096bf73e778852e012b913e5a2abb77839d75b21ac5b"
+      }
+    },
+    {
+      "id": "runtime-preflight-dea7617f336ff5057d026e25-chat",
+      "model_id": "dea7617f336ff5057d026e25",
+      "model_name": "nvidia_Qwen3.8-Flash-Next-NVFP4",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "unavailable",
+      "trial_count": 0,
+      "preferred": false,
+      "metrics": {},
+      "trials": [],
+      "error": "Installed TensorFold0.3.6.3 generic format check accepts ModelOpt, but its real qwen4_exp serving family check rejects this exact MIXED_PRECISION checkpoint. It contains NVFP4, FP8 and FP8_PB_WO layer algorithms; the installed family accepts NVFP4, W4A16_NVFP4 and MXFP8. This pre-load check runs before CUDA engine construction. No GPU allocation or throughput test was attempted.",
+      "protocol": {
+        "id": "sparkbench-runtime-preflight-v1",
+        "prompt_family": "chat",
+        "timing_basis": "No generation measured: installed runtime compatibility check only.",
+        "notes": [
+          "Installed TensorFold0.3.6.3 generic format check accepts ModelOpt, but its real qwen4_exp serving family check rejects this exact MIXED_PRECISION checkpoint. It contains NVFP4, FP8 and FP8_PB_WO layer algorithms; the installed family accepts NVFP4, W4A16_NVFP4 and MXFP8. This pre-load check runs before CUDA engine construction. No GPU allocation or throughput test was attempted."
+        ]
+      },
+      "provenance": {
+        "source": "Installed TensorFold CUDA pre-load compatibility check",
+        "measured_at": "2026-09-30T14:24:32.906469+00:00",
+        "receipt_sha256": "8e10186b8ea6699bde51096bf73e778852e012b913e5a2abb77839d75b21ac5b"
       }
     }
   ],
@@ -6992,7 +7370,7 @@
   "suite": {
     "protocol_id": "sparkbench-workloads-v1",
     "status": "in_progress",
-    "successful_workload_profiles": 39,
+    "successful_workload_profiles": 41,
     "failed_workload_profiles": 3,
     "unavailable_workload_profiles": 4,
     "note": "Completed observations only. The site reloads published snapshots; it does not query the active benchmark runner."
