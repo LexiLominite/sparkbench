@@ -31,7 +31,7 @@
     {
       "id": "tensorfold-quant-study-20261011",
       "label": "TensorFold quantization study, 11 October",
-      "description": "Same client against each server, one at a time: greedy (temperature 0, seed 7), thinking off, 512 output tokens. Coding and chat each ran three requests; the first also warms the prefix cache and is included in the median. Then four simultaneous coding requests, cold prefill at about 8k, 32k and 128k prompt tokens (Python standard-library source with a unique first line), a passphrase recall at about 104k tokens and one tool call. Speculative decoding stayed on as each server is normally configured."
+      "description": "Same client against each server, one at a time: greedy (temperature 0, seed 7), thinking off, 512 output tokens. Coding and chat each ran three requests; the first also warms the prefix cache and is included in the median. Then four simultaneous coding requests, cold prefill with prompts of about 7k, 28k and 115k tokens (aimed at 8k, 32k and 128k; Python standard-library source with a unique first line), a passphrase recall at about 104k tokens and one tool call. Speculative decoding stayed on as each server is normally configured."
     }
   ],
   "results": [
@@ -10998,10 +10998,10 @@
         }
       ],
       "findings": [
-        "27B prefill: NVFP4 processes prompts about 2.1x faster at 8k tokens (2,834 vs 1,377 tok/s) and 1.6x faster at 128k (1,608 vs 1,007).",
+        "27B prefill: NVFP4 reads prompts about 2.1x faster at 7k tokens (2,834 vs 1,377 tok/s) and 1.6x faster at 115k (1,608 vs 1,007).",
         "27B decode: MLX 4-bit stays ahead, 82.7 vs 74.1 tok/s on coding and 41.2 vs 35.9 on chat. The NVFP4 export keeps attention in FP8, so its weights are larger (20.4 vs 15.0 GiB), and decoding on the GB10 is bound by memory bandwidth.",
         "27B under load: four simultaneous coding streams reach 192 tok/s on NVFP4 and 197 on MLX 4-bit.",
-        "Flash Next: the NVFP4 build trails the live MLX 4-bit server on decode (66.2 vs 81.7 coding, 40.6 vs 56.6 chat), prefill (1,615 vs 1,979 tok/s at 8k) and four-stream throughput (119 vs 153 tok/s).",
+        "Flash Next: the NVFP4 build trails the live MLX 4-bit server on decode (66.2 vs 81.7 coding, 40.6 vs 56.6 chat), prefill (1,615 vs 1,979 tok/s at 7k) and four-stream throughput (119 vs 153 tok/s).",
         "All four setups recalled the passphrase from a ~104k-token prompt and made a correct tool call."
       ],
       "outcome": "The live default stayed on the MLX 4-bit Flash Next. The 27B NVFP4 suits long-prompt and agent work; switching either model is still an open decision.",
@@ -11018,7 +11018,7 @@
       "date": "2026-09-28",
       "title": "Writing baseline",
       "id": "writing-baseline",
-      "summary": "26 Ollama and vLLM entries timed on the shared essay prompts; one checkpoint was incomplete.",
+      "summary": "25 Ollama and vLLM entries timed on the shared essay prompts, one of them an embedding model. A 26th checkpoint was incomplete and has no speed.",
       "link": "#models?workload=writing"
     },
     {

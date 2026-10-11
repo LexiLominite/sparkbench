@@ -46,7 +46,7 @@ const GB10_BANDWIDTH = 273e9; // bytes per second, NVIDIA's published DGX Spark 
 const defaultState = () => ({
   workload: 'writing', query: '', engine: 'all', format: 'all', quant: '', sort: 'speed', group: true, view: 'all',
   scope: 'all', metric: 'decode_tps', showLatency: true, minParams: '', maxParams: '', maxActive: '', maxDisk: '',
-  includeUnmeasured: true, includeUnknown: true, remember: true, theme: 'system', axis: 'disk',
+  includeUnmeasured: true, includeUnknown: true, remember: true, theme: 'system', axis: 'disk', race: 'coding',
 });
 let DATA, SUM, WORK, models = [], state = defaultState(), selected = new Set(), toastTimer, preferencesRestored = false;
 const openPanels = new Map();
@@ -105,7 +105,8 @@ function content(html) { patch('#content', html); }
 // ---------------------------------------------------------------- preferences (first-party cookie, opt-out)
 function persistPreferences() {
   const secure = location.protocol === 'https:' ? '; Secure' : '';
-  if (!state.remember) { document.cookie = COOKIE + '=; Max-Age=0; Path=/; SameSite=Lax' + secure; return; }
+  // Opting out keeps only the opt-out itself, so the choice survives a reload.
+  if (!state.remember) { document.cookie = COOKIE + '=' + encodeURIComponent(JSON.stringify({v: 1, state: {remember: false}})) + '; Max-Age=15552000; Path=/; SameSite=Lax' + secure; return; }
   const saved = {v: 1, state: {...state}, selected: [...selected].slice(0, 8)};
   let encoded = encodeURIComponent(JSON.stringify(saved));
   while (encoded.length > 3600 && (saved.state.query.length || saved.state.quant.length)) {
@@ -123,7 +124,9 @@ function restorePreferences() {
     const entry = document.cookie.split('; ').find(c => c.startsWith(COOKIE + '='));
     if (!entry) return;
     const saved = JSON.parse(decodeURIComponent(entry.slice(COOKIE.length + 1)));
-    if (saved.v !== 1 || !saved.state || saved.state.remember !== true) return;
+    if (saved.v !== 1 || !saved.state) return;
+    if (saved.state.remember === false) { state.remember = false; return; }
+    if (saved.state.remember !== true) return;
     const stored = saved.state, base = defaultState();
     for (const k of Object.keys(base)) {
       if (typeof base[k] === 'boolean') { if (typeof stored[k] === 'boolean') state[k] = stored[k]; }
@@ -131,7 +134,7 @@ function restorePreferences() {
     }
     const allowed = {
       workload: WORKLOADS, view: ['all', 'single'], scope: ['all', 'selected'], metric: metricKeys,
-      sort: ['speed', 'ttft', 'memory', 'name', 'params', 'active', 'disk'], theme: ['system', 'light', 'dark'], axis: ['disk', 'params'],
+      sort: ['speed', 'ttft', 'memory', 'name', 'params', 'active', 'disk'], theme: ['system', 'light', 'dark'], axis: ['disk', 'params'], race: WORKLOADS,
       engine: ['all', ...new Set(models.map(m => m.engine))], format: ['all', ...new Set(models.map(formatOf))],
     };
     for (const [k, values] of Object.entries(allowed)) if (!values.includes(state[k])) state[k] = base[k];
@@ -163,6 +166,7 @@ function updateInPlace() {
 function applyTheme() {
   const root = document.documentElement;
   if (state.theme === 'system') delete root.dataset.theme; else root.dataset.theme = state.theme;
+  $$('meta[name="theme-color"]').forEach(meta => { meta.content = state.theme === 'system' ? (meta.media.includes('dark') ? '#131518' : '#eef0f2') : state.theme === 'dark' ? '#131518' : '#eef0f2'; });
   const button = $('#theme-toggle');
   const icons = {
     system: '<circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" class="fill"/>',
@@ -193,12 +197,18 @@ function formatOf(m) { return m.format || m.raw?.format || 'Unknown'; }
 function engineSlot(engine) { return ENGINE_SLOT[engine] || 0; }
 function groupKey(m) { return `${m.engine}:${m.raw?.digest || m.manifest_digest || m.config?.checkpoint?.revision || m.id}`; }
 function representative(list) { return list.find(m => !m.model.includes(':') || !['default', 'coder', 'vision', 'reasoning', 'fast', 'agent'].includes(m.model.split(':')[0])) || list[0]; }
+// Active parameters: recorded where known, read from MoE tag names such as "a5.1b" or "A12B", and equal to the total for
+// checkpoints known to be dense (TensorFold reports Qwen3.8 27B as "Qwen3.8 dense"). Everything else stays unknown.
+const DENSE = [/qwen3\.8[-_:]?27b/i, /^qwen3:0\.6b/i];
+function activeFromName(name) { const x = String(name).match(/[-_:]a(\d+(?:\.\d+)?)b(?![a-z])/i); return x ? Number(x[1]) : null; }
 function normalise(m) {
-  const raw = m.raw;
+  const raw = m.raw, totalB = numberB(m.parameter_size || raw?.parameters), recorded = numberB(m.active_parameters || raw?.active_parameters);
+  const named = recorded == null ? activeFromName(m.model) : null, dense = recorded == null && named == null && (m.config ? !m.active_parameters : DENSE.some(r => r.test(m.model)));
   return {
     ...m, kind: m.kind || raw?.kind || 'generation', quant: m.quantization_metadata || raw?.quantization || 'Unknown',
-    params: displayParameters(m.parameter_size || raw?.parameters || 'Unknown'), active: displayParameters(m.active_parameters || raw?.active_parameters || null),
-    totalB: numberB(m.parameter_size || raw?.parameters), activeB: numberB(m.active_parameters || raw?.active_parameters), diskGiB: validNumber(m.tag_disk_gib),
+    params: displayParameters(m.parameter_size || raw?.parameters || 'Unknown'),
+    totalB, activeB: recorded ?? named ?? (dense ? totalB : null), activeBasis: recorded != null ? 'recorded' : named != null ? 'tag name' : dense ? 'dense' : null, dense,
+    active: displayParameters(m.active_parameters || raw?.active_parameters || null) || (named != null ? named + 'B' : null), diskGiB: validNumber(m.tag_disk_gib),
     name: m.display_name || m.model,
   };
 }
@@ -292,7 +302,7 @@ function longContextFor(m) { return (WORK.long_context || []).filter(r => r.mode
 function studyById(id) { return (WORK.studies || []).find(s => s.id === id); }
 function modelById(id) { return models.find(m => m.id === id); }
 function engineLabel(m) { return `<span class="engine"><span class="engine-dot s${engineSlot(m.engine)}" aria-hidden="true"></span>${esc(m.engine)}</span>`; }
-function sizeLine(m) { return `${esc(m.params)} total${m.active ? ', ' + esc(m.active) + ' active' : ''}, ${esc(m.quant)}`; }
+function sizeLine(m) { return `${esc(m.params)} total${m.active ? ', ' + esc(m.active) + ' active' : m.dense ? ', dense' : ''}, ${esc(m.quant)}`; }
 function statusTag(m) {
   if (m.status === 'incomplete') return '<span class="tag warn">Incomplete</span>';
   if (m.status === 'unavailable') return '<span class="tag warn">Unavailable</span>';
@@ -320,17 +330,17 @@ function protocolNote() {
 
 // ---------------------------------------------------------------- views: leaderboard
 function raceLanes() {
-  const w = state.workload, usable = m => m.kind === 'generation' && metricOf(m, w, 'decode_tps') != null;
+  const w = state.race, usable = m => m.kind === 'generation' && metricOf(m, w, 'decode_tps') != null;
   const picked = models.filter(m => selected.has(m.id) && usable(m));
   const lanes = picked.length >= 2 ? picked : RACE_DEFAULTS.map(([name, engine]) => models.find(m => m.model === name && m.engine === engine)).filter(m => m && usable(m));
   return {mine: picked.length >= 2, lanes: lanes.sort((a, b) => metricOf(b, w, 'decode_tps') - metricOf(a, w, 'decode_tps')).slice(0, 8)};
 }
 function heroHTML() {
-  const w = state.workload, {mine, lanes} = raceLanes();
+  const w = state.race, {mine, lanes} = raceLanes();
   const laneHTML = lanes.map((m, i) => {
     const r = measurement(m, w), tps = r.metrics.decode_tps.median, ttft = r.metrics.ttft_s?.median ?? 0, total = ttft + TAPE_TOKENS / tps;
     return `<div class="lane" data-row="lane-${esc(m.id)}" data-lane="${esc(m.id)}" data-tps="${tps}" data-ttft="${ttft}" data-seed="${i + 1}">
-      <div class="lane-name"><a href="${modelURL(m)}">${esc(m.name)}</a><div class="lane-sub"><span class="engine-dot s${engineSlot(m.engine)}" aria-hidden="true"></span>${esc(m.engine)}, ${esc(m.quant.replace(/\s*\(.*\)$/, ''))}</div></div>
+      <div class="lane-name"><a href="${modelURL(m, w)}">${esc(m.name)}</a><div class="lane-sub"><span class="engine-dot s${engineSlot(m.engine)}" aria-hidden="true"></span>${esc(m.engine)}, ${esc(m.quant.replace(/\s*\(.*\)$/, ''))}</div></div>
       <canvas class="tape" aria-hidden="true"></canvas>
       <div class="lane-read" aria-hidden="true"><b>${fmt(total, 1)} s</b><span>${fmt(tps, 1)} tok/s</span></div>
       <span class="sr-only">${esc(m.name)} on ${esc(m.engine)}: ${fmt(tps, 1)} tokens per second after a first token at ${fmt(ttft, 2)} seconds, so ${TAPE_TOKENS} tokens take about ${fmt(total, 1)} seconds.</span>
@@ -342,7 +352,7 @@ function heroHTML() {
         <h1 class="display" id="hero-title">How fast does it type?</h1>
         <p class="lede">Local models on one NVIDIA DGX Spark, timed token by token. Each lane waits for its measured first token, then types a ${TAPE_TOKENS}-token answer at its median ${w} speed.</p>
       </div>
-      <div class="hero-controls">${workloadSegments('hero-workload', false)}</div>
+      <div class="hero-controls"><div class="segmented" role="group" aria-label="Race workload" id="hero-workload">${WORKLOADS.map(k => `<button type="button" data-race="${k}" aria-pressed="${state.race === k}">${cap(k)}</button>`).join('')}</div></div>
     </div>
     <div class="race" id="race" role="group" aria-label="${TAPE_TOKENS}-token answers typed at measured ${w} speed">${laneHTML || '<div class="empty"><p>No setup has a measured output speed for this workload.</p></div>'}</div>
     <div class="race-foot">
@@ -435,7 +445,7 @@ function renderModels() {
         <label class="field">Sort by<select id="sort">${sorts.map(([k, v]) => `<option value="${k}" ${state.sort === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
         <label class="field">Total parameters, at least (B)<input id="minParams" type="number" min="0" step="any" value="${esc(state.minParams)}" placeholder="No minimum"></label>
         <label class="field">Total parameters, at most (B)<input id="maxParams" type="number" min="0" step="any" value="${esc(state.maxParams)}" placeholder="No maximum"></label>
-        <label class="field">Active parameters, at most (B)<input id="maxActive" type="number" min="0" step="any" value="${esc(state.maxActive)}" placeholder="No maximum"></label>
+        <label class="field">Active parameters, at most (B)<input id="maxActive" title="Dense models count every parameter. Mixture-of-experts counts come from the checkpoint or the tag name; other models are unknown." type="number" min="0" step="any" value="${esc(state.maxActive)}" placeholder="No maximum"></label>
         <label class="field">Weights on disk, at most (GiB)<input id="maxDisk" type="number" min="0" step="any" value="${esc(state.maxDisk)}" placeholder="No maximum"></label>
       </div>
       <div class="filter-options">
@@ -465,11 +475,12 @@ function renderModels() {
   $('#metric-choice').onchange = e => { state.metric = e.target.value; updateInPlace(); };
   $$('[data-scope]').forEach(b => b.onclick = () => { state.scope = b.dataset.scope; updateInPlace(); });
   $('#reset-advanced').onclick = () => { resetFilters(); updateInPlace(); };
-  $('#remember').onchange = e => { state.remember = e.target.checked; persistPreferences(); notify(state.remember ? 'Your view will be remembered' : 'Saved view cookie removed'); };
+  $('#remember').onchange = e => { state.remember = e.target.checked; persistPreferences(); notify(state.remember ? 'Your view will be remembered' : 'Your view will not be saved'); };
   $('#forget').onclick = () => { state = defaultState(); state.remember = false; selected.clear(); persistPreferences(); applyTheme(); updateInPlace(); notify('Saved view forgotten and reset'); };
   $('#reload').onclick = () => load(true);
   $('#download-csv').onclick = exportCSV;
   $('#race-replay').onclick = () => Race.restart(true);
+  $$('[data-race]').forEach(b => b.onclick = () => { state.race = b.dataset.race; updateInPlace(); });
   bindWorkloadButtons();
   renderResults();
 }
@@ -482,7 +493,7 @@ const Race = {
     const root = $('#race');
     if (!root) { this.stop(); this.sig = ''; this.lanes = []; return; }
     const lanes = $$('[data-lane]', root).map(el => ({el, canvas: $('canvas', el), read: $('.lane-read', el), tps: Number(el.dataset.tps), ttft: Number(el.dataset.ttft) || 0, seed: Number(el.dataset.seed), heights: null, drawn: -1}));
-    const sig = state.workload + '|' + lanes.map(l => l.el.dataset.lane + ':' + l.tps).join('|');
+    const sig = state.race + '|' + lanes.map(l => l.el.dataset.lane + ':' + l.tps).join('|');
     lanes.forEach(l => { l.heights = tokenHeights(l.seed * 7919 + Math.round(l.tps * 10)); });
     this.lanes = lanes;
     this.watch(root);
@@ -612,9 +623,20 @@ function legendHTML(items) {
   return `<ul class="legend">${items.map(([slot, label, kind = 'dot']) => `<li>${kind === 'dot' ? `<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" class="s${slot}"/></svg>` : `<span class="key-line ${slot === 'ceiling' ? 'ceiling' : 's' + slot}" aria-hidden="true"></span>`}${esc(label)}</li>`).join('')}</ul>`;
 }
 
+// Charts are drawn at the pixel width they will occupy, so 12px text stays 12px on a phone.
+function frameWidth(columns = 1) {
+  const main = $('#content'), cs = getComputedStyle(main);
+  const inner = main.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const cols = window.innerWidth <= 820 ? 1 : columns, pad = window.innerWidth <= 560 ? 24 : 40;
+  return Math.max(260, Math.floor((inner - 18 * (cols - 1)) / cols - pad));
+}
+function barPath(x0, y, w, h, toRight) {
+  const r = Math.min(4, w / 2), s = toRight ? 1 : -1;
+  return `M${x0},${y}h${s * (w - r)}a${r},${r} 0 0 ${toRight ? 1 : 0} ${s * r},${r}v${h - 2 * r}a${r},${r} 0 0 ${toRight ? 1 : 0} ${-s * r},${r}h${-s * (w - r)}z`;
+}
 // scatter: output speed against size, coloured by engine
-function speedMapSVG(points, axis) {
-  const W = 1000, H = 560, m = {l: 58, r: 18, t: 18, b: 50}, iw = W - m.l - m.r, ih = H - m.t - m.b;
+function speedMapSVG(points, axis, W) {
+  const narrow = W < 560, H = Math.round(Math.min(560, Math.max(320, W * .6))), m = {l: narrow ? 40 : 58, r: 14, t: 18, b: 46}, iw = W - m.l - m.r, ih = H - m.t - m.b;
   const xs = points.map(p => p.x), ys = points.map(p => p.y);
   const x0 = Math.min(...xs) / 1.6, x1 = Math.max(...xs) * 1.6, y0 = Math.min(...ys) / 1.6, y1 = Math.max(...ys) * 1.7;
   const X = logScale(x0, x1, m.l, m.l + iw), Y = logScale(y0, y1, m.t + ih, m.t);
@@ -624,60 +646,62 @@ function speedMapSVG(points, axis) {
     const seg = [];
     for (let i = 0; i <= 60; i++) { const gib = x0 * (x1 / x0) ** (i / 60), tps = GB10_BANDWIDTH / (gib * 2 ** 30); if (tps >= y0 && tps <= y1) seg.push(`${X(gib).toFixed(1)},${Y(tps).toFixed(1)}`); }
     if (seg.length > 1) {
-      const lx = 1.15, labelGib = Math.max(x0 * 1.2, GB10_BANDWIDTH / (y1 / lx * 2 ** 30));
-      ceiling = `<polyline class="ceiling" points="${seg.join(' ')}"/><text class="ceiling-label" x="${X(labelGib) + 8}" y="${Y(GB10_BANDWIDTH / (labelGib * 2 ** 30)) - 6}">Dense ceiling at 273 GB/s</text>`;
+      const labelGib = Math.max(x0 * 1.2, GB10_BANDWIDTH / (y1 / 1.15 * 2 ** 30));
+      ceiling = `<polyline class="ceiling" points="${seg.join(' ')}"/><text class="ceiling-label" x="${X(labelGib) + 8}" y="${Y(GB10_BANDWIDTH / (labelGib * 2 ** 30)) - 6}">${narrow ? '273 GB/s ceiling' : 'Dense ceiling at 273 GB/s'}</text>`;
     }
   }
   const pts = points.map(p => ({...p, px: X(p.x), py: Y(p.y)}));
   const labelled = placeLabels(pts.filter(p => p.label).sort((a, b) => b.y - a.y).map(p => ({x: p.px, y: p.py, text: p.label})), pts.map(p => ({x: p.px, y: p.py})), W, H);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Output speed against ${axis === 'disk' ? 'weight size' : 'parameter count'}, log scales">
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Output speed against ${axis === 'disk' ? 'weight size' : 'parameter count'}, log scales">
     <g class="grid">${yt.map(v => `<line x1="${m.l}" x2="${m.l + iw}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}${xt.map(v => `<line y1="${m.t}" y2="${m.t + ih}" x1="${X(v)}" x2="${X(v)}"/>`).join('')}</g>
     <g class="axis"><line x1="${m.l}" x2="${m.l + iw}" y1="${m.t + ih}" y2="${m.t + ih}"/></g>
     ${yt.map(v => `<text x="${m.l - 8}" y="${Y(v) + 4}" text-anchor="end">${tickText(v)}</text>`).join('')}
     ${xt.map(v => `<text x="${X(v)}" y="${m.t + ih + 18}" text-anchor="middle">${tickText(v)}</text>`).join('')}
-    <text class="axis-title" x="${m.l + iw}" y="${H - 6}" text-anchor="end">${axis === 'disk' ? 'Weights on disk, GiB (log scale)' : 'Total parameters, billions (log scale)'}</text>
+    <text class="axis-title" x="${m.l + iw}" y="${H - 4}" text-anchor="end">${axis === 'disk' ? 'Weights on disk, GiB (log scale)' : 'Total parameters, billions (log scale)'}</text>
     ${ceiling}
-    ${pts.map(p => `<a href="${p.href}" class="hit-wrap" data-tip="${tip(p.tip)}" aria-label="${esc(p.tip.join(', '))}"><circle class="hit" cx="${p.px}" cy="${p.py}" r="13"/><circle class="dot s${p.slot}" cx="${p.px}" cy="${p.py}" r="${p.selected ? 7 : 5.5}"/></a>`).join('')}
-    ${labelled.map(l => `<text class="${'label'}" x="${l.lx}" y="${l.ly}" text-anchor="${l.anchor}">${esc(l.text)}</text>`).join('')}
+    ${pts.map(p => `<a href="${p.href}" class="hit-wrap" data-tip="${tip(p.tip)}" aria-label="${esc(p.tip.join(', '))}"><circle class="hit" cx="${p.px}" cy="${p.py}" r="14"/><circle class="dot s${p.slot}" cx="${p.px}" cy="${p.py}" r="${p.selected ? 7 : 5.5}"/></a>`).join('')}
+    ${labelled.map(l => `<text class="label" x="${l.lx}" y="${l.ly}" text-anchor="${l.anchor}">${esc(l.text)}</text>`).join('')}
   </svg>`;
 }
 // lines: one panel per model family, x is prompt length
-function prefillLinesSVG(series, xDomain, yMax) {
-  const W = 600, H = 330, m = {l: 54, r: 16, t: 14, b: 44}, iw = W - m.l - m.r, ih = H - m.t - m.b;
+function prefillLinesSVG(series, xDomain, yMax, W) {
+  const H = Math.round(Math.max(240, Math.min(320, W * .58))), m = {l: 44, r: 14, t: 14, b: 42}, iw = W - m.l - m.r, ih = H - m.t - m.b;
   const X = logScale(xDomain[0], xDomain[1], m.l, m.l + iw), yt = linTicks(yMax, 4), Y = linScale(0, yt[yt.length - 1], m.t + ih, m.t);
   const xt = logTicks(xDomain[0], xDomain[1]);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Prompt processing speed by prompt length">
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Prompt processing speed by prompt length">
     <g class="grid">${yt.map(v => `<line x1="${m.l}" x2="${m.l + iw}" y1="${Y(v)}" y2="${Y(v)}"/>`).join('')}</g>
     <g class="axis"><line x1="${m.l}" x2="${m.l + iw}" y1="${m.t + ih}" y2="${m.t + ih}"/></g>
     ${yt.map(v => `<text x="${m.l - 8}" y="${Y(v) + 4}" text-anchor="end">${tickText(v)}</text>`).join('')}
     ${xt.map(v => `<text x="${X(v)}" y="${m.t + ih + 18}" text-anchor="middle">${tickText(v)}</text>`).join('')}
-    <text class="axis-title" x="${m.l + iw}" y="${H - 6}" text-anchor="end">Prompt tokens (log scale)</text>
+    <text class="axis-title" x="${m.l + iw}" y="${H - 4}" text-anchor="end">Prompt tokens (log scale)</text>
     ${series.map(s => `<polyline class="line s${s.slot}" points="${s.points.map(p => `${X(p.x).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ')}"/>`).join('')}
-    ${series.map(s => s.points.map(p => `<g data-tip="${tip([s.label, `${fmtInt(p.y)} tok/s at ${fmtInt(p.x)} prompt tokens`, p.seconds != null ? `${fmt(p.seconds, 1)} s to read the prompt` : '', p.note])}" tabindex="0" role="img" aria-label="${esc(s.label)}: ${fmtInt(p.y)} tokens per second at ${fmtInt(p.x)} prompt tokens"><circle class="hit" cx="${X(p.x)}" cy="${Y(p.y)}" r="12"/><circle class="dot s${s.slot}" cx="${X(p.x)}" cy="${Y(p.y)}" r="4.5"/></g>`).join('')).join('')}
+    ${series.map(s => s.points.map(p => `<g data-tip="${tip([s.label, `${fmtInt(p.y)} tok/s at ${fmtInt(p.x)} prompt tokens`, p.seconds != null ? `${fmt(p.seconds, 1)} s to read the prompt` : '', p.note])}" tabindex="0" role="img" aria-label="${esc(s.label)}: ${fmtInt(p.y)} tokens per second at ${fmtInt(p.x)} prompt tokens"><circle class="hit" cx="${X(p.x)}" cy="${Y(p.y)}" r="13"/><circle class="dot s${s.slot}" cx="${X(p.x)}" cy="${Y(p.y)}" r="4.5"/></g>`).join('')).join('')}
   </svg>`;
 }
-// horizontal bars: one measure, sorted
-function hbarsSVG(rows, unit, digits = 0) {
-  const W = 1000, rowH = 34, m = {l: 260, r: 90, t: 6, b: 6}, H = m.t + m.b + rows.length * rowH, iw = W - m.l - m.r;
+// horizontal bars: one measure, sorted; on narrow screens each label sits above its bar
+function hbarsSVG(rows, unit, digits, W) {
+  const compact = W < 640, rowH = compact ? 50 : 34, labelW = compact ? 0 : 250, valueW = 80, H = 8 + rows.length * rowH, iw = W - labelW - valueW;
   const max = Math.max(...rows.map(r => r.value)), X = linScale(0, max, 0, iw);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(rows.map(r => `${r.label} ${fmt(r.value, digits)} ${unit}`).join('; '))}">
-    <line class="zero" x1="${m.l}" x2="${m.l}" y1="${m.t}" y2="${H - m.b}"/>
-    ${rows.map((r, i) => { const y = m.t + i * rowH + 7, w = Math.max(2, X(r.value)), h = 20; return `<g data-tip="${tip([r.label, `${fmt(r.value, digits)} ${unit}`, r.note])}"><text class="label" x="${m.l - 12}" y="${y + 14}" text-anchor="end">${esc(r.label)}</text><path class="dot s${r.slot}" d="M${m.l},${y}h${w - 4}a4,4 0 0 1 4,4v${h - 8}a4,4 0 0 1 -4,4h${-(w - 4)}z" style="stroke:none"/><text class="label-strong" x="${m.l + w + 8}" y="${y + 14}">${fmt(r.value, digits)} ${esc(unit)}</text></g>`; }).join('')}
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(rows.map(r => `${r.label} ${fmt(r.value, digits)} ${unit}`).join('; '))}">
+    ${rows.map((r, i) => {
+      const top = 4 + i * rowH, y = compact ? top + 22 : top + 7, w = Math.max(2, X(r.value)), h = 20;
+      return `<g data-tip="${tip([r.label, `${fmt(r.value, digits)} ${unit}`, r.note])}" tabindex="0" role="img" aria-label="${esc(r.label)}: ${fmt(r.value, digits)} ${esc(unit)}"><rect class="hit" x="0" y="${top}" width="${W}" height="${rowH}"/>${compact ? `<text class="label" x="0" y="${top + 14}">${esc(r.label)}</text>` : `<text class="label" x="${labelW - 12}" y="${y + 14}" text-anchor="end">${esc(r.label)}</text>`}<path class="bar s${r.slot}" d="${barPath(labelW, y, w, h, true)}"/><text class="label-strong" x="${labelW + w + 8}" y="${y + 14}">${fmt(r.value, digits)} ${esc(unit)}</text></g>`;
+    }).join('')}
+    <line class="zero" x1="${labelW}" x2="${labelW}" y1="4" y2="${H - 4}"/>
   </svg>`;
 }
-// diverging bars: relative change of one format against the other
-function divergingSVG(rows, limit) {
-  const W = 600, rowH = 36, m = {l: 160, r: 64, t: 26, b: 8}, H = m.t + m.b + rows.length * rowH, iw = W - m.l - m.r;
-  const lim = limit || Math.max(25, ...rows.map(r => Math.abs(r.pct))) * 1.35, X = linScale(-lim, lim, m.l, m.l + iw), zero = X(0);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(rows.map(r => `${r.label}: ${r.pct > 0 ? '+' : ''}${fmt(r.pct, 0)}%`).join('; '))}">
+// diverging bars: relative change of one format against the other, on a scale shared across panels
+function divergingSVG(rows, limit, W) {
+  const compact = W < 520, rowH = compact ? 50 : 36, labelW = compact ? 0 : 150, top0 = 26, H = top0 + 6 + rows.length * rowH;
+  const lim = limit || Math.max(25, ...rows.map(r => Math.abs(r.pct))) * 1.35, X = linScale(-lim, lim, labelW + 46, W - 46), zero = X(0);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(rows.map(r => `${r.label}: ${r.pct > 0 ? '+' : ''}${fmt(r.pct, 0)}%`).join('; '))}">
     <text x="${zero - 6}" y="14" text-anchor="end">slower</text><text x="${zero + 6}" y="14">faster</text>
     ${rows.map((r, i) => {
-      const y = m.t + i * rowH + 8, h = 20, w = Math.max(2, Math.abs(X(r.pct) - zero)), up = r.pct >= 0;
-      const path = up ? `M${zero},${y}h${w - 4}a4,4 0 0 1 4,4v${h - 8}a4,4 0 0 1 -4,4h${-(w - 4)}z` : `M${zero},${y}h${-(w - 4)}a4,4 0 0 0 -4,4v${h - 8}a4,4 0 0 0 4,4h${w - 4}z`;
-      const lx = up ? zero + w + 6 : zero - w - 6;
-      return `<g data-tip="${tip([r.label, `${r.a} vs ${r.b}`, `${r.pct > 0 ? '+' : ''}${fmt(r.pct, 0)}%`])}"><text class="label" x="${m.l - 12}" y="${y + 14}" text-anchor="end">${esc(r.label)}</text><path class="${up ? 'bar-up' : 'bar-down'}" d="${path}"/><text class="label-strong" x="${lx}" y="${y + 14}" text-anchor="${up ? 'start' : 'end'}">${r.pct > 0 ? '+' : r.pct < 0 ? '−' : ''}${fmt(Math.abs(r.pct), 0)}%</text></g>`;
+      const top = top0 + i * rowH, y = compact ? top + 22 : top + 8, h = 20, w = Math.max(2, Math.abs(X(r.pct) - zero)), up = r.pct >= 0;
+      const sign = r.pct > 0 ? '+' : r.pct < 0 ? '−' : '', text = `${sign}${fmt(Math.abs(r.pct), 0)}%`;
+      return `<g data-tip="${tip([r.label, `${r.a} against ${r.b}`, text])}" tabindex="0" role="img" aria-label="${esc(r.label)}: ${text}"><rect class="hit" x="0" y="${top}" width="${W}" height="${rowH}"/>${compact ? `<text class="label" x="0" y="${top + 14}">${esc(r.label)}</text>` : `<text class="label" x="${labelW - 12}" y="${y + 14}" text-anchor="end">${esc(r.label)}</text>`}<path class="${up ? 'bar-up' : 'bar-down'}" d="${barPath(zero, y, w, h, up)}"/><text class="label-strong" x="${up ? zero + w + 6 : zero - w - 6}" y="${y + 14}" text-anchor="${up ? 'start' : 'end'}">${text}</text></g>`;
     }).join('')}
-    <line class="zero" x1="${zero}" x2="${zero}" y1="${m.t}" y2="${H - m.b}"/>
+    <line class="zero" x1="${zero}" x2="${zero}" y1="${top0}" y2="${H - 4}"/>
   </svg>`;
 }
 // tooltips for any [data-tip], by pointer and keyboard
@@ -695,12 +719,14 @@ function moveTip(x, y) {
   box.style.top = Math.max(8, y - r.height - 12 < 8 ? y + 18 : y - r.height - 12) + 'px';
 }
 function hideTip() { $('#chart-tip').hidden = true; tipFor = null; }
+function tipAnchor(el) { const r = el.getBoundingClientRect(); return [r.left + Math.min(r.width / 2, 120), r.top]; }
 document.addEventListener('pointerover', e => { const el = e.target.closest?.('[data-tip]'); if (el && el !== tipFor) showTip(el, e.clientX, e.clientY); });
-document.addEventListener('pointermove', e => { if (tipFor) moveTip(e.clientX, e.clientY); });
-document.addEventListener('pointerout', e => { if (tipFor && !tipFor.contains(e.relatedTarget)) hideTip(); });
-document.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tip]'); if (el) { const r = el.getBoundingClientRect(); showTip(el, r.left + r.width / 2, r.top); } });
+document.addEventListener('pointermove', e => { if (tipFor && tipFor !== document.activeElement) moveTip(e.clientX, e.clientY); });
+document.addEventListener('pointerout', e => { if (tipFor && tipFor !== document.activeElement && !tipFor.contains(e.relatedTarget)) hideTip(); });
+document.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tip]'); if (el) showTip(el, ...tipAnchor(el)); });
 document.addEventListener('focusout', hideTip);
-window.addEventListener('scroll', () => { if (tipFor) hideTip(); }, {passive: true});
+// A focused point keeps its tooltip while the page scrolls it into view; a hovered one lets go.
+window.addEventListener('scroll', () => { if (!tipFor) return; if (tipFor === document.activeElement) moveTip(...tipAnchor(tipFor)); else hideTip(); }, {passive: true});
 
 // ---------------------------------------------------------------- views: speed map
 function renderMap() {
@@ -724,7 +750,7 @@ function renderMap() {
     <p class="chart-title">${cap(w)} output speed, tokens per second (log scale)</p>
     <p class="chart-sub">${points.length} setups that follow the leaderboard filters. Select a point to open it.</p>
     ${legendHTML([...engines.map(e => [engineSlot(e), e]), ...(axis === 'disk' ? [['ceiling', 'Memory-bandwidth ceiling for a dense model', 'line']] : [])])}
-    ${speedMapSVG(points, axis)}
+    ${speedMapSVG(points, axis, frameWidth())}
   </figure>
   ${axis === 'disk' ? `<p class="map-note">The dashed line is a rule of thumb: 273 GB/s of memory bandwidth divided by the weight size gives the best a dense model can do if it reads every weight once per token. ${above.length} of ${points.length} setups beat it. They read fewer bytes per token than they store: mixture-of-experts models only touch their active experts, and speculative decoding (MTP or a drafter) accepts several tokens per pass.</p>` : `<p class="map-note">Parameter count ignores quantization, so two setups with the same count can differ several times in speed. Switch to weights on disk to see the memory-bandwidth ceiling.</p>`}
   <details class="panel" style="margin-top:22px"><summary>Show as a table</summary><div><div class="table-scroll"><table><thead><tr><th>Setup</th><th>Engine</th><th class="right">${axis === 'disk' ? 'Weights, GiB' : 'Parameters, B'}</th><th class="right">${cap(w)} tok/s</th>${axis === 'disk' ? '<th class="right">Dense ceiling tok/s</th>' : ''}</tr></thead><tbody>${points.slice().sort((a, b) => b.y - a.y).map(p => `<tr><td><a href="${p.href}">${esc(p.m.name)}</a></td><td>${engineLabel(p.m)}</td><td class="right num">${fmt(p.x, 1)}</td><td class="right num">${fmt(p.y, 1)}</td>${axis === 'disk' ? `<td class="right num">${fmt(GB10_BANDWIDTH / (p.x * 2 ** 30), 1)}</td>` : ''}</tr>`).join('')}</tbody></table></div></div></details>`
@@ -758,7 +784,7 @@ function contextPanels(series) {
   const families = [...new Set(series.map(s => s.family))];
   const xs = series.flatMap(s => s.points.map(p => p.x)), ys = series.flatMap(s => s.points.map(p => p.y));
   const xDomain = [Math.min(...xs) / 1.3, Math.max(...xs) * 1.3], yMax = Math.max(...ys) * 1.08;
-  return `<div class="small-multiples">${families.map(f => { const ss = series.filter(s => s.family === f); return `<figure class="chart-frame chart" style="margin:0"><p class="chart-title">${esc(f)}</p><p class="chart-sub">Prompt tokens read per second</p>${legendHTML(ss.map(s => [s.slot, s.label, 'line']))}${prefillLinesSVG(ss, xDomain, yMax)}</figure>`; }).join('')}</div>`;
+  return `<div class="small-multiples">${families.map(f => { const ss = series.filter(s => s.family === f); return `<figure class="chart-frame chart" style="margin:0"><p class="chart-title">${esc(f)}</p><p class="chart-sub">Prompt tokens read per second</p>${legendHTML(ss.map(s => [s.slot, s.label, 'line']))}${prefillLinesSVG(ss, xDomain, yMax, frameWidth(2))}</figure>`; }).join('')}</div>`;
 }
 function renderContext() {
   const series = contextSeries(), studyRows = (WORK.long_context || []).filter(r => r.protocol?.id === STUDY_PROTOCOL);
@@ -767,8 +793,8 @@ function renderContext() {
   const slot = r => study?.configs.find(c => c.model_id === r.model_id)?.format_family === 'NVFP4' ? 1 : 2;
   content(`<div class="page-head"><div><h1 class="page-title">The wait before the first word.</h1><p class="lede">Before a model writes anything it has to read the whole prompt. With an agent's long context, that reading time can outlast the answer.</p></div><a class="button" href="workloads.json" download>Download workload JSON</a></div>
   ${series.length ? `${biggest.length ? `<section aria-labelledby="ctx-wait"><h2 id="ctx-wait">Reading a ${fmtInt(Math.round(median(biggest.map(r => r.prompt_tokens)) / 1000))}k-token prompt</h2><p class="muted" style="max-width:66ch">Seconds of prompt processing before the first token, from the 11 October study. One cold request per setup.</p>
-    <figure class="chart-frame chart" style="margin:16px 0 0">${legendHTML([[1, 'NVFP4 weights'], [2, 'MLX 4-bit weights']])}${hbarsSVG(biggest.slice().sort((a, b) => a.prefill_s - b.prefill_s).map(r => ({label: label(r), value: r.prefill_s, slot: slot(r), note: `${fmtInt(r.prompt_tokens)} prompt tokens at ${fmtInt(r.prefill_tps)} tok/s`})), 's', 1)}</figure></section>` : ''}
-  <section class="section" aria-labelledby="ctx-speed"><h2 id="ctx-speed">Prompt speed as prompts grow</h2><p class="muted" style="max-width:66ch">The 27B's NVFP4 build reads prompts about twice as fast as MLX 4-bit at 8k tokens, and the gap narrows as prompts grow. Flash Next keeps its speed out to 128k.</p>${contextPanels(series)}</section>
+    <figure class="chart-frame chart" style="margin:16px 0 0">${legendHTML([[1, 'NVFP4 weights'], [2, 'MLX 4-bit weights']])}${hbarsSVG(biggest.slice().sort((a, b) => a.prefill_s - b.prefill_s).map(r => ({label: label(r), value: r.prefill_s, slot: slot(r), note: `${fmtInt(r.prompt_tokens)} prompt tokens at ${fmtInt(r.prefill_tps)} tok/s`})), 's', 1, frameWidth())}</figure></section>` : ''}
+  <section class="section" aria-labelledby="ctx-speed"><h2 id="ctx-speed">Prompt speed as prompts grow</h2><p class="muted" style="max-width:66ch">The 27B's NVFP4 build reads prompts about twice as fast as MLX 4-bit at 7k tokens, and the gap narrows as prompts grow. Flash Next keeps its speed out to 115k.</p>${contextPanels(series)}</section>
   <details class="panel" style="margin-top:26px"><summary>Show as a table</summary><div><div class="table-scroll"><table><thead><tr><th>Setup</th><th>Run</th><th class="right">Prompt tokens</th><th class="right">Prompt tok/s</th><th class="right">Read time</th><th class="right">First token</th></tr></thead><tbody>${series.flatMap(s => s.points.map(p => `<tr><td>${s.model ? `<a href="${modelURL(s.model, 'coding')}">${esc(s.model.name)}</a>` : esc(s.family)}</td><td>${esc(s.label)}</td><td class="right num">${fmtInt(p.x)}</td><td class="right num">${fmtInt(p.y)}</td><td class="right num">${p.seconds != null ? fmt(p.seconds, 2) + ' s' : '—'}</td><td class="right num">${p.ttft != null ? fmt(p.ttft, 2) + ' s' : '—'}</td></tr>`)).join('')}</tbody></table></div></div></details>
   <div class="section prose"><h2>What this does and does not show</h2><p>Prompt speed is reading, not writing: it says nothing about how fast the answer is generated or whether the model actually uses what it read. All four setups in the study did recall a passphrase from the start of a ~104k-token prompt.</p><p>The 11 October prompts start with a unique line so no cached prefix is reused. The 29 September archive values are rounded and their cache settings were not recorded, so compare the shapes rather than single points.</p></div>`
   : '<div class="empty"><h2>No long-prompt results yet</h2><p>Each model page lists its configured context limit; this page shows actual measurements once they are published.</p><a class="button" href="#models">Browse setups</a></div>'}`);
@@ -783,9 +809,10 @@ function renderStudies() {
 function studyMetricRows(a, b) {
   const res = (id, w) => (WORK.results || []).find(r => r.model_id === id && r.workload === w && r.protocol?.id === STUDY_PROTOCOL)?.metrics?.decode_tps?.median;
   const conc = id => (WORK.concurrency || []).find(c => c.model_id === id && c.protocol_id === STUDY_PROTOCOL)?.aggregate_tps;
-  const pre = (id, s) => (WORK.long_context || []).find(r => r.model_id === id && r.protocol?.id === STUDY_PROTOCOL && r.size_label === s)?.prefill_tps;
+  const row = (id, s) => (WORK.long_context || []).find(r => r.model_id === id && r.protocol?.id === STUDY_PROTOCOL && r.size_label === s), pre = (id, s) => row(id, s)?.prefill_tps;
+  const size = s => { const n = row(a, s)?.prompt_tokens; return n ? `~${Math.round(n / 1000)}k` : s; };
   return [['Coding output', res(a, 'coding'), res(b, 'coding'), 'tok/s', 1], ['Chat output', res(a, 'chat'), res(b, 'chat'), 'tok/s', 1], ['Four streams', conc(a), conc(b), 'tok/s total', 1],
-    ['Prompt, 8k', pre(a, '8k'), pre(b, '8k'), 'tok/s', 0], ['Prompt, 32k', pre(a, '32k'), pre(b, '32k'), 'tok/s', 0], ['Prompt, 128k', pre(a, '128k'), pre(b, '128k'), 'tok/s', 0]]
+    [`Prompt, ${size('8k')}`, pre(a, '8k'), pre(b, '8k'), 'tok/s', 0], [`Prompt, ${size('32k')}`, pre(a, '32k'), pre(b, '32k'), 'tok/s', 0], [`Prompt, ${size('128k')}`, pre(a, '128k'), pre(b, '128k'), 'tok/s', 0]]
     .filter(r => isNum(r[1]) && isNum(r[2]));
 }
 function renderStudy(id) {
@@ -799,7 +826,7 @@ function renderStudy(id) {
     if (!a || !b) return '';
     const rows = pairRows[p.id];
     return `<figure class="chart-frame chart" style="margin:0"><p class="chart-title">${esc(p.label)}</p><p class="chart-sub">NVFP4 compared with ${esc(b.format_family)}, same prompts</p>
-      ${divergingSVG(rows.map(([label, x, y, unit, d]) => ({label, pct: (x / y - 1) * 100, a: `${fmt(x, d)} ${unit}`, b: `${fmt(y, d)}`})), limit)}
+      ${divergingSVG(rows.map(([label, x, y, unit, d]) => ({label, pct: (x / y - 1) * 100, a: `${fmt(x, d)} ${unit}`, b: `${fmt(y, d)}`})), limit, frameWidth(2))}
       <div class="table-scroll" style="margin-top:8px"><table><thead><tr><th>Measure</th><th class="right">NVFP4</th><th class="right">${esc(b.format_family)}</th></tr></thead><tbody>${rows.map(([label, x, y, unit, d]) => `<tr><td>${label}<div class="model-sub">${unit}</div></td><td class="right num">${fmt(x, d)}</td><td class="right num">${fmt(y, d)}</td></tr>`).join('')}</tbody></table></div>
       <p class="small ${p.same_engine_version ? 'muted' : ''}" style="margin:12px 0 0">${p.same_engine_version ? '' : '<span class="tag warn">Engine versions differ</span> '}${esc(p.note)}</p></figure>`;
   }).join('');
@@ -944,7 +971,7 @@ function updateTray() {
 }
 function renderCompare() {
   const a = models.filter(m => selected.has(m.id)), ws = WORKLOADS;
-  const rows = [['Engine', m => m.engine], ['Format', formatOf], ['Quantization', m => m.quant], ['Total parameters', m => m.params], ['Active parameters', m => m.active || (m.config ? 'Dense (all)' : 'Not recorded')], ['Weights on disk', m => val(m.diskGiB, 'GiB')],
+  const rows = [['Engine', m => m.engine], ['Format', formatOf], ['Quantization', m => m.quant], ['Total parameters', m => m.params], ['Active parameters', m => m.active || (m.dense ? 'Dense (all)' : 'Not recorded')], ['Weights on disk', m => val(m.diskGiB, 'GiB')],
     ['Four streams at once', m => { const c = concurrencyFor(m)[0]; return c ? `${fmt(c.aggregate_tps, 1)} tok/s total` : 'Not measured'; }],
     ['Loaded allocation', m => val(m.loaded_allocated_gib, 'GiB')], ['Host peak unavailable', m => val(m.resources?.host_peak_unavailable_gib, 'GiB')], ['GPU temperature max', m => val(m.resources?.gpu_temperature_max_c, '°C', 0)], ['GPU power mean', m => val(m.resources?.gpu_power_mean_w, 'W')],
     ['Load duration', m => m.config ? val(m.config.server.engine_load_s, 's') : val(m.load_s, 's', 3)], [`${cap(state.workload)} timing basis`, m => measurement(m)?.protocol?.timing_basis || m.decode_measurement], [`${cap(state.workload)} protocol`, m => measurement(m)?.protocol?.id || 'Not measured']];
@@ -965,14 +992,16 @@ function renderCompare() {
 // ---------------------------------------------------------------- views: method
 function renderMethod() {
   const p = SUM.protocol || {}, study = (WORK.profiles || []).find(x => x.id === STUDY_PROTOCOL);
-  const block = (title, body) => `<section class="two-col" style="grid-template-columns:minmax(0,260px) minmax(0,1fr);margin-top:0;padding:30px 0;border-top:1px solid var(--rule)"><h2>${title}</h2><div class="prose">${body}</div></section>`;
+  const block = (title, body) => `<section class="method-block"><h2>${title}</h2><div class="prose">${body}</div></section>`;
+  const hwNames = {hardware: ['System'], os_visible_memory_gib: ['Memory visible to the OS', 'GiB'], driver: ['NVIDIA driver'], cuda_driver_reported: ['CUDA version reported by the driver'], ollama_version: ['Ollama'], vllm_version: ['vLLM'], tensorfold_version: ['TensorFold for the writing baseline']};
+  const hwRows = Object.entries(SUM.hardware || {}).map(([k, v]) => { const [label, unit] = hwNames[k] || [cap(k.replaceAll('_', ' '))]; return [label, unit ? `${v} ${unit}` : v]; });
   content(`<div class="page-head"><div><h1 class="page-title">How the numbers are made.</h1><p class="lede">A reproducible speed snapshot with its limits in plain view: model identities, timing statistics, warmups and resource observations.</p></div><div class="actions"><a class="button" href="data.json" download>Archive JSON</a><a class="button" href="summary.json" download>Summary JSON</a><a class="button" href="workloads.json" download>Workloads JSON</a></div></div>
-  ${block('Hardware', specs(Object.entries(SUM.hardware || {}).map(([k, v]) => [cap(k.replaceAll('_', ' ')), v]).concat([['TensorFold for the 11 October study', '0.6.6 (python-0.6 line); the live Flash Next server runs 0.3.6.3'], ['Memory bandwidth', '273 GB/s (NVIDIA specification), used for the speed-map ceiling']])))}
+  ${block('Hardware', specs(hwRows.concat([['TensorFold for the 11 October study', '0.6.6 (python-0.6 line); the live Flash Next server runs 0.3.6.3'], ['Memory bandwidth', '273 GB/s (NVIDIA specification), used for the speed-map ceiling']])))}
   ${block('Writing baseline', `<p>One warmup capped at ${esc(p.warmup_output_limit)} output tokens, then ${esc(p.measured_trials)} measured trials capped at ${esc(p.measured_output_limit)} tokens. The displayed number is the median of the measured trials.</p>${specs([['Temperature', p.temperature], ['Thinking', p.thinking === false ? 'Requested off' : p.thinking], ['Concurrency', p.concurrency], ['Seed', p.seed], ['Default requested context', p.context_tokens], ['Sample limits', p.sample_limits], ['Prompt caching', p.prompt_cache], ['Token counting', p.generated_tokens]])}`)}
   ${block('Engine timing', `${Object.entries(p.decode_basis || {}).map(([engine, basis]) => `<p><strong>${esc(engine)}.</strong> ${esc(basis)}</p>`).join('')}<p>${esc(p.configuration_caveat)}</p><details class="panel"><summary>Complete engine profiles</summary><div>${Object.entries(p.engine_profiles || {}).map(([name, profile]) => `<h3 style="margin-top:14px">${esc(cap(name.replaceAll('_', ' ')))}</h3>${specs(Object.entries(profile).map(([k, v]) => [cap(k.replaceAll('_', ' ')), typeof v === 'object' ? JSON.stringify(v) : v]))}`).join('')}</div></details>`)}
   ${block('Coding and chat', `<p>Dedicated workload results are stored apart from the writing baseline. Each records its model, engine, workload, metrics, protocol and source, and keeps its own prompts and sampling.</p><p>The 30 September suite used a 16-token warmup, then three measured requests capped at 256 tokens, temperature 0, thinking requested off and one request at a time. Tag names such as “coder” identify an installed tag, not a coding measurement.</p>${(WORK.profiles || []).filter(x => x.id !== STUDY_PROTOCOL).map(x => `<h3>${esc(x.label)}</h3><p>${esc(x.description)}</p>`).join('')}`)}
   ${study ? block('11 October study', `<p>${esc(study.description)}</p><p>Decode medians come from the bench client; per-request rates, first-token times and accepted drafts come from each server's log. Prompt text is published only as SHA-256 hashes. <a href="#study/nvfp4-vs-mlx-20261011">Read the study</a>.</p>`) : ''}
-  ${block('Load and resources', `<p>Start-up observations separate server start-up to readiness, engine weight loading, weight allocation and the native load in a cold warmup request. A null value was not measured. Ollama native timing is shown separately, converted from nanoseconds.</p><p>${esc(p.warmup_basis)}</p><p>${esc(p.load_caveat)}</p><p>Loaded allocation and host peak memory have different scopes. Host values include the OS and background services. GPU power is sampled, not full-run energy.</p>`)}
+  ${block('Load and resources', `<p>Start-up observations separate server start-up to readiness, engine weight loading, weight allocation and the native load in a cold warmup request. A missing value was not measured. Ollama native timing is shown separately, converted from nanoseconds.</p><p>${esc(p.warmup_basis)}</p><p>${esc(p.load_caveat)}</p><p>Loaded allocation and host peak memory have different scopes. Host values include the OS and background services. GPU power is sampled, not full-run energy.</p>`)}
   ${block('Limits', `<p>${esc(p.scope)}</p><p>Tokenizers count text differently. A small fast model is not automatically a better coding model, and the leaderboard order is not a quality ranking. Engine timing formulas are not interchangeable.</p><p>Matching digests are grouped within an engine for browsing; Ollama digests identify manifests, so tags with different manifests stay separate even when they share a weight blob. Every alias keeps its own trials.</p>`)}
   ${block('Data', `<p>A static GitHub Pages snapshot. Reload fetches the published files again; it never starts a benchmark or contacts the Spark. Prompt and answer text are left out of the public archive.</p><p><a href="BENCHMARK.md">Benchmark protocol</a>, <a href="WORKLOADS.md">workload schema</a>, <a href="all-models-side-by-side.csv" download>all models CSV</a>, <a href="controlled-workload-trials.csv" download>trial timings CSV</a>, <a href="workload-startup-observations.csv" download>start-up CSV</a>, <a href="quant-study-20261011.csv" download>11 October study CSV</a>, <a href="https://github.com/LexiLominite/sparkbench">repository history</a>.</p>`)}`);
 }
@@ -1006,6 +1035,7 @@ function render(inPlace = false) {
   document.title = title ? `${title}, SparkBench` : 'SparkBench: model speed on a DGX Spark';
   updateTray();
   Race.sync();
+  drawnWidth = Math.round(frameWidth() / 32);
 }
 
 // ---------------------------------------------------------------- export and load
@@ -1037,7 +1067,8 @@ async function load(reload = false) {
     applyTheme();
     const updated = WORK.updated_utc || DATA.archive_updated_utc;
     $('#header-meta').textContent = updated ? 'Updated ' + dayLabel(updated, {day: 'numeric', month: 'short', year: 'numeric'}) : 'Published snapshot';
-    $('#footer-meta').textContent = `${models.length} model and engine setups measured on one NVIDIA DGX Spark. Speed does not measure answer quality.`;
+    const measuredCount = models.filter(m => m.status === 'ok').length;
+    $('#footer-meta').textContent = `${models.length} model and engine setups archived, ${measuredCount} with measurements, all on one NVIDIA DGX Spark. Speed does not measure answer quality.`;
     render();
     if (reload) notify('Published measurements reloaded');
   } catch (e) {
@@ -1046,6 +1077,11 @@ async function load(reload = false) {
   }
 }
 $('#clear-selection').onclick = () => { selected.clear(); updateInPlace(); };
+$('.skip').onclick = e => { e.preventDefault(); $('#content').focus(); };
+$('.site-nav').addEventListener('focusin', e => e.target.scrollIntoView({block: 'nearest', inline: 'nearest'}));
+// Charts are drawn for their width, so redraw them when the width changes meaningfully.
+let resizeTimer, drawnWidth = 0;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { const w = Math.round(frameWidth() / 32); if (DATA && w !== drawnWidth && /^(map|context|study\/)/.test(currentPath())) updateInPlace(); drawnWidth = w; }, 150); });
 $('#theme-toggle').onclick = () => { state.theme = {system: 'light', light: 'dark', dark: 'system'}[state.theme]; applyTheme(); persistPreferences(); };
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => Race.recolor());
 document.addEventListener('visibilitychange', () => { if (document.hidden) Race.pause(); else if (Race.visible && Race.lanes.length && !Race.finished()) Race.loop(); });

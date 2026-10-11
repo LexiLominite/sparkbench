@@ -128,6 +128,7 @@ p { margin: 0 0 14px; }
 .brand-mark { width: 20px; height: 20px; stroke: var(--gold); stroke-width: 2.4; stroke-linecap: round; fill: none; }
 .site-nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
 .site-nav::-webkit-scrollbar { display: none; }
+.site-nav a:focus-visible, .segmented button:focus-visible { outline-offset: -3px; border-radius: 5px; }
 .site-nav a { color: var(--ink-2); text-decoration: none; padding: 18px 10px 17px; font-size: 15px; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; }
 .site-nav a:hover { color: var(--ink); }
 .site-nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--gold); font-weight: 600; }
@@ -293,11 +294,11 @@ td.select { width: 36px; padding-right: 0; }
 .chart .grid line { stroke: var(--rule); stroke-width: 1; }
 .chart .axis line, .chart .axis path { stroke: var(--rule-2); stroke-width: 1; }
 .chart text { fill: var(--ink-3); font-size: 12px; font-family: var(--font); font-variant-numeric: tabular-nums; }
-.chart .label { fill: var(--ink-2); font-size: 12.5px; }
+.chart .label { fill: var(--ink-2); font-size: 12.5px; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; }
 .chart .label-strong { fill: var(--ink); font-size: 13px; font-weight: 600; }
 .chart .axis-title { fill: var(--ink-2); font-size: 13px; }
 .chart .ceiling { stroke: var(--gold); stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
-.chart .ceiling-label { fill: var(--gold-ink); font-size: 12.5px; }
+.chart .ceiling-label { fill: var(--gold-ink); font-size: 12.5px; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; }
 .chart .dot { stroke: var(--panel); stroke-width: 2; cursor: pointer; }
 .chart .dot.s1, .chart .line.s1, .legend .s1 { fill: var(--s1); }
 .chart .dot.s2, .legend .s2 { fill: var(--s2); }
@@ -306,6 +307,9 @@ td.select { width: 36px; padding-right: 0; }
 .chart .line.s1 { stroke: var(--s1); fill: none; } .chart .line.s2 { stroke: var(--s2); } .chart .line.s3 { stroke: var(--s3); }
 .chart .hit { fill: transparent; cursor: pointer; }
 .chart .hit:focus-visible { outline: none; stroke: var(--focus); stroke-width: 2; }
+.chart .bar.s1 { fill: var(--s1); } .chart .bar.s2 { fill: var(--s2); } .chart .bar.s3 { fill: var(--s3); }
+.chart [data-tip]:focus-visible { outline: none; }
+.chart [data-tip]:focus-visible .hit { fill: var(--gold-wash); stroke: var(--focus); stroke-width: 2; }
 .chart .bar-up { fill: var(--up); }
 .chart .bar-down { fill: var(--down); }
 .chart .zero { stroke: var(--ink-3); stroke-width: 1; }
@@ -344,6 +348,7 @@ td.select { width: 36px; padding-right: 0; }
 
 /* Selection tray, toast */
 .selection-tray { position: fixed; z-index: 25; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 18px; background: var(--ink); color: var(--page); border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, .22); font-size: 14px; max-width: calc(100vw - 24px); }
+#tray-count { white-space: nowrap; }
 .selection-tray .button.primary { background: var(--gold); border-color: var(--gold); color: #15181c; }
 .selection-tray button.quiet { color: var(--page); border-color: color-mix(in srgb, var(--page) 35%, transparent); }
 .selection-tray button.quiet:hover { background: transparent; border-color: var(--page); }
@@ -361,6 +366,7 @@ td.select { width: 36px; padding-right: 0; }
 .compare-table td:first-child, .compare-table th:first-child { min-width: 170px; color: var(--ink-2); }
 .remove { margin-top: 6px; font-size: 13px; }
 .loading, .error { padding: 80px 0; }
+.method-block { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 16px 48px; padding: 30px 0; border-top: 1px solid var(--rule); }
 
 @media (max-width: 1100px) {
   .header-inner { gap: 18px; }
@@ -380,6 +386,7 @@ td.select { width: 36px; padding-right: 0; }
   .figure:nth-child(3) { padding-left: 0; border-left: 0; }
   .two-col, .small-multiples, .pair-grid { grid-template-columns: minmax(0, 1fr); }
   .matrix { grid-template-columns: minmax(0, 1fr); }
+  .method-block { grid-template-columns: minmax(0, 1fr); }
   .matrix > div + div { padding-left: 0; border-left: 0; }
   .timeline li { grid-template-columns: minmax(0, 1fr); }
   .specs { grid-template-columns: minmax(110px, 40%) minmax(0, 1fr); font-size: 14px; }
