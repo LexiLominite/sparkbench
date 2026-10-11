@@ -46,7 +46,7 @@ const GB10_BANDWIDTH = 273e9; // bytes per second, NVIDIA's published DGX Spark 
 const defaultState = () => ({
   workload: 'writing', query: '', engine: 'all', format: 'all', quant: '', sort: 'speed', group: true, view: 'all',
   scope: 'all', metric: 'decode_tps', showLatency: true, minParams: '', maxParams: '', maxActive: '', maxDisk: '',
-  includeUnmeasured: true, includeUnknown: true, remember: true, theme: 'system', axis: 'disk', race: 'coding',
+  includeUnmeasured: true, includeUnknown: true, remember: true, theme: 'dark', axis: 'disk', race: 'coding',
 });
 let DATA, SUM, WORK, models = [], state = defaultState(), selected = new Set(), toastTimer, preferencesRestored = false;
 const openPanels = new Map();
@@ -134,7 +134,7 @@ function restorePreferences() {
     }
     const allowed = {
       workload: WORKLOADS, view: ['all', 'single'], scope: ['all', 'selected'], metric: metricKeys,
-      sort: ['speed', 'ttft', 'memory', 'name', 'params', 'active', 'disk'], theme: ['system', 'light', 'dark'], axis: ['disk', 'params'], race: WORKLOADS,
+      sort: ['speed', 'ttft', 'memory', 'name', 'params', 'active', 'disk'], theme: ['dark', 'light'], axis: ['disk', 'params'], race: WORKLOADS,
       engine: ['all', ...new Set(models.map(m => m.engine))], format: ['all', ...new Set(models.map(formatOf))],
     };
     for (const [k, values] of Object.entries(allowed)) if (!values.includes(state[k])) state[k] = base[k];
@@ -164,19 +164,13 @@ function updateInPlace() {
 
 // ---------------------------------------------------------------- theme
 function applyTheme() {
-  const root = document.documentElement;
-  if (state.theme === 'system') delete root.dataset.theme; else root.dataset.theme = state.theme;
-  $$('meta[name="theme-color"]').forEach(meta => { meta.content = state.theme === 'system' ? (meta.media.includes('dark') ? '#131518' : '#eef0f2') : state.theme === 'dark' ? '#131518' : '#eef0f2'; });
+  const root = document.documentElement, light = state.theme === 'light';
+  root.dataset.theme = light ? 'light' : 'dark';
+  $$('meta[name="theme-color"]').forEach(meta => { meta.content = light ? '#f4f1ea' : '#02161a'; });
   const button = $('#theme-toggle');
-  const icons = {
-    system: '<circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" class="fill"/>',
-    light: '<circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7"/>',
-    dark: '<path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" class="fill"/>',
-  };
-  button.innerHTML = `<svg viewBox="0 0 20 20" aria-hidden="true">${icons[state.theme]}</svg>`;
-  const next = {system: 'light', light: 'dark', dark: 'system'}[state.theme];
-  button.setAttribute('aria-label', `Colour theme: ${state.theme}. Switch to ${next}`);
-  button.title = `Theme: ${cap(state.theme)}`;
+  const icon = light ? '<circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7"/>' : '<path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" class="fill"/>';
+  button.innerHTML = `<svg viewBox="0 0 20 20" aria-hidden="true">${icon}</svg><span>${light ? 'Paper' : 'Console'}</span>`;
+  button.setAttribute('aria-label', `Theme: ${light ? 'paper' : 'console'}. Switch to ${light ? 'console' : 'paper'}`);
   Race.recolor();
 }
 
@@ -341,7 +335,7 @@ function heroHTML() {
     const r = measurement(m, w), tps = r.metrics.decode_tps.median, ttft = r.metrics.ttft_s?.median ?? 0, total = ttft + TAPE_TOKENS / tps;
     return `<div class="lane" data-row="lane-${esc(m.id)}" data-lane="${esc(m.id)}" data-tps="${tps}" data-ttft="${ttft}" data-seed="${i + 1}">
       <div class="lane-name"><a href="${modelURL(m, w)}">${esc(m.name)}</a><div class="lane-sub"><span class="engine-dot s${engineSlot(m.engine)}" aria-hidden="true"></span>${esc(m.engine)}, ${esc(m.quant.replace(/\s*\(.*\)$/, ''))}</div></div>
-      <canvas class="tape" aria-hidden="true"></canvas>
+      <div class="tape-cell" aria-hidden="true"><canvas class="tape"></canvas></div>
       <div class="lane-read" aria-hidden="true"><b>${fmt(total, 1)} s</b><span>${fmt(tps, 1)} tok/s</span></div>
       <span class="sr-only">${esc(m.name)} on ${esc(m.engine)}: ${fmt(tps, 1)} tokens per second after a first token at ${fmt(ttft, 2)} seconds, so ${TAPE_TOKENS} tokens take about ${fmt(total, 1)} seconds.</span>
     </div>`;
@@ -354,18 +348,19 @@ function heroHTML() {
       </div>
       <div class="hero-controls"><div class="segmented" role="group" aria-label="Race workload" id="hero-workload">${WORKLOADS.map(k => `<button type="button" data-race="${k}" aria-pressed="${state.race === k}">${cap(k)}</button>`).join('')}</div></div>
     </div>
+    <div class="scope hud"><div class="scope-head" aria-hidden="true"><span>${lanes.length} channels, ${TAPE_TOKENS}-token answer, ${w}</span><span>Time base <b>real time</b></span></div>
     <div class="race" id="race" role="group" aria-label="${TAPE_TOKENS}-token answers typed at measured ${w} speed">${laneHTML || '<div class="empty"><p>No setup has a measured output speed for this workload.</p></div>'}</div>
     <div class="race-foot">
       <p>${mine ? 'Racing your selected setups. Clear the selection to see the default line-up.' : 'A fixed line-up from the smallest model to full BF16. Select setups in the leaderboard to race your own.'} Answers are drawn as redacted bars: SparkBench publishes timings and hashes, never response text.</p>
       <div class="actions"><span class="tabular" id="race-clock" aria-hidden="true"></span><button class="quiet" type="button" id="race-replay">Replay</button></div>
-    </div>
+    </div></div>
     ${latestHTML()}
   </section>`;
 }
 function latestHTML() {
   const s = (WORK.studies || []).slice().sort((a, b) => b.date.localeCompare(a.date))[0];
   if (!s) return '';
-  return `<div class="latest"><span class="latest-date">${esc(dayLabel(s.date, {day: 'numeric', month: 'long'}))}</span><p><strong>${esc(s.title)}.</strong> ${esc(s.answer)}</p><a class="button" href="#study/${esc(s.id)}">Read the study</a></div>`;
+  return `<div class="latest hud"><span class="latest-date">${esc(dayLabel(s.date, {day: 'numeric', month: 'long'}))}</span><p><strong>${esc(s.title)}.</strong> ${esc(s.answer)}</p><a class="button" href="#study/${esc(s.id)}">Read the study</a></div>`;
 }
 function cellMetric(m, w, max = 1) {
   const r = measurement(m, w), meta = METRICS[state.metric], v = r?.metrics?.[state.metric]?.median, attempt = latestAttempt(m, w);
@@ -427,7 +422,7 @@ function renderModels() {
   const engines = [...new Set(models.map(m => m.engine))], formats = [...new Set(models.map(formatOf))];
   const generation = models.filter(m => m.kind === 'generation');
   const sorts = [['speed', 'Selected workload column'], ['ttft', 'Fastest first token'], ['params', 'Most total parameters'], ['active', 'Most active parameters'], ['disk', 'Largest weights'], ['memory', 'Smallest loaded allocation'], ['name', 'Name']];
-  content(`${heroHTML()}
+  content(`<div class="board-layout"><div class="board-hero">${heroHTML()}</div><div class="board-main">
   <section class="section" aria-labelledby="board-title">
     <div class="section-head"><div><h2 id="board-title">Leaderboard</h2><p>${generation.length} engine setups across ${engines.join(', ').replace(/, ([^,]*)$/, ' and $1')}. Click a workload heading to sort by it.</p></div>
       <div class="actions"><button class="quiet" type="button" id="download-csv">Export CSV</button><button class="quiet" type="button" id="reload">Reload data</button></div></div>
@@ -462,7 +457,7 @@ function renderModels() {
       <details class="panel"><summary>Embedding models (${models.filter(m => m.kind === 'embedding').length})</summary><div>${embeddingTable()}</div></details>
       <details class="panel"><summary>Reading these numbers</summary><div class="prose"><p>Output speed is tokens generated per second after the prompt is processed. First token adds prompt processing and request overhead. Prompt speed is how fast the prompt itself is read.</p><p>Parameter counts describe the model; GiB is the size of its weight files. A small, fast model is not automatically a better one: none of these numbers score answer quality or code correctness.</p>${WORK.suite ? `<p>The 30 September coding and chat suite ${WORK.suite.status === 'complete' ? 'is complete' : 'is in progress'}: ${WORK.suite.successful_workload_profiles} measured profiles, ${WORK.suite.failed_workload_profiles} failed, ${WORK.suite.unavailable_workload_profiles} unavailable across ${WORK.suite.mapped_model_configurations} mapped configurations.</p>` : ''}<p><a href="#method">Full protocol and limits</a></p></div></details>
     </div>
-  </section>`);
+  </section></div></div>`);
   for (const k of ['query', 'quant', 'minParams', 'maxParams', 'maxActive', 'maxDisk']) {
     $(k === 'query' ? '#search' : '#' + k).oninput = e => {
       state[k] = e.target.value; renderResults(); replaceURL(); persistPreferences();
@@ -535,7 +530,7 @@ const Race = {
   stop() { this.pause(); },
   recolor(redraw = true) {
     const cs = getComputedStyle(document.documentElement);
-    this.colors = {ink: cs.getPropertyValue('--ink-2').trim(), rule: cs.getPropertyValue('--rule-2').trim(), gold: cs.getPropertyValue('--gold').trim()};
+    this.colors = {trace: cs.getPropertyValue('--trace').trim(), head: cs.getPropertyValue('--trace-head').trim(), base: cs.getPropertyValue('--grat-strong').trim()};
     if (redraw && this.lanes.length) { this.lanes.forEach(l => l.drawn = -1); this.draw(true); }
   },
   layout() {
@@ -574,18 +569,18 @@ function tokenHeights(seed) {
   return out;
 }
 function drawTape(canvas, heights, n, done, colors) {
-  const ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height, mid = h / 2;
+  const ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height, mid = h / 2, amp = h * .72;
   if (!w || !h) return;
   const pitch = w / TAPE_TOKENS, bar = Math.max(1, pitch * .62);
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = colors.rule;
-  ctx.fillRect(0, Math.round(mid), w, Math.max(1, Math.round(h / 34)));
-  ctx.fillStyle = colors.ink;
+  ctx.fillStyle = colors.base;
+  ctx.fillRect(0, Math.round(mid), w, Math.max(1, Math.round(h / 60)));
+  ctx.fillStyle = colors.trace;
   const fresh = done ? n : Math.max(0, n - 10);
-  for (let i = 0; i < fresh; i++) { const bh = heights[i] * h; ctx.fillRect(i * pitch, mid - bh / 2, bar, bh); }
-  ctx.fillStyle = colors.gold;
-  for (let i = fresh; i < n; i++) { const bh = heights[i] * h; ctx.fillRect(i * pitch, mid - bh / 2, bar, bh); }
-  if (!done && n > 0) ctx.fillRect(Math.min(w - 2, n * pitch + 1), 0, Math.max(1.5, pitch), h);
+  for (let i = 0; i < fresh; i++) { const bh = heights[i] * amp; ctx.fillRect(i * pitch, mid - bh / 2, bar, bh); }
+  ctx.fillStyle = colors.head;
+  for (let i = fresh; i < n; i++) { const bh = heights[i] * amp; ctx.fillRect(i * pitch, mid - bh / 2, bar, bh); }
+  if (!done && n > 0) ctx.fillRect(Math.min(w - 2, n * pitch + 1), h * .08, Math.max(1.5, pitch), h * .84);
 }
 
 // ---------------------------------------------------------------- charts
@@ -623,20 +618,13 @@ function legendHTML(items) {
   return `<ul class="legend">${items.map(([slot, label, kind = 'dot']) => `<li>${kind === 'dot' ? `<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" class="s${slot}"/></svg>` : `<span class="key-line ${slot === 'ceiling' ? 'ceiling' : 's' + slot}" aria-hidden="true"></span>`}${esc(label)}</li>`).join('')}</ul>`;
 }
 
-// Charts are drawn at the pixel width they will occupy, so 12px text stays 12px on a phone.
-function frameWidth(columns = 1) {
-  const main = $('#content'), cs = getComputedStyle(main);
-  const inner = main.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-  const cols = window.innerWidth <= 820 ? 1 : columns, pad = window.innerWidth <= 560 ? 24 : 40;
-  return Math.max(260, Math.floor((inner - 18 * (cols - 1)) / cols - pad));
-}
 function barPath(x0, y, w, h, toRight) {
   const r = Math.min(4, w / 2), s = toRight ? 1 : -1;
   return `M${x0},${y}h${s * (w - r)}a${r},${r} 0 0 ${toRight ? 1 : 0} ${s * r},${r}v${h - 2 * r}a${r},${r} 0 0 ${toRight ? 1 : 0} ${-s * r},${r}h${-s * (w - r)}z`;
 }
 // scatter: output speed against size, coloured by engine
 function speedMapSVG(points, axis, W) {
-  const narrow = W < 560, H = Math.round(Math.min(560, Math.max(320, W * .6))), m = {l: narrow ? 40 : 58, r: 14, t: 18, b: 46}, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const narrow = W < 560, H = Math.round(Math.max(320, Math.min(W * .6, window.innerHeight - 300, 820))), m = {l: narrow ? 40 : 58, r: 14, t: 18, b: 46}, iw = W - m.l - m.r, ih = H - m.t - m.b;
   const xs = points.map(p => p.x), ys = points.map(p => p.y);
   const x0 = Math.min(...xs) / 1.6, x1 = Math.max(...xs) * 1.6, y0 = Math.min(...ys) / 1.6, y1 = Math.max(...ys) * 1.7;
   const X = logScale(x0, x1, m.l, m.l + iw), Y = logScale(y0, y1, m.t + ih, m.t);
@@ -665,7 +653,7 @@ function speedMapSVG(points, axis, W) {
 }
 // lines: one panel per model family, x is prompt length
 function prefillLinesSVG(series, xDomain, yMax, W) {
-  const H = Math.round(Math.max(240, Math.min(320, W * .58))), m = {l: 44, r: 14, t: 14, b: 42}, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const H = Math.round(Math.max(240, Math.min(420, W * .55))), m = {l: 44, r: 14, t: 14, b: 42}, iw = W - m.l - m.r, ih = H - m.t - m.b;
   const X = logScale(xDomain[0], xDomain[1], m.l, m.l + iw), yt = linTicks(yMax, 4), Y = linScale(0, yt[yt.length - 1], m.t + ih, m.t);
   const xt = logTicks(xDomain[0], xDomain[1]);
   return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Prompt processing speed by prompt length">
@@ -729,6 +717,17 @@ document.addEventListener('focusout', hideTip);
 window.addEventListener('scroll', () => { if (!tipFor) return; if (tipFor === document.activeElement) moveTip(...tipAnchor(tipFor)); else hideTip(); }, {passive: true});
 
 // ---------------------------------------------------------------- views: speed map
+// Charts are registered as slots and drawn after layout at the slot's real width, then redrawn when it changes.
+let CHARTS = {};
+function chartSlot(key, draw) { CHARTS[key] = draw; return `<div class="chart-slot" data-chart="${esc(key)}"></div>`; }
+function drawCharts() {
+  for (const slot of $$('[data-chart]')) {
+    const draw = CHARTS[slot.dataset.chart], w = Math.floor(slot.clientWidth);
+    if (!draw || w < 50 || (Number(slot.dataset.w) === w && slot.firstChild)) continue;
+    slot.innerHTML = draw(w);
+    slot.dataset.w = w;
+  }
+}
 function renderMap() {
   const w = state.workload, axis = state.axis, curated = new Set(RACE_DEFAULTS.map(([n, e]) => n + '|' + e));
   const points = filterModels().map(m => {
@@ -741,19 +740,23 @@ function renderMap() {
   }).filter(Boolean);
   const engines = [...new Set(points.map(p => p.m.engine))].sort((a, b) => engineSlot(a) - engineSlot(b));
   const above = axis === 'disk' ? points.filter(p => p.y > GB10_BANDWIDTH / (p.x * 2 ** 30)) : [];
+  const rows = points.slice().sort((a, b) => b.y - a.y);
+  const table = `<table><thead><tr><th>Setup</th><th class="right">${axis === 'disk' ? 'GiB' : 'Params, B'}</th><th class="right">tok/s</th>${axis === 'disk' ? '<th class="right">Ceiling</th>' : ''}</tr></thead><tbody>${rows.map(p => `<tr><td><span class="engine-dot s${p.slot}" style="display:inline-block;margin-right:.45rem" aria-hidden="true"></span><a href="${p.href}">${esc(p.m.name)}</a></td><td class="right num">${fmt(p.x, 1)}</td><td class="right num">${fmt(p.y, 1)}</td>${axis === 'disk' ? `<td class="right num">${fmt(GB10_BANDWIDTH / (p.x * 2 ** 30), 1)}</td>` : ''}</tr>`).join('')}</tbody></table>`;
   content(`<div class="page-head"><div><h1 class="page-title">Speed against size.</h1><p class="lede">On the GB10, generating a token means reading the model's weights from memory, so bigger weights usually mean slower output. The points that escape that rule are the interesting ones.</p></div></div>
   <div class="map-controls">
     <div class="field"><span>Workload</span>${workloadSegments('map-workload', false)}</div>
     <div class="field"><span>Size measure</span><div class="segmented" role="group" aria-label="Size measure"><button type="button" data-axis="disk" aria-pressed="${axis === 'disk'}">Weights on disk</button><button type="button" data-axis="params" aria-pressed="${axis === 'params'}">Total parameters</button></div></div>
   </div>
-  ${points.length ? `<figure class="chart-frame chart" style="margin:0">
-    <p class="chart-title">${cap(w)} output speed, tokens per second (log scale)</p>
-    <p class="chart-sub">${points.length} setups that follow the leaderboard filters. Select a point to open it.</p>
-    ${legendHTML([...engines.map(e => [engineSlot(e), e]), ...(axis === 'disk' ? [['ceiling', 'Memory-bandwidth ceiling for a dense model', 'line']] : [])])}
-    ${speedMapSVG(points, axis, frameWidth())}
-  </figure>
-  ${axis === 'disk' ? `<p class="map-note">The dashed line is a rule of thumb: 273 GB/s of memory bandwidth divided by the weight size gives the best a dense model can do if it reads every weight once per token. ${above.length} of ${points.length} setups beat it. They read fewer bytes per token than they store: mixture-of-experts models only touch their active experts, and speculative decoding (MTP or a drafter) accepts several tokens per pass.</p>` : `<p class="map-note">Parameter count ignores quantization, so two setups with the same count can differ several times in speed. Switch to weights on disk to see the memory-bandwidth ceiling.</p>`}
-  <details class="panel" style="margin-top:22px"><summary>Show as a table</summary><div><div class="table-scroll"><table><thead><tr><th>Setup</th><th>Engine</th><th class="right">${axis === 'disk' ? 'Weights, GiB' : 'Parameters, B'}</th><th class="right">${cap(w)} tok/s</th>${axis === 'disk' ? '<th class="right">Dense ceiling tok/s</th>' : ''}</tr></thead><tbody>${points.slice().sort((a, b) => b.y - a.y).map(p => `<tr><td><a href="${p.href}">${esc(p.m.name)}</a></td><td>${engineLabel(p.m)}</td><td class="right num">${fmt(p.x, 1)}</td><td class="right num">${fmt(p.y, 1)}</td>${axis === 'disk' ? `<td class="right num">${fmt(GB10_BANDWIDTH / (p.x * 2 ** 30), 1)}</td>` : ''}</tr>`).join('')}</tbody></table></div></div></details>`
+  ${points.length ? `<div class="map-layout"><div>
+    <figure class="chart-frame chart hud">
+      <p class="chart-title">${cap(w)} output speed, tokens per second (log scale)</p>
+      <p class="chart-sub">${points.length} setups that follow the leaderboard filters. Select a point to open it.</p>
+      ${legendHTML([...engines.map(e => [engineSlot(e), e]), ...(axis === 'disk' ? [['ceiling', 'Memory-bandwidth ceiling for a dense model', 'line']] : [])])}
+      ${chartSlot('map', W => speedMapSVG(points, axis, W))}
+    </figure>
+    ${axis === 'disk' ? `<p class="map-note">The dashed line is a rule of thumb: 273 GB/s of memory bandwidth divided by the weight size gives the best a dense model can do if it reads every weight once per token. ${above.length} of ${points.length} setups beat it. They read fewer bytes per token than they store: mixture-of-experts models only touch their active experts, and speculative decoding (MTP or a drafter) accepts several tokens per pass.</p>` : `<p class="map-note">Parameter count ignores quantization, so two setups with the same count can differ several times in speed. Switch to weights on disk to see the memory-bandwidth ceiling.</p>`}
+  </div><aside class="map-aside" aria-label="Plotted values">${table}</aside></div>
+  <details class="panel map-table" style="margin-top:1.4rem"><summary>Show as a table</summary><div><div class="table-scroll">${table}</div></div></details>`
   : `<div class="empty"><h2>Nothing to plot</h2><p>No setup with a known size has a measured ${w} speed under the current leaderboard filters.</p><a class="button" href="#models">Adjust the leaderboard filters</a></div>`}`);
   $$('[data-axis]').forEach(b => b.onclick = () => { state.axis = b.dataset.axis; updateInPlace(); });
   bindWorkloadButtons();
@@ -780,31 +783,45 @@ function contextSeries() {
   series.forEach(s => s.points.sort((a, b) => a.x - b.x));
   return series.sort((a, b) => a.slot - b.slot);
 }
-function contextPanels(series) {
+function contextFigures(series, prefix) {
   const families = [...new Set(series.map(s => s.family))];
   const xs = series.flatMap(s => s.points.map(p => p.x)), ys = series.flatMap(s => s.points.map(p => p.y));
   const xDomain = [Math.min(...xs) / 1.3, Math.max(...xs) * 1.3], yMax = Math.max(...ys) * 1.08;
-  return `<div class="small-multiples">${families.map(f => { const ss = series.filter(s => s.family === f); return `<figure class="chart-frame chart" style="margin:0"><p class="chart-title">${esc(f)}</p><p class="chart-sub">Prompt tokens read per second</p>${legendHTML(ss.map(s => [s.slot, s.label, 'line']))}${prefillLinesSVG(ss, xDomain, yMax, frameWidth(2))}</figure>`; }).join('')}</div>`;
+  return families.map((f, i) => { const ss = series.filter(s => s.family === f); return `<figure class="chart-frame chart hud"><h2 class="chart-title">${esc(f)}</h2><p class="chart-sub">Prompt tokens read per second</p>${legendHTML(ss.map(s => [s.slot, s.label, 'line']))}${chartSlot(`${prefix}-${i}`, W => prefillLinesSVG(ss, xDomain, yMax, W))}</figure>`; }).join('');
 }
 function renderContext() {
   const series = contextSeries(), studyRows = (WORK.long_context || []).filter(r => r.protocol?.id === STUDY_PROTOCOL);
   const biggest = studyRows.filter(r => r.size_label === '128k'), study = (WORK.studies || []).find(s => s.protocol_id === STUDY_PROTOCOL);
   const label = r => study?.configs.find(c => c.model_id === r.model_id)?.label || r.model_name;
   const slot = r => study?.configs.find(c => c.model_id === r.model_id)?.format_family === 'NVFP4' ? 1 : 2;
+  const bars = biggest.slice().sort((a, b) => a.prefill_s - b.prefill_s).map(r => ({label: label(r), value: r.prefill_s, slot: slot(r), note: `${fmtInt(r.prompt_tokens)} prompt tokens at ${fmtInt(r.prefill_tps)} tok/s`}));
   content(`<div class="page-head"><div><h1 class="page-title">The wait before the first word.</h1><p class="lede">Before a model writes anything it has to read the whole prompt. With an agent's long context, that reading time can outlast the answer.</p></div><a class="button" href="workloads.json" download>Download workload JSON</a></div>
-  ${series.length ? `${biggest.length ? `<section aria-labelledby="ctx-wait"><h2 id="ctx-wait">Reading a ${fmtInt(Math.round(median(biggest.map(r => r.prompt_tokens)) / 1000))}k-token prompt</h2><p class="muted" style="max-width:66ch">Seconds of prompt processing before the first token, from the 11 October study. One cold request per setup.</p>
-    <figure class="chart-frame chart" style="margin:16px 0 0">${legendHTML([[1, 'NVFP4 weights'], [2, 'MLX 4-bit weights']])}${hbarsSVG(biggest.slice().sort((a, b) => a.prefill_s - b.prefill_s).map(r => ({label: label(r), value: r.prefill_s, slot: slot(r), note: `${fmtInt(r.prompt_tokens)} prompt tokens at ${fmtInt(r.prefill_tps)} tok/s`})), 's', 1, frameWidth())}</figure></section>` : ''}
-  <section class="section" aria-labelledby="ctx-speed"><h2 id="ctx-speed">Prompt speed as prompts grow</h2><p class="muted" style="max-width:66ch">The 27B's NVFP4 build reads prompts about twice as fast as MLX 4-bit at 7k tokens, and the gap narrows as prompts grow. Flash Next keeps its speed out to 115k.</p>${contextPanels(series)}</section>
-  <details class="panel" style="margin-top:26px"><summary>Show as a table</summary><div><div class="table-scroll"><table><thead><tr><th>Setup</th><th>Run</th><th class="right">Prompt tokens</th><th class="right">Prompt tok/s</th><th class="right">Read time</th><th class="right">First token</th></tr></thead><tbody>${series.flatMap(s => s.points.map(p => `<tr><td>${s.model ? `<a href="${modelURL(s.model, 'coding')}">${esc(s.model.name)}</a>` : esc(s.family)}</td><td>${esc(s.label)}</td><td class="right num">${fmtInt(p.x)}</td><td class="right num">${fmtInt(p.y)}</td><td class="right num">${p.seconds != null ? fmt(p.seconds, 2) + ' s' : '—'}</td><td class="right num">${p.ttft != null ? fmt(p.ttft, 2) + ' s' : '—'}</td></tr>`)).join('')}</tbody></table></div></div></details>
+  ${series.length ? `<p class="muted" style="max-width:78ch;margin-bottom:1.2rem">The 27B's NVFP4 build reads prompts about twice as fast as MLX 4-bit at 7k tokens, and the gap narrows as prompts grow. Flash Next keeps its speed out to 115k. One cold request per setup and size, from the 11 October study.</p>
+  <div class="context-grid">
+    ${biggest.length ? `<figure class="chart-frame chart hud"><h2 class="chart-title" id="ctx-wait">Reading a ${fmtInt(Math.round(median(biggest.map(r => r.prompt_tokens)) / 1000))}k-token prompt</h2><p class="chart-sub">Seconds of prompt processing before the first token</p>${legendHTML([[1, 'NVFP4 weights'], [2, 'MLX 4-bit weights']])}${chartSlot('ctx-wait', W => hbarsSVG(bars, 's', 1, W))}</figure>` : ''}
+    ${contextFigures(series, 'ctx')}
+  </div>
+  <details class="panel" style="margin-top:1.6rem"><summary>Show as a table</summary><div><div class="table-scroll"><table><thead><tr><th>Setup</th><th>Run</th><th class="right">Prompt tokens</th><th class="right">Prompt tok/s</th><th class="right">Read time</th><th class="right">First token</th></tr></thead><tbody>${series.flatMap(s => s.points.map(p => `<tr><td>${s.model ? `<a href="${modelURL(s.model, 'coding')}">${esc(s.model.name)}</a>` : esc(s.family)}</td><td>${esc(s.label)}</td><td class="right num">${fmtInt(p.x)}</td><td class="right num">${fmtInt(p.y)}</td><td class="right num">${p.seconds != null ? fmt(p.seconds, 2) + ' s' : '—'}</td><td class="right num">${p.ttft != null ? fmt(p.ttft, 2) + ' s' : '—'}</td></tr>`)).join('')}</tbody></table></div></div></details>
   <div class="section prose"><h2>What this does and does not show</h2><p>Prompt speed is reading, not writing: it says nothing about how fast the answer is generated or whether the model actually uses what it read. All four setups in the study did recall a passphrase from the start of a ~104k-token prompt.</p><p>The 11 October prompts start with a unique line so no cached prefix is reused. The 29 September archive values are rounded and their cache settings were not recorded, so compare the shapes rather than single points.</p></div>`
   : '<div class="empty"><h2>No long-prompt results yet</h2><p>Each model page lists its configured context limit; this page shows actual measurements once they are published.</p><a class="button" href="#models">Browse setups</a></div>'}`);
 }
 
 // ---------------------------------------------------------------- views: studies
+function studyHeadline(s) {
+  const pair = id => { const a = s.configs.find(c => c.pair === id && c.format_family === 'NVFP4'), b = s.configs.find(c => c.pair === id && c.format_family !== 'NVFP4'); return a && b ? studyMetricRows(a.model_id, b.model_id) : []; };
+  const pct = (rows, i) => rows[i] ? (rows[i][1] / rows[i][2] - 1) * 100 : null, signed = v => v == null ? '—' : `${v > 0 ? '+' : '−'}${fmt(Math.abs(v), 0)}%`;
+  const big = pair('27b'), flash = pair('flash'), checks = (WORK.checks || []).filter(c => c.study_id === s.id);
+  return [[`27B prompt, ${big[3]?.[0].replace('Prompt, ', '') || ''}`, signed(pct(big, 3)), 'NVFP4 against MLX 4-bit'], ['27B coding output', signed(pct(big, 0)), 'NVFP4 against MLX 4-bit'],
+    ['Flash Next coding output', signed(pct(flash, 0)), 'NVFP4 against MLX 4-bit'], ['Functional checks', `${checks.filter(c => c.passed).length}/${checks.length}`, 'long recall and tool calls passed']];
+}
 function renderStudies() {
-  const items = (WORK.timeline || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+  const items = (WORK.timeline || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  const latest = (WORK.studies || []).slice().sort((a, b) => b.date.localeCompare(a.date))[0];
   content(`<div class="page-head"><div><h1 class="page-title">What was tested, and when.</h1><p class="lede">SparkBench grows one question at a time. Each entry links to the setups or study it added; earlier numbers are never overwritten.</p></div></div>
-  <ol class="timeline" reversed>${items.map(t => `<li class="${t.study_id ? 'featured' : ''}"><time datetime="${esc(t.date)}">${esc(dayLabel(t.date, {day: 'numeric', month: 'short', year: 'numeric'}))}</time><div><h3><a href="${esc(t.link)}">${esc(t.title)}</a></h3><p>${esc(t.summary)}</p></div></li>`).join('')}</ol>`);
+  ${latest ? `<section class="studies-feature hud" aria-labelledby="feature-title"><div><p class="kicker">Latest study, ${esc(dayLabel(latest.date))}</p><h2 id="feature-title">${esc(latest.title)}</h2><p class="answer">${esc(latest.answer)}</p><a class="button primary" href="#study/${esc(latest.id)}">Open the study</a></div>
+    <div class="feature-figures">${studyHeadline(latest).map(([label, value, note]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div></section>` : ''}
+  <h2 class="sr-only">Timeline</h2>
+  <ol class="timeline">${items.map(t => `<li class="${t.study_id ? 'featured' : ''}"><time datetime="${esc(t.date)}">${esc(dayLabel(t.date, {day: 'numeric', month: 'short', year: 'numeric'}))}</time><div><h3><a href="${esc(t.link)}">${esc(t.title)}</a></h3><p>${esc(t.summary)}</p></div></li>`).join('')}</ol>`);
 }
 function studyMetricRows(a, b) {
   const res = (id, w) => (WORK.results || []).find(r => r.model_id === id && r.workload === w && r.protocol?.id === STUDY_PROTOCOL)?.metrics?.decode_tps?.median;
@@ -822,26 +839,27 @@ function renderStudy(id) {
   const pairRows = Object.fromEntries(s.pairs.map(p => { const a = cfg.find(c => c.pair === p.id && c.format_family === 'NVFP4'), b = cfg.find(c => c.pair === p.id && c.format_family !== 'NVFP4'); return [p.id, a && b ? studyMetricRows(a.model_id, b.model_id) : []]; }));
   const limit = Math.max(25, ...Object.values(pairRows).flat().map(([, x, y]) => Math.abs((x / y - 1) * 100))) * 1.35;
   const pairHTML = s.pairs.map(p => {
-    const a = cfg.find(c => c.pair === p.id && c.format_family === 'NVFP4'), b = cfg.find(c => c.pair === p.id && c.format_family !== 'NVFP4');
-    if (!a || !b) return '';
-    const rows = pairRows[p.id];
-    return `<figure class="chart-frame chart" style="margin:0"><p class="chart-title">${esc(p.label)}</p><p class="chart-sub">NVFP4 compared with ${esc(b.format_family)}, same prompts</p>
-      ${divergingSVG(rows.map(([label, x, y, unit, d]) => ({label, pct: (x / y - 1) * 100, a: `${fmt(x, d)} ${unit}`, b: `${fmt(y, d)}`})), limit, frameWidth(2))}
-      <div class="table-scroll" style="margin-top:8px"><table><thead><tr><th>Measure</th><th class="right">NVFP4</th><th class="right">${esc(b.format_family)}</th></tr></thead><tbody>${rows.map(([label, x, y, unit, d]) => `<tr><td>${label}<div class="model-sub">${unit}</div></td><td class="right num">${fmt(x, d)}</td><td class="right num">${fmt(y, d)}</td></tr>`).join('')}</tbody></table></div>
-      <p class="small ${p.same_engine_version ? 'muted' : ''}" style="margin:12px 0 0">${p.same_engine_version ? '' : '<span class="tag warn">Engine versions differ</span> '}${esc(p.note)}</p></figure>`;
+    const b = cfg.find(c => c.pair === p.id && c.format_family !== 'NVFP4'), rows = pairRows[p.id];
+    if (!rows.length) return '';
+    const bars = rows.map(([label, x, y, unit, d]) => ({label, pct: (x / y - 1) * 100, a: `${fmt(x, d)} ${unit}`, b: `${fmt(y, d)}`}));
+    return `<figure class="chart-frame chart hud"><p class="chart-title">${esc(p.label)}</p><p class="chart-sub">NVFP4 compared with ${esc(b.format_family)}, same prompts</p>
+      ${chartSlot('pair-' + p.id, W => divergingSVG(bars, limit, W))}
+      <div class="table-scroll" style="margin-top:.5rem"><table><thead><tr><th>Measure</th><th class="right">NVFP4</th><th class="right">${esc(b.format_family)}</th></tr></thead><tbody>${rows.map(([label, x, y, unit, d]) => `<tr><td>${label}<div class="model-sub">${unit}</div></td><td class="right num">${fmt(x, d)}</td><td class="right num">${fmt(y, d)}</td></tr>`).join('')}</tbody></table></div>
+      <p class="small ${p.same_engine_version ? 'muted' : ''}" style="margin:.75rem 0 0">${p.same_engine_version ? '' : '<span class="tag warn">Engine versions differ</span> '}${esc(p.note)}</p></figure>`;
   }).join('');
   const checks = (WORK.checks || []).filter(c => c.study_id === s.id), series = contextSeries().filter(x => x.proto === s.protocol_id);
   const profile = (WORK.profiles || []).find(p => p.id === s.protocol_id);
   content(`<a class="back" href="#studies">All studies</a>
-  <div class="page-head" style="padding-top:18px"><div><p class="muted" style="margin:0 0 8px">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="actions"><a class="button" href="quant-study-20261011.csv" download>Download CSV</a></div></div>
-  <p class="answer">${esc(s.answer)}</p>
-  <section class="section" aria-labelledby="study-pairs"><h2 id="study-pairs">Format against format</h2><p class="muted" style="max-width:66ch">Bars show how much faster or slower the NVFP4 build is than the MLX 4-bit build of the same model. Blue is faster, red is slower.</p>
-    <div class="pair-grid" style="margin-top:16px">${pairHTML}</div></section>
-  <section class="section" aria-labelledby="study-findings"><h2 id="study-findings">Findings</h2><ul class="findings" style="margin-top:12px">${s.findings.map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:74ch">${esc(s.outcome)}</p></section>
-  ${series.length ? `<section class="section" aria-labelledby="study-prefill"><h2 id="study-prefill">Prompt speed by length</h2>${contextPanels(series)}</section>` : ''}
+  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="actions"><a class="button" href="quant-study-20261011.csv" download>Download CSV</a></div></div>
+  <div class="study-top">
+    <section aria-labelledby="study-findings"><p class="answer">${esc(s.answer)}</p><h2 id="study-findings" style="margin-top:1.8rem">Findings</h2><ul class="findings" style="margin-top:.75rem">${s.findings.map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:78ch">${esc(s.outcome)}</p></section>
+    <section class="section" aria-labelledby="study-pairs"><h2 id="study-pairs">Format against format</h2><p class="muted" style="max-width:70ch">How much faster or slower each NVFP4 build is than the MLX 4-bit build of the same model. Bars to the right are faster.</p>
+      <div class="pair-grid" style="margin-top:1rem">${pairHTML}</div></section>
+  </div>
+  ${series.length ? `<section class="section" aria-labelledby="study-prefill"><h2 id="study-prefill">Prompt speed by length</h2><div class="small-multiples" style="margin-top:1rem">${contextFigures(series, 'sctx')}</div></section>` : ''}
   <section class="section" aria-labelledby="study-setups"><h2 id="study-setups">The four setups</h2>
     <div class="table-scroll"><table><thead><tr><th>Setup</th><th>Checkpoint</th><th>TensorFold</th><th class="right">Weights</th><th>Speculative decoding</th><th class="right">Long recall</th><th class="right">Tool call</th></tr></thead><tbody>${cfg.map(c => { const m = setup(c), srv = m?.config?.server || {}, ch = checks.filter(x => x.model_id === c.model_id), ok = k => { const x = ch.find(y => y.check === k); return x == null ? '—' : x.passed ? '<span class="check-ok">Passed</span>' : '<span class="check-fail">Failed</span>'; }; const spec = (WORK.results || []).find(r => r.model_id === c.model_id && r.protocol?.id === s.protocol_id)?.protocol?.notes?.find(n => n.startsWith('Speculative')); return `<tr><td>${m ? `<a class="model-name" href="${modelURL(m, 'coding')}">${esc(c.label)}</a>` : esc(c.label)}</td><td class="small">${esc(c.checkpoint)}</td><td class="small">${esc(c.engine_version.split(' ')[0])}</td><td class="right num">${m?.diskGiB != null ? fmt(m.diskGiB, 1) + ' GiB' : '—'}</td><td class="small">${esc((srv.speculative_decoding || spec?.replace('Speculative decoding on: ', '') || '').replace(/\.$/, ''))}</td><td class="right">${ok('long_recall')}</td><td class="right">${ok('tool_call')}</td></tr>`; }).join('')}</tbody></table></div></section>
-  <div class="two-col"><section><h2>Protocol</h2><p class="muted">${esc(profile?.description || '')}</p><p class="small muted">Prompt text is not published; each result carries the SHA-256 of its prompt. The weight sizes exclude the 3.6 GiB DFlash2 drafter used by both 27B setups.</p></section>
+  <div class="cols"><section><h2>Protocol</h2><p class="muted">${esc(profile?.description || '')}</p><p class="small muted">Prompt text is not published; each result carries the SHA-256 of its prompt. The weight sizes exclude the 3.6 GiB DFlash2 drafter used by both 27B setups.</p></section>
     <section><h2>Caveats</h2><ul class="findings">${s.caveats.map(c => `<li>${esc(c)}</li>`).join('')}</ul></section></div>`);
 }
 
@@ -996,14 +1014,14 @@ function renderMethod() {
   const hwNames = {hardware: ['System'], os_visible_memory_gib: ['Memory visible to the OS', 'GiB'], driver: ['NVIDIA driver'], cuda_driver_reported: ['CUDA version reported by the driver'], ollama_version: ['Ollama'], vllm_version: ['vLLM'], tensorfold_version: ['TensorFold for the writing baseline']};
   const hwRows = Object.entries(SUM.hardware || {}).map(([k, v]) => { const [label, unit] = hwNames[k] || [cap(k.replaceAll('_', ' '))]; return [label, unit ? `${v} ${unit}` : v]; });
   content(`<div class="page-head"><div><h1 class="page-title">How the numbers are made.</h1><p class="lede">A reproducible speed snapshot with its limits in plain view: model identities, timing statistics, warmups and resource observations.</p></div><div class="actions"><a class="button" href="data.json" download>Archive JSON</a><a class="button" href="summary.json" download>Summary JSON</a><a class="button" href="workloads.json" download>Workloads JSON</a></div></div>
-  ${block('Hardware', specs(hwRows.concat([['TensorFold for the 11 October study', '0.6.6 (python-0.6 line); the live Flash Next server runs 0.3.6.3'], ['Memory bandwidth', '273 GB/s (NVIDIA specification), used for the speed-map ceiling']])))}
+  <div class="method-grid">${block('Hardware', specs(hwRows.concat([['TensorFold for the 11 October study', '0.6.6 (python-0.6 line); the live Flash Next server runs 0.3.6.3'], ['Memory bandwidth', '273 GB/s (NVIDIA specification), used for the speed-map ceiling']])))}
   ${block('Writing baseline', `<p>One warmup capped at ${esc(p.warmup_output_limit)} output tokens, then ${esc(p.measured_trials)} measured trials capped at ${esc(p.measured_output_limit)} tokens. The displayed number is the median of the measured trials.</p>${specs([['Temperature', p.temperature], ['Thinking', p.thinking === false ? 'Requested off' : p.thinking], ['Concurrency', p.concurrency], ['Seed', p.seed], ['Default requested context', p.context_tokens], ['Sample limits', p.sample_limits], ['Prompt caching', p.prompt_cache], ['Token counting', p.generated_tokens]])}`)}
   ${block('Engine timing', `${Object.entries(p.decode_basis || {}).map(([engine, basis]) => `<p><strong>${esc(engine)}.</strong> ${esc(basis)}</p>`).join('')}<p>${esc(p.configuration_caveat)}</p><details class="panel"><summary>Complete engine profiles</summary><div>${Object.entries(p.engine_profiles || {}).map(([name, profile]) => `<h3 style="margin-top:14px">${esc(cap(name.replaceAll('_', ' ')))}</h3>${specs(Object.entries(profile).map(([k, v]) => [cap(k.replaceAll('_', ' ')), typeof v === 'object' ? JSON.stringify(v) : v]))}`).join('')}</div></details>`)}
   ${block('Coding and chat', `<p>Dedicated workload results are stored apart from the writing baseline. Each records its model, engine, workload, metrics, protocol and source, and keeps its own prompts and sampling.</p><p>The 30 September suite used a 16-token warmup, then three measured requests capped at 256 tokens, temperature 0, thinking requested off and one request at a time. Tag names such as “coder” identify an installed tag, not a coding measurement.</p>${(WORK.profiles || []).filter(x => x.id !== STUDY_PROTOCOL).map(x => `<h3>${esc(x.label)}</h3><p>${esc(x.description)}</p>`).join('')}`)}
   ${study ? block('11 October study', `<p>${esc(study.description)}</p><p>Decode medians come from the bench client; per-request rates, first-token times and accepted drafts come from each server's log. Prompt text is published only as SHA-256 hashes. <a href="#study/nvfp4-vs-mlx-20261011">Read the study</a>.</p>`) : ''}
   ${block('Load and resources', `<p>Start-up observations separate server start-up to readiness, engine weight loading, weight allocation and the native load in a cold warmup request. A missing value was not measured. Ollama native timing is shown separately, converted from nanoseconds.</p><p>${esc(p.warmup_basis)}</p><p>${esc(p.load_caveat)}</p><p>Loaded allocation and host peak memory have different scopes. Host values include the OS and background services. GPU power is sampled, not full-run energy.</p>`)}
   ${block('Limits', `<p>${esc(p.scope)}</p><p>Tokenizers count text differently. A small fast model is not automatically a better coding model, and the leaderboard order is not a quality ranking. Engine timing formulas are not interchangeable.</p><p>Matching digests are grouped within an engine for browsing; Ollama digests identify manifests, so tags with different manifests stay separate even when they share a weight blob. Every alias keeps its own trials.</p>`)}
-  ${block('Data', `<p>A static GitHub Pages snapshot. Reload fetches the published files again; it never starts a benchmark or contacts the Spark. Prompt and answer text are left out of the public archive.</p><p><a href="BENCHMARK.md">Benchmark protocol</a>, <a href="WORKLOADS.md">workload schema</a>, <a href="all-models-side-by-side.csv" download>all models CSV</a>, <a href="controlled-workload-trials.csv" download>trial timings CSV</a>, <a href="workload-startup-observations.csv" download>start-up CSV</a>, <a href="quant-study-20261011.csv" download>11 October study CSV</a>, <a href="https://github.com/LexiLominite/sparkbench">repository history</a>.</p>`)}`);
+  ${block('Data', `<p>A static GitHub Pages snapshot. Reload fetches the published files again; it never starts a benchmark or contacts the Spark. Prompt and answer text are left out of the public archive.</p><p><a href="BENCHMARK.md">Benchmark protocol</a>, <a href="WORKLOADS.md">workload schema</a>, <a href="all-models-side-by-side.csv" download>all models CSV</a>, <a href="controlled-workload-trials.csv" download>trial timings CSV</a>, <a href="workload-startup-observations.csv" download>start-up CSV</a>, <a href="quant-study-20261011.csv" download>11 October study CSV</a>, <a href="https://github.com/LexiLominite/sparkbench">repository history</a>.</p>`)}</div>`);
 }
 
 // ---------------------------------------------------------------- routing
@@ -1021,6 +1039,7 @@ function route() {
 const TITLES = {compare: 'Compare', context: 'Long prompts', method: 'Method', map: 'Speed map', studies: 'Studies'};
 function render(inPlace = false) {
   const path = inPlace ? currentPath() : route();
+  CHARTS = {};
   const section = path.startsWith('model/') ? 'models' : path.startsWith('study/') ? 'studies' : path;
   $$('[data-nav]').forEach(a => { if (a.dataset.nav === section) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   if (path.startsWith('model/')) renderDetail(decodeId(path.slice(6)));
@@ -1035,7 +1054,7 @@ function render(inPlace = false) {
   document.title = title ? `${title}, SparkBench` : 'SparkBench: model speed on a DGX Spark';
   updateTray();
   Race.sync();
-  drawnWidth = Math.round(frameWidth() / 32);
+  drawCharts();
 }
 
 // ---------------------------------------------------------------- export and load
@@ -1079,11 +1098,10 @@ async function load(reload = false) {
 $('#clear-selection').onclick = () => { selected.clear(); updateInPlace(); };
 $('.skip').onclick = e => { e.preventDefault(); $('#content').focus(); };
 $('.site-nav').addEventListener('focusin', e => e.target.scrollIntoView({block: 'nearest', inline: 'nearest'}));
-// Charts are drawn for their width, so redraw them when the width changes meaningfully.
-let resizeTimer, drawnWidth = 0;
-window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { const w = Math.round(frameWidth() / 32); if (DATA && w !== drawnWidth && /^(map|context|study\/)/.test(currentPath())) updateInPlace(); drawnWidth = w; }, 150); });
-$('#theme-toggle').onclick = () => { state.theme = {system: 'light', light: 'dark', dark: 'system'}[state.theme]; applyTheme(); persistPreferences(); };
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => Race.recolor());
+// Charts are drawn for their slot's width, so redraw them when a slot changes size.
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (DATA) drawCharts(); }, 120); });
+$('#theme-toggle').onclick = () => { state.theme = state.theme === 'light' ? 'dark' : 'light'; applyTheme(); persistPreferences(); };
 document.addEventListener('visibilitychange', () => { if (document.hidden) Race.pause(); else if (Race.visible && Race.lanes.length && !Race.finished()) Race.loop(); });
 window.addEventListener('hashchange', () => { if (DATA) { openPanels.clear(); hideTip(); render(); persistPreferences(); window.scrollTo({top: 0, behavior: 'instant'}); } });
 load();

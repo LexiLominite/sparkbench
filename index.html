@@ -1,11 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="How fast local models generate on one NVIDIA DGX Spark: output speed, first-token latency, long-prompt processing and studies, with every trial and protocol published.">
-<meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#131518" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#02161a">
 <title>SparkBench</title>
 <meta property="og:title" content="SparkBench: how fast local models type on a DGX Spark">
 <meta property="og:description" content="Output speed, first-token latency, long-prompt processing and studies for local model and engine setups on one NVIDIA DGX Spark, with trials and protocols published.">
@@ -14,11 +13,13 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/orbitron-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/electrolize-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/app.css?v=20261011">
 <script>
 // Apply a saved theme before first paint so the page never flashes the wrong one.
-try{const c=document.cookie.split('; ').find(c=>c.startsWith('sparkbench_preferences_v1='));const t=c&&JSON.parse(decodeURIComponent(c.slice(26))).state.theme;if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}
+try{const c=document.cookie.split('; ').find(c=>c.startsWith('sparkbench_preferences_v1='));const t=c&&JSON.parse(decodeURIComponent(c.slice(26))).state.theme;if(t==='light'){document.documentElement.dataset.theme=t;document.querySelector('meta[name=theme-color]').content='#f4f1ea'}}catch{}
 </script>
 </head>
 <body>
@@ -27,7 +28,7 @@ try{const c=document.cookie.split('; ').find(c=>c.startsWith('sparkbench_prefere
   <div class="header-inner">
     <a class="brand" href="#models" aria-label="SparkBench home">
       <svg class="brand-mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8v4M7 4v12M11 6v8M15 3v14M19 9v2"/></svg>
-      <span>SparkBench</span>
+      <span class="brand-word">SparkBench</span>
     </a>
     <nav class="site-nav" aria-label="Main">
       <a href="#models" data-nav="models">Leaderboard</a>
@@ -39,9 +40,8 @@ try{const c=document.cookie.split('; ').find(c=>c.startsWith('sparkbench_prefere
     </nav>
     <div class="header-tools">
       <span class="updated" id="header-meta">NVIDIA DGX Spark</span>
-      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Colour theme: system">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" class="fill"/></svg>
-      </button>
+      <a class="parent-link" href="https://lexilominite.com" rel="noopener">LexiLominite</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Theme: console. Switch to paper"><span>Console</span></button>
     </div>
   </div>
 </header>
