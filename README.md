@@ -27,6 +27,8 @@ The interface compares writing, coding and chat rates side by side, with optiona
 
 ## Updating results
 
-Run the private benchmark launcher on Spark, verify its stored results, export a new curated `data.json`, and commit the reviewed snapshot. Refresh in the public UI reloads the published snapshot; it does not initiate a benchmark or query a private machine.
+Run the private benchmark launcher on Spark, verify its stored results, export a new curated `data.json`, and commit the reviewed snapshot.
+
+When `assets/app.css` or `assets/app.js` change, update their `?v=` values in `index.html` to the first ten characters of each file's SHA-256 (`shasum -a 256 assets/app.css`). Cloudflare tells browsers to keep CSS and JS for four hours, so an unchanged URL would pair new HTML with stale styles. Refresh in the public UI reloads the published snapshot; it does not initiate a benchmark or query a private machine.
 
 The historical writing baseline stays in `data.json` and `summary.json`. Supplemental and newly measured workload results stay in `workloads.json`. See [WORKLOADS.md](WORKLOADS.md) for the workload schema and comparability rules.
