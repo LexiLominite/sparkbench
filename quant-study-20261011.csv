@@ -1,0 +1,5 @@
+setup,checkpoint,tensorfold_version,coding_decode_tps,chat_decode_tps,four_stream_aggregate_tps,prefill_8k_tps,prefill_32k_tps,prefill_128k_tps,prefill_128k_prompt_tokens,long_recall_passed,tool_call_passed
+Qwen3.8 27B NVFP4,nvidia/Qwen3.8-27B-NVFP4,"0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",74.1,35.9,192.4,2834,2553,1608,114545,True,True
+Qwen3.8 27B MLX 4-bit,Vontra/Qwen3.8-27B-MLX-4bit,"0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",82.7,41.2,196.9,1377,1315,1007,114542,True,True
+Qwen3.8 Flash Next NVFP4 (QAD),local-inference-lab/Qwen3.8-Flash-Next-NVFP4,"0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",66.2,40.6,119.3,1615,1582,1494,114541,True,True
+Qwen3.8 Flash Next MLX 4-bit,Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP,"0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",81.7,56.6,153.1,1979,2119,1926,114546,True,True

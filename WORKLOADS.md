@@ -39,3 +39,21 @@ Native Ollama timing fields retain engine durations in nanoseconds, together wit
 Startup observations identify the model and engine. vLLM startup-to-observed-ready covers the launch request through the first successful readiness observation, before warmup, with readiness polled every five seconds. This includes launch, initialization, weight loading and any compilation or tuning, and is not a pure disk-transfer rate. Native weight-loading seconds and weight allocation GiB come from engine logs and use a separate window. Ollama's first coding warmup after explicit unload records its native load duration. Already loaded services and unsupported checkpoints have no new startup measurement. Null values mean not measured, not zero.
 
 The final private runner receipt verifies restoration of the same BF16 container object and its original configuration, a successful inference smoke request, no temporary benchmark inference container, no loaded Ollama models, and release of the shared inference-maintenance lock. Raw prompts and response text remain private on Spark.
+
+## 11 October TensorFold quantization study
+
+Protocol ID `tensorfold-quant-study-20261011`, schema version 2. One bench client ran against each server in turn: the live Qwen3.8 Flash Next MLX 4-bit server (TensorFold 0.3.6.3), then Qwen3.8 27B NVFP4, Qwen3.8 27B MLX 4-bit and Qwen3.8 Flash Next NVFP4 (QAD), each on TensorFold 0.6.6. Requests were greedy (temperature 0, seed 7) with thinking off and a 512-token output limit. Coding and chat each ran three requests; the first also warms the prefix cache and is included in the median. Speculative decoding stayed on as each server is normally configured (MTP for Flash Next, the DFlash2 drafter for the 27B), so decode rates depend on draft acceptance.
+
+The study also records four simultaneous coding requests (aggregate completion tokens over wall time), cold prefill at roughly 8k, 32k and 128k prompt tokens (Python standard-library source with a unique first line, one request per size), a passphrase recall from the start of a ~104k-token prompt and one tool call. The recall and tool checks are pass/fail functional checks, not quality scores.
+
+Decode medians are the values recorded by the bench client from each response's `decode_tps`. Per-request rates, first-token times and accepted drafts come from each server's log; TensorFold rounds its logged rate slightly differently, so those statistics are published separately as `decode_tps_server_log`. The live 0.3.6.3 server did not log per-request lines, so its four results carry medians only. The Flash Next pair also differs in engine version, server streams (5 against 4) and vision, so it is not a pure format comparison. These results are kept apart from the 30 September suite: the prompts and output limit differ, and the already published Flash Next keeps its controlled-suite numbers as preferred.
+
+Schema version 2 adds these arrays to `workloads.json`:
+
+- `configurations`: engine setups that have no writing baseline (`writing_baseline: false`), with checkpoint repository and revision, weight size, and the server settings used.
+- `concurrency`: aggregate throughput for simultaneous streams, with per-stream rates where logged.
+- `checks`: functional pass/fail checks tied to a study.
+- `studies`: a question, its short answer, the compared setups and pairs, findings, caveats and outcome.
+- `timeline`: dated entries for each addition to the archive.
+
+Long-context rows from the study carry `prefill_s` and a `size_label`. Prompt text is published only as SHA-256 hashes. The flat `quant-study-20261011.csv` repeats the headline numbers.

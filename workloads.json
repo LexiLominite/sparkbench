@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "updated_utc": "2026-09-30T14:57:27.560087+00:00",
+  "schema_version": 2,
+  "updated_utc": "2026-10-11T07:55:40+00:00",
   "scope": "Text generation speed and serving measurements. No coding correctness, writing quality, vision accuracy or tool-use quality scores are claimed.",
   "profiles": [
     {
@@ -27,6 +27,11 @@
       "id": "sparkbench-runtime-preflight-v1",
       "label": "Installed runtime compatibility check",
       "description": "Unsupported engine/checkpoint configurations are identified before GPU allocation. They have no generation speed, latency or trial median."
+    },
+    {
+      "id": "tensorfold-quant-study-20261011",
+      "label": "TensorFold quantization study, 11 October",
+      "description": "Same client against each server, one at a time: greedy (temperature 0, seed 7), thinking off, 512 output tokens. Coding and chat each ran three requests; the first also warms the prefix cache and is included in the median. Then four simultaneous coding requests, cold prefill at about 8k, 32k and 128k prompt tokens (Python standard-library source with a unique first line), a passphrase recall at about 104k tokens and one tool call. Speculative decoding stayed on as each server is normally configured."
     }
   ],
   "results": [
@@ -9101,6 +9106,770 @@
         "measured_at": "2026-09-30T14:24:32.906469+00:00",
         "receipt_sha256": "8e10186b8ea6699bde51096bf73e778852e012b913e5a2abb77839d75b21ac5b"
       }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-nvfp4-27b-coding",
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 74.1,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": 0.09,
+          "min": 0.09,
+          "max": 45.41,
+          "mean": 15.196666666666665,
+          "sample_sd": 26.165514199673837,
+          "cv_percent": 172.1792994056186
+        },
+        "decode_tps_server_log": {
+          "median": 74.0,
+          "min": 62.9,
+          "max": 74.0,
+          "mean": 70.3,
+          "sample_sd": 6.408587988004847,
+          "cv_percent": 9.11605688194146
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 0,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 62.9,
+          "ttft_s": 45.41,
+          "prefill_s": 45.41,
+          "tensorfold": {
+            "rounds": 71,
+            "accepted": 440,
+            "drafted": 1065
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prefix cache cold. First request after start-up: includes one-time CUDA extension builds."
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 33,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 74.0,
+          "ttft_s": 0.09,
+          "prefill_s": 0.09,
+          "tensorfold": {
+            "rounds": 71,
+            "accepted": 440,
+            "drafted": 1065
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prompt prefix reused from the previous request."
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 33,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 74.0,
+          "ttft_s": 0.09,
+          "prefill_s": 0.09,
+          "tensorfold": {
+            "rounds": 71,
+            "accepted": 440,
+            "drafted": 1065
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prompt prefix reused from the previous request."
+        }
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Coding: a thread-safe cache module with tests",
+        "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: DFlash2 drafter (z-lab/Qwen3.8-27B-DFlash2 @50307d4c, 3.58 GiB)."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-27b.json and server log tf-nvfp4-27b-124929.log",
+        "measured_at": "2026-10-11T07:14:56+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-nvfp4-27b-chat",
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 35.9,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": 0.09,
+          "min": 0.09,
+          "max": 0.1,
+          "mean": 0.09333333333333334,
+          "sample_sd": 0.005773502691896263,
+          "cv_percent": 6.185895741317425
+        },
+        "decode_tps_server_log": {
+          "median": 35.8,
+          "min": 35.7,
+          "max": 35.8,
+          "mean": 35.766666666666666,
+          "sample_sd": 0.05773502691895929,
+          "cv_percent": 0.16142132409774265
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 0,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 35.7,
+          "ttft_s": 0.1,
+          "prefill_s": 0.1,
+          "tensorfold": {
+            "rounds": 146,
+            "accepted": 365,
+            "drafted": 2190
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prefix cache cold."
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 35,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 35.8,
+          "ttft_s": 0.09,
+          "prefill_s": 0.09,
+          "tensorfold": {
+            "rounds": 146,
+            "accepted": 365,
+            "drafted": 2190
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prompt prefix reused from the previous request."
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 35,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 35.8,
+          "ttft_s": 0.09,
+          "prefill_s": 0.09,
+          "tensorfold": {
+            "rounds": 146,
+            "accepted": 365,
+            "drafted": 2190
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prompt prefix reused from the previous request."
+        }
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Chat: a plain-language science explanation",
+        "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: DFlash2 drafter (z-lab/Qwen3.8-27B-DFlash2 @50307d4c, 3.58 GiB)."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-27b.json and server log tf-nvfp4-27b-124929.log",
+        "measured_at": "2026-10-11T07:14:56+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-mlx-27b-coding",
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 82.7,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": 0.11,
+          "min": 0.11,
+          "max": 0.18,
+          "mean": 0.13333333333333333,
+          "sample_sd": 0.0404145188432738,
+          "cv_percent": 30.310889132455355
+        },
+        "decode_tps_server_log": {
+          "median": 82.6,
+          "min": 81.7,
+          "max": 82.8,
+          "mean": 82.36666666666666,
+          "sample_sd": 0.5859465277082277,
+          "cv_percent": 0.7113879332758735
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 0,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 81.7,
+          "ttft_s": 0.18,
+          "prefill_s": 0.18,
+          "tensorfold": {
+            "rounds": 76,
+            "accepted": 435,
+            "drafted": 1140
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prefix cache cold."
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 33,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 82.6,
+          "ttft_s": 0.11,
+          "prefill_s": 0.11,
+          "tensorfold": {
+            "rounds": 76,
+            "accepted": 435,
+            "drafted": 1140
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prompt prefix reused from the previous request."
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 33,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 82.8,
+          "ttft_s": 0.11,
+          "prefill_s": 0.11,
+          "tensorfold": {
+            "rounds": 76,
+            "accepted": 435,
+            "drafted": 1140
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prompt prefix reused from the previous request."
+        }
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Coding: a thread-safe cache module with tests",
+        "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: DFlash2 drafter (z-lab/Qwen3.8-27B-DFlash2 @50307d4c, 3.58 GiB)."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-27b.json and server log tf-mlx-27b-125504.log",
+        "measured_at": "2026-10-11T07:19:50+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-mlx-27b-chat",
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 41.2,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": 0.11,
+          "min": 0.11,
+          "max": 0.12,
+          "mean": 0.11333333333333333,
+          "sample_sd": 0.0057735026918962545,
+          "cv_percent": 5.094267081084931
+        },
+        "decode_tps_server_log": {
+          "median": 41.1,
+          "min": 41.1,
+          "max": 41.1,
+          "mean": 41.1,
+          "sample_sd": 0.0,
+          "cv_percent": 0.0
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 0,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 41.1,
+          "ttft_s": 0.12,
+          "prefill_s": 0.12,
+          "tensorfold": {
+            "rounds": 153,
+            "accepted": 358,
+            "drafted": 2295
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prefix cache cold."
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 35,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 41.1,
+          "ttft_s": 0.11,
+          "prefill_s": 0.11,
+          "tensorfold": {
+            "rounds": 153,
+            "accepted": 358,
+            "drafted": 2295
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prompt prefix reused from the previous request."
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 35,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 41.1,
+          "ttft_s": 0.11,
+          "prefill_s": 0.11,
+          "tensorfold": {
+            "rounds": 153,
+            "accepted": 358,
+            "drafted": 2295
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prompt prefix reused from the previous request."
+        }
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Chat: a plain-language science explanation",
+        "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: DFlash2 drafter (z-lab/Qwen3.8-27B-DFlash2 @50307d4c, 3.58 GiB)."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-27b.json and server log tf-mlx-27b-125504.log",
+        "measured_at": "2026-10-11T07:19:50+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-nvfp4-flash-coding",
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 66.2,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": 0.16,
+          "min": 0.07,
+          "max": 0.67,
+          "mean": 0.3,
+          "sample_sd": 0.32357379374726875,
+          "cv_percent": 107.85793124908957
+        },
+        "decode_tps_server_log": {
+          "median": 66.4,
+          "min": 66.3,
+          "max": 66.6,
+          "mean": 66.43333333333334,
+          "sample_sd": 0.1527525231651922,
+          "cv_percent": 0.22993355218041975
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 0,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 66.4,
+          "ttft_s": 0.67,
+          "prefill_s": 0.65,
+          "tensorfold": {
+            "rounds": 115,
+            "accepted": 396,
+            "drafted": 545
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prefix cache cold."
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 33,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 66.6,
+          "ttft_s": 0.16,
+          "prefill_s": 0.12,
+          "tensorfold": {
+            "rounds": 115,
+            "accepted": 396,
+            "drafted": 545
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prompt prefix reused from the previous request."
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 34,
+          "cached_prompt_tokens": 33,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 66.3,
+          "ttft_s": 0.07,
+          "prefill_s": 0.03,
+          "tensorfold": {
+            "rounds": 115,
+            "accepted": 396,
+            "drafted": 545
+          },
+          "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+          "note": "Prompt prefix reused from the previous request."
+        }
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Coding: a thread-safe cache module with tests",
+        "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: MTP, 1-6 drafts a round, confidence 0.60."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-flash.json and server log tf-nvfp4-flash-132951.log",
+        "measured_at": "2026-10-11T07:55:40+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-nvfp4-flash-chat",
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": true,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 40.6,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": 0.08,
+          "min": 0.07,
+          "max": 0.17,
+          "mean": 0.10666666666666667,
+          "sample_sd": 0.055075705472861024,
+          "cv_percent": 51.6334738808072
+        },
+        "decode_tps_server_log": {
+          "median": 40.7,
+          "min": 40.4,
+          "max": 40.7,
+          "mean": 40.6,
+          "sample_sd": 0.1732050807568902,
+          "cv_percent": 0.42661349940120735
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 0,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 40.4,
+          "ttft_s": 0.17,
+          "prefill_s": 0.08,
+          "tensorfold": {
+            "rounds": 226,
+            "accepted": 285,
+            "drafted": 525
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prefix cache cold."
+        },
+        {
+          "trial": 2,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 35,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 40.7,
+          "ttft_s": 0.07,
+          "prefill_s": 0.03,
+          "tensorfold": {
+            "rounds": 226,
+            "accepted": 285,
+            "drafted": 525
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prompt prefix reused from the previous request."
+        },
+        {
+          "trial": 3,
+          "ranked": true,
+          "output_limit": 512,
+          "prompt_tokens": 36,
+          "cached_prompt_tokens": 35,
+          "output_tokens": 512,
+          "finish_reason": "length",
+          "decode_tps": 40.7,
+          "ttft_s": 0.08,
+          "prefill_s": 0.03,
+          "tensorfold": {
+            "rounds": 226,
+            "accepted": 285,
+            "drafted": 525
+          },
+          "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+          "note": "Prompt prefix reused from the previous request."
+        }
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Chat: a plain-language science explanation",
+        "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: MTP, 1-6 drafts a round, confidence 0.60."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-flash.json and server log tf-nvfp4-flash-132951.log",
+        "measured_at": "2026-10-11T07:55:40+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-mlx-flash-0363-coding",
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "workload": "coding",
+      "status": "ok",
+      "preferred": false,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 81.7,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": null
+        }
+      },
+      "trials": [],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Coding: a thread-safe cache module with tests",
+        "prompt_sha256": "c903da703a1a72b56a85b2b29b2617d67a68a1addc7f9a8be29c1b3fe1edf20d",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: MTP, 1-6 drafts a round, confidence 0.60.",
+          "Per-request server timings were not logged for this server; only the client median is available."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-flash-0363.json",
+        "measured_at": "2026-10-11T06:43:06+00:00",
+        "engine_version": "0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "id": "tensorfold-quant-study-20261011-mlx-flash-0363-chat",
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "workload": "chat",
+      "status": "ok",
+      "preferred": false,
+      "trial_count": 3,
+      "metrics": {
+        "decode_tps": {
+          "median": 56.6,
+          "basis": "Median of three requests, recorded by the bench client"
+        },
+        "ttft_s": {
+          "median": null
+        }
+      },
+      "trials": [],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "prompt_family": "Chat: a plain-language science explanation",
+        "prompt_sha256": "2f6787bf4a4b42159b54ceadace221574502ad7d184cae2f0ad160f78c41de38",
+        "output_limit": 512,
+        "temperature": 0,
+        "seed": 7,
+        "thinking": false,
+        "concurrency": 1,
+        "context_tokens": 262144,
+        "timing_basis": "TensorFold-reported decode tok/s per request; median of three requests as recorded by the bench client",
+        "notes": [
+          "Three requests; the first also warms the prefix cache and is included in the median.",
+          "Speculative decoding on: MTP, 1-6 drafts a round, confidence 0.60.",
+          "Per-request server timings were not logged for this server; only the client median is available."
+        ]
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-flash-0363.json",
+        "measured_at": "2026-10-11T06:43:06+00:00",
+        "engine_version": "0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
     }
   ],
   "long_context": [
@@ -9170,6 +9939,246 @@
         "source": "Archived TensorFold tools/bench.py measurements, curated with the Qwen Flash row",
         "measured_at": "2026-09-29",
         "precision_note": "Rounded supplementary measurements; individual trials were not included in the curated export."
+      }
+    },
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "prompt_tokens": 7133,
+      "prefill_tps": 2834,
+      "prefill_s": 2.52,
+      "ttft_s": 2.52,
+      "size_label": "8k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-27b.json and server log tf-nvfp4-27b-124929.log",
+        "measured_at": "2026-10-11T07:14:56+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "prompt_tokens": 27782,
+      "prefill_tps": 2553,
+      "prefill_s": 10.88,
+      "ttft_s": 10.91,
+      "size_label": "32k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-27b.json and server log tf-nvfp4-27b-124929.log",
+        "measured_at": "2026-10-11T07:14:56+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "prompt_tokens": 114545,
+      "prefill_tps": 1608,
+      "prefill_s": 71.25,
+      "ttft_s": 71.48,
+      "size_label": "128k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-27b.json and server log tf-nvfp4-27b-124929.log",
+        "measured_at": "2026-10-11T07:14:56+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "prompt_tokens": 7133,
+      "prefill_tps": 1377,
+      "prefill_s": 5.18,
+      "ttft_s": 5.22,
+      "size_label": "8k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-27b.json and server log tf-mlx-27b-125504.log",
+        "measured_at": "2026-10-11T07:19:50+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "prompt_tokens": 27783,
+      "prefill_tps": 1315,
+      "prefill_s": 21.13,
+      "ttft_s": 21.15,
+      "size_label": "32k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-27b.json and server log tf-mlx-27b-125504.log",
+        "measured_at": "2026-10-11T07:19:50+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "prompt_tokens": 114542,
+      "prefill_tps": 1007,
+      "prefill_s": 113.71,
+      "ttft_s": 113.96,
+      "size_label": "128k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-27b.json and server log tf-mlx-27b-125504.log",
+        "measured_at": "2026-10-11T07:19:50+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "prompt_tokens": 7127,
+      "prefill_tps": 1615,
+      "prefill_s": 4.41,
+      "ttft_s": 4.43,
+      "size_label": "8k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-flash.json and server log tf-nvfp4-flash-132951.log",
+        "measured_at": "2026-10-11T07:55:40+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "prompt_tokens": 27780,
+      "prefill_tps": 1582,
+      "prefill_s": 17.56,
+      "ttft_s": 17.62,
+      "size_label": "32k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-flash.json and server log tf-nvfp4-flash-132951.log",
+        "measured_at": "2026-10-11T07:55:40+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "prompt_tokens": 114541,
+      "prefill_tps": 1494,
+      "prefill_s": 76.65,
+      "ttft_s": 76.79,
+      "size_label": "128k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/nvfp4-flash.json and server log tf-nvfp4-flash-132951.log",
+        "measured_at": "2026-10-11T07:55:40+00:00",
+        "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 7135,
+      "prefill_tps": 1979,
+      "prefill_s": 3.61,
+      "ttft_s": null,
+      "size_label": "8k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-flash-0363.json",
+        "measured_at": "2026-10-11T06:43:06+00:00",
+        "engine_version": "0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 27785,
+      "prefill_tps": 2119,
+      "prefill_s": 13.11,
+      "ttft_s": null,
+      "size_label": "32k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-flash-0363.json",
+        "measured_at": "2026-10-11T06:43:06+00:00",
+        "engine_version": "0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",
+        "study_id": "nvfp4-vs-mlx-20261011"
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "prompt_tokens": 114546,
+      "prefill_tps": 1926,
+      "prefill_s": 59.48,
+      "ttft_s": null,
+      "size_label": "128k",
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011",
+        "notes": "Cold prefill: unique first line so no prefix is reused; Python standard-library source; 16 output tokens; one request per size. Prefill rate from TensorFold's prefill seconds."
+      },
+      "provenance": {
+        "source": "tf-bench.py results/mlx-flash-0363.json",
+        "measured_at": "2026-10-11T06:43:06+00:00",
+        "engine_version": "0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",
+        "study_id": "nvfp4-vs-mlx-20261011"
       }
     }
   ],
@@ -9583,6 +10592,76 @@
       "notes": [
         "Ollama native load_duration observed during first coding warmup after explicit unload; separate from API server startup and ranked generation."
       ]
+    },
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "server_startup_to_observed_ready_s": 20,
+      "startup_basis": "Launcher health poll every 10 s",
+      "engine_weight_loading_s": 12.5,
+      "engine_weight_allocation_gib": null,
+      "startup_memory_estimate_gib": 42.68,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "TensorFold's own 'loaded in' time and CUDA start-up memory estimate."
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011"
+      }
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "server_startup_to_observed_ready_s": 20,
+      "startup_basis": "Launcher health poll every 10 s",
+      "engine_weight_loading_s": 17.7,
+      "engine_weight_allocation_gib": null,
+      "startup_memory_estimate_gib": 38.01,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "TensorFold's own 'loaded in' time and CUDA start-up memory estimate."
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011"
+      }
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "server_startup_to_observed_ready_s": 191,
+      "startup_basis": "Launcher health poll every 10 s",
+      "engine_weight_loading_s": 183.8,
+      "engine_weight_allocation_gib": null,
+      "startup_memory_estimate_gib": 81.88,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "TensorFold's own 'loaded in' time and CUDA start-up memory estimate.",
+        "Vision refused at startup: the quantized vision tower is not a Qwen3.5-compatible vision checkpoint. --ple-on-ssd is not available on this build.",
+        "Load time includes one-time CUDA extension builds on the first start."
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011"
+      }
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "server_startup_to_observed_ready_s": null,
+      "startup_basis": "Not measured",
+      "engine_weight_loading_s": 144.7,
+      "engine_weight_allocation_gib": null,
+      "startup_memory_estimate_gib": 102.5,
+      "cold_warmup_native_load_s": null,
+      "notes": [
+        "TensorFold's own 'loaded in' time and CUDA start-up memory estimate."
+      ],
+      "protocol": {
+        "id": "tensorfold-quant-study-20261011"
+      }
     }
   ],
   "suite": {
@@ -9594,5 +10673,382 @@
     "failed_workload_profiles": 3,
     "unavailable_workload_profiles": 6,
     "note": "All mapped profiles reached a terminal status; original serving configuration restored and verified. The site is a published snapshot."
-  }
+  },
+  "configurations": [
+    {
+      "id": "f400064311610e9e3bd55b9e",
+      "model": "Qwen3.8-27B-NVFP4",
+      "display_name": "Qwen3.8 27B NVFP4",
+      "engine": "TensorFold",
+      "kind": "generation",
+      "status": "ok",
+      "family": "qwen3.8",
+      "format": "safetensors",
+      "quantization_metadata": "NVFP4 + FP8 (ModelOpt mixed precision)",
+      "parameter_size": "27.78B",
+      "active_parameters": null,
+      "tag_disk_gib": 20.43814559467137,
+      "weight_size_basis": "Checkpoint snapshot files with symlinks resolved; drafter weights not included.",
+      "checkpoint": {
+        "repo_id": "nvidia/Qwen3.8-27B-NVFP4",
+        "revision": "482ca0f3832238542f8f5295dde86b5f22711d80"
+      },
+      "server": {
+        "tensorfold_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "context_tokens": 262144,
+        "parallel_slots": 4,
+        "kv_dtype": "bf16",
+        "precision": "checkpoint: NVFP4 layers FP4 x FP4, FP8 layers FP8 x FP8",
+        "speculative_decoding": "DFlash2 drafter (z-lab/Qwen3.8-27B-DFlash2 @50307d4c, 3.58 GiB)",
+        "vision": false,
+        "startup_estimate_gib": 42.68,
+        "engine_load_s": 12.5,
+        "ready_after_s": 20
+      },
+      "writing_baseline": false,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "added_utc": "2026-10-11T07:14:56+00:00"
+    },
+    {
+      "id": "57df763c01d7913d64262f41",
+      "model": "Qwen3.8-27B-MLX-4bit",
+      "display_name": "Qwen3.8 27B MLX 4-bit",
+      "engine": "TensorFold",
+      "kind": "generation",
+      "status": "ok",
+      "family": "qwen3.8",
+      "format": "safetensors",
+      "quantization_metadata": "MLX 4-bit affine",
+      "parameter_size": "27.78B",
+      "active_parameters": null,
+      "tag_disk_gib": 14.97708330117166,
+      "weight_size_basis": "Checkpoint snapshot files with symlinks resolved; drafter weights not included.",
+      "checkpoint": {
+        "repo_id": "Vontra/Qwen3.8-27B-MLX-4bit",
+        "revision": "70ae7fac63274ff2eac54152031433374cb80f2f"
+      },
+      "server": {
+        "tensorfold_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "context_tokens": 262144,
+        "parallel_slots": 4,
+        "kv_dtype": "bf16",
+        "precision": "bf16 activations",
+        "speculative_decoding": "DFlash2 drafter (z-lab/Qwen3.8-27B-DFlash2 @50307d4c, 3.58 GiB)",
+        "vision": false,
+        "startup_estimate_gib": 38.01,
+        "engine_load_s": 17.7,
+        "ready_after_s": 20
+      },
+      "writing_baseline": false,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "added_utc": "2026-10-11T07:19:50+00:00"
+    },
+    {
+      "id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "display_name": "Qwen3.8 Flash Next NVFP4 (QAD)",
+      "engine": "TensorFold",
+      "kind": "generation",
+      "status": "ok",
+      "family": "qwen3.8",
+      "format": "safetensors",
+      "quantization_metadata": "NVFP4 QAD + MXFP8 attention (ModelOpt mixed precision)",
+      "parameter_size": "125B",
+      "active_parameters": "6B",
+      "tag_disk_gib": 98.62333242315799,
+      "weight_size_basis": "Checkpoint snapshot files with symlinks resolved; drafter weights not included.",
+      "checkpoint": {
+        "repo_id": "local-inference-lab/Qwen3.8-Flash-Next-NVFP4",
+        "revision": "7c4f1bc1a2d6847e0cbc01ac6b823f00251de8dd"
+      },
+      "server": {
+        "tensorfold_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+        "context_tokens": 262144,
+        "parallel_slots": 4,
+        "kv_dtype": "int8 (fp16 scale per 32 values)",
+        "precision": "bf16 activations",
+        "speculative_decoding": "MTP, 1-6 drafts a round, confidence 0.60",
+        "vision": false,
+        "startup_estimate_gib": 81.88,
+        "engine_load_s": 183.8,
+        "ready_after_s": 191,
+        "notes": [
+          "Vision refused at startup: the quantized vision tower is not a Qwen3.5-compatible vision checkpoint. --ple-on-ssd is not available on this build.",
+          "Load time includes one-time CUDA extension builds on the first start."
+        ]
+      },
+      "writing_baseline": false,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "added_utc": "2026-10-11T07:55:40+00:00"
+    }
+  ],
+  "concurrency": [
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "streams": 4,
+      "aggregate_tps": 192.4,
+      "output_tokens_each": 512,
+      "per_request_decode_tps": [
+        59.3,
+        55.2,
+        54.0,
+        48.9
+      ],
+      "server_parallel_slots": 4,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011",
+      "basis": "Total completion tokens of four simultaneous coding requests divided by their wall time.",
+      "measured_at": "2026-10-11T07:14:56+00:00"
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "streams": 4,
+      "aggregate_tps": 196.9,
+      "output_tokens_each": 512,
+      "per_request_decode_tps": [
+        55.9,
+        50.9,
+        50.4,
+        50.4
+      ],
+      "server_parallel_slots": 4,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011",
+      "basis": "Total completion tokens of four simultaneous coding requests divided by their wall time.",
+      "measured_at": "2026-10-11T07:19:50+00:00"
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "streams": 4,
+      "aggregate_tps": 119.3,
+      "output_tokens_each": 512,
+      "per_request_decode_tps": [
+        31.3,
+        31.3,
+        33.9,
+        30.9
+      ],
+      "server_parallel_slots": 4,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011",
+      "basis": "Total completion tokens of four simultaneous coding requests divided by their wall time.",
+      "measured_at": "2026-10-11T07:55:40+00:00"
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "streams": 4,
+      "aggregate_tps": 153.1,
+      "output_tokens_each": 512,
+      "per_request_decode_tps": null,
+      "server_parallel_slots": 5,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011",
+      "basis": "Total completion tokens of four simultaneous coding requests divided by their wall time.",
+      "measured_at": "2026-10-11T06:43:06+00:00"
+    }
+  ],
+  "checks": [
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "check": "long_recall",
+      "label": "Passphrase recall from the start of a ~104k-token prompt",
+      "passed": true,
+      "prompt_tokens": 103958,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "f400064311610e9e3bd55b9e",
+      "model_name": "Qwen3.8-27B-NVFP4",
+      "engine": "TensorFold",
+      "check": "tool_call",
+      "label": "One function call with both required arguments",
+      "passed": true,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "check": "long_recall",
+      "label": "Passphrase recall from the start of a ~104k-token prompt",
+      "passed": true,
+      "prompt_tokens": 103958,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "57df763c01d7913d64262f41",
+      "model_name": "Qwen3.8-27B-MLX-4bit",
+      "engine": "TensorFold",
+      "check": "tool_call",
+      "label": "One function call with both required arguments",
+      "passed": true,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "check": "long_recall",
+      "label": "Passphrase recall from the start of a ~104k-token prompt",
+      "passed": true,
+      "prompt_tokens": 103960,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+      "model_name": "Qwen3.8-Flash-Next-NVFP4-QAD",
+      "engine": "TensorFold",
+      "check": "tool_call",
+      "label": "One function call with both required arguments",
+      "passed": true,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "check": "long_recall",
+      "label": "Passphrase recall from the start of a ~104k-token prompt",
+      "passed": true,
+      "prompt_tokens": null,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    },
+    {
+      "model_id": "3ac63ddd35a51e2282183d9b",
+      "model_name": "Qwen3.8-Flash-Next",
+      "engine": "TensorFold",
+      "check": "tool_call",
+      "label": "One function call with both required arguments",
+      "passed": true,
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011"
+    }
+  ],
+  "studies": [
+    {
+      "id": "nvfp4-vs-mlx-20261011",
+      "date": "2026-10-11",
+      "protocol_id": "tensorfold-quant-study-20261011",
+      "title": "NVFP4 or MLX 4-bit for Qwen3.8 on TensorFold",
+      "question": "Does serving Qwen3.8 from NVFP4 checkpoints beat the MLX 4-bit weights on the GB10?",
+      "answer": "Only for long prompts on the dense 27B. NVFP4 roughly doubles its prompt processing but decodes 10–13% slower. The Flash Next NVFP4 build is slower everywhere and cannot load vision.",
+      "pairs": [
+        {
+          "id": "27b",
+          "label": "Qwen3.8 27B (dense)",
+          "same_engine_version": true,
+          "note": "Both on TensorFold 0.6.6 with the same DFlash2 drafter, 4 streams and bf16 KV cache."
+        },
+        {
+          "id": "flash",
+          "label": "Qwen3.8 Flash Next (125B, 6B active)",
+          "same_engine_version": false,
+          "note": "The MLX 4-bit numbers come from the live server (TensorFold 0.3.6.3, 5 streams, vision on); the NVFP4 build needs TensorFold 0.6.6. Engine version differs, so this pair is not a pure format test."
+        }
+      ],
+      "configs": [
+        {
+          "model_id": "f400064311610e9e3bd55b9e",
+          "label": "Qwen3.8 27B NVFP4",
+          "pair": "27b",
+          "format_family": "NVFP4",
+          "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+          "checkpoint": "nvidia/Qwen3.8-27B-NVFP4"
+        },
+        {
+          "model_id": "57df763c01d7913d64262f41",
+          "label": "Qwen3.8 27B MLX 4-bit",
+          "pair": "27b",
+          "format_family": "MLX 4-bit",
+          "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+          "checkpoint": "Vontra/Qwen3.8-27B-MLX-4bit"
+        },
+        {
+          "model_id": "83b4cb9a3cbcd2b08f40c4b4",
+          "label": "Qwen3.8 Flash Next NVFP4 (QAD)",
+          "pair": "flash",
+          "format_family": "NVFP4",
+          "engine_version": "0.6.6 (python-0.6 @ ed78d6fc, image sha256:082c40d042fc)",
+          "checkpoint": "local-inference-lab/Qwen3.8-Flash-Next-NVFP4"
+        },
+        {
+          "model_id": "3ac63ddd35a51e2282183d9b",
+          "label": "Qwen3.8 Flash Next MLX 4-bit",
+          "pair": "flash",
+          "format_family": "MLX 4-bit",
+          "engine_version": "0.3.6.3 (image sha256:05620ace4085, the live server on port 8888)",
+          "checkpoint": "Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP"
+        }
+      ],
+      "findings": [
+        "27B prefill: NVFP4 processes prompts about 2.1x faster at 8k tokens (2,834 vs 1,377 tok/s) and 1.6x faster at 128k (1,608 vs 1,007).",
+        "27B decode: MLX 4-bit stays ahead, 82.7 vs 74.1 tok/s on coding and 41.2 vs 35.9 on chat. The NVFP4 export keeps attention in FP8, so its weights are larger (20.4 vs 15.0 GiB), and decoding on the GB10 is bound by memory bandwidth.",
+        "27B under load: four simultaneous coding streams reach 192 tok/s on NVFP4 and 197 on MLX 4-bit.",
+        "Flash Next: the NVFP4 build trails the live MLX 4-bit server on decode (66.2 vs 81.7 coding, 40.6 vs 56.6 chat), prefill (1,615 vs 1,979 tok/s at 8k) and four-stream throughput (119 vs 153 tok/s).",
+        "All four setups recalled the passphrase from a ~104k-token prompt and made a correct tool call."
+      ],
+      "outcome": "The live default stayed on the MLX 4-bit Flash Next. The 27B NVFP4 suits long-prompt and agent work; switching either model is still an open decision.",
+      "caveats": [
+        "One request per prompt length for prefill, and three requests per decode workload, so treat small differences as noise.",
+        "Speculative decoding was on for every server, so decode speed depends on how often drafts are accepted for each prompt.",
+        "NVFP4's gain is meant to be quality (quantization-aware training) and prefill; quality was not scored.",
+        "These prompts and the 512-token limit differ from the 30 September coding/chat suite; the two are not averaged together."
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-09-28",
+      "title": "Writing baseline",
+      "id": "writing-baseline",
+      "summary": "26 Ollama and vLLM entries timed on the shared essay prompts; one checkpoint was incomplete.",
+      "link": "#models?workload=writing"
+    },
+    {
+      "date": "2026-09-29",
+      "title": "Qwen3.8 Flash Next on TensorFold",
+      "id": "flash-tensorfold",
+      "summary": "MLX 4-bit Flash Next with MTP drafting: 55.9 tok/s on the writing prompts, plus archived coding, chat and long-context runs.",
+      "link": "#model/3ac63ddd35a51e2282183d9b?workload=writing"
+    },
+    {
+      "date": "2026-09-30",
+      "title": "Full BF16 27B, and where it cannot run",
+      "id": "bf16",
+      "summary": "Qwen3.8 27B in full BF16 runs on vLLM at about 4.3 tok/s. TensorFold 0.3.6.3 rejects unquantized BF16 weights before loading, so that entry has no speed.",
+      "link": "#model/3e5cadd6550c81efb281a531?workload=coding"
+    },
+    {
+      "date": "2026-09-30",
+      "title": "Controlled coding and chat suite",
+      "id": "workload-suite",
+      "summary": "54 profiles across 27 configurations: 45 measured, 3 failed, 6 unavailable.",
+      "link": "#models?workload=coding"
+    },
+    {
+      "date": "2026-10-11",
+      "title": "NVFP4 or MLX 4-bit on TensorFold",
+      "id": "nvfp4-vs-mlx-20261011",
+      "study_id": "nvfp4-vs-mlx-20261011",
+      "summary": "NVFP4 doubles 27B prompt processing; MLX 4-bit still decodes faster. Flash Next NVFP4 is slower everywhere.",
+      "link": "#study/nvfp4-vs-mlx-20261011"
+    }
+  ]
 }
