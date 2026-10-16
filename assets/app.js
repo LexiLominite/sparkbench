@@ -808,6 +808,7 @@ function renderContext() {
 
 // ---------------------------------------------------------------- views: studies
 function studyHeadline(s) {
+  if (s.headline?.length) return s.headline.map(x => [x.label, x.value, x.note, x.unit]);
   if (s.figures) return s.figures;
   const pair = id => { const a = s.configs.find(c => c.pair === id && c.format_family === 'NVFP4'), b = s.configs.find(c => c.pair === id && c.format_family !== 'NVFP4'); return a && b ? studyMetricRows(a.model_id, b.model_id) : []; };
   const pct = (rows, i) => rows[i] ? (rows[i][1] / rows[i][2] - 1) * 100 : null, signed = v => v == null ? '—' : `${v > 0 ? '+' : '−'}${fmt(Math.abs(v), 0)}%`;
@@ -817,9 +818,9 @@ function studyHeadline(s) {
 }
 function renderStudies() {
   const items = (WORK.timeline || []).slice().sort((a, b) => a.date.localeCompare(b.date));
-  const latest = (WORK.studies || []).slice().sort((a, b) => b.date.localeCompare(a.date))[0];
-  content(`<div class="page-head"><div><h1 class="page-title">What was tested, and when.</h1><p class="lede">SparkBench grows one question at a time. Each entry links to the setups or study it added; earlier numbers are never overwritten.</p></div></div>
-  ${latest ? `<section class="studies-feature hud" aria-labelledby="feature-title"><div><p class="kicker">Latest study, ${esc(dayLabel(latest.date))}</p><h2 id="feature-title">${esc(latest.title)}</h2><p class="answer">${esc(latest.answer)}</p><a class="button primary" href="#study/${esc(latest.id)}">Open the study</a></div>
+  const latest = (WORK.studies || []).slice().sort((a, b) => b.date.localeCompare(a.date) || (b.order || 0) - (a.order || 0))[0];
+  content(`<div class="page-head"><div><h1 class="page-title">What we tested, observed and learned.</h1><p class="lede">SparkBench grows one question at a time. Controlled benchmarks, runtime qualifications and field observations keep their own evidence labels and limits; earlier numbers are never overwritten.</p></div></div>
+  ${latest ? `<section class="studies-feature hud" aria-labelledby="feature-title"><div><p class="kicker">Latest ${esc(latest.kind || 'study')}, ${esc(dayLabel(latest.date))}</p><h2 id="feature-title">${esc(latest.title)}</h2><p class="answer">${esc(latest.answer)}</p><a class="button primary" href="#study/${esc(latest.id)}">Open the study</a></div>
     <div class="feature-figures">${studyHeadline(latest).map(([label, value, note, unit]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div></section>` : ''}
   <h2 class="sr-only">Timeline</h2>
   <ol class="timeline">${items.map(t => `<li class="${t.study_id ? 'featured' : ''}"><time datetime="${esc(t.date)}">${esc(dayLabel(t.date, {day: 'numeric', month: 'short', year: 'numeric'}))}</time><div><h3><a href="${esc(t.link)}">${esc(t.title)}</a></h3><p>${esc(t.summary)}</p></div></li>`).join('')}</ol>`);
@@ -833,10 +834,34 @@ function studyMetricRows(a, b) {
     [`Prompt, ${size('8k')}`, pre(a, '8k'), pre(b, '8k'), 'tok/s', 0], [`Prompt, ${size('32k')}`, pre(a, '32k'), pre(b, '32k'), 'tok/s', 0], [`Prompt, ${size('128k')}`, pre(a, '128k'), pre(b, '128k'), 'tok/s', 0]]
     .filter(r => isNum(r[1]) && isNum(r[2]));
 }
+function studySources(s) {
+  if (!s.sources?.length) return '';
+  const sources = s.sources.map(x => Array.isArray(x) ? {label: x[0], url: x[1]} : x);
+  return `<section class="section" aria-labelledby="study-sources"><h2 id="study-sources">Sources and evidence</h2><ul class="source-list">${sources.map(x => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>${x.note ? `<span>${esc(x.note)}</span>` : ''}</li>`).join('')}</ul></section>`;
+}
+function renderNarrativeStudy(s) {
+  const evidence = s.evidence || [];
+  const protocol = s.protocol || [];
+  const figures = studyHeadline(s);
+  const cell = (v, c) => `<td class="${c.right ? 'right num' : ''}">${esc(v)}</td>`;
+  const tables = (s.tables || []).map(t => `<figure class="chart-frame hud"><p class="chart-title">${esc(t.title)}</p>${t.sub ? `<p class="chart-sub">${esc(t.sub)}</p>` : ''}
+    <div class="table-scroll" style="margin-top:.5rem"><table><thead><tr>${t.columns.map(c => `<th class="${c.right ? 'right' : ''}">${esc(c.label)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((v, i) => cell(v, t.columns[i] || {})).join('')}</tr>`).join('')}</tbody></table></div>
+    ${t.note ? `<p class="small muted" style="margin:.75rem 0 0">${esc(t.note)}</p>` : ''}</figure>`).join('');
+  content(`<a class="back" href="#studies">All studies</a>
+  <div class="page-head study-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))} · ${esc(s.kind || 'study')}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="study-status"><span class="tag">${esc(s.evidence_level || 'Evidence recorded')}</span>${s.status ? `<strong>${esc(s.status)}</strong>` : ''}${s.csv ? `<a class="button" href="${esc(s.csv)}" download>Download CSV</a>` : ''}</div></div>
+  <section class="narrative-lead hud"><p class="answer">${esc(s.answer)}</p><div class="feature-figures">${figures.map(([label, value, note, unit]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div></section>
+  <div class="study-top narrative-study"><section aria-labelledby="study-findings"><h2 id="study-findings">What the evidence says</h2><ul class="findings">${(s.findings || []).map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:78ch">${esc(s.outcome)}</p></section>
+  ${evidence.length ? `<section aria-labelledby="study-evidence"><h2 id="study-evidence">Evidence ledger</h2><div class="evidence-grid">${evidence.map(e => `<article><p class="kicker">${esc(e.label)}</p><p class="evidence-value">${esc(e.value)}</p><p>${esc(e.note || '')}</p></article>`).join('')}</div></section>` : tables ? `<section class="section" aria-labelledby="study-data"><h2 id="study-data">The numbers</h2><div class="pair-grid" style="margin-top:1rem">${tables}</div></section>` : ''}</div>
+  ${evidence.length && tables ? `<section class="section" aria-labelledby="study-data"><h2 id="study-data">The numbers</h2><div class="pair-grid" style="margin-top:1rem">${tables}</div></section>` : ''}
+  ${s.method ? `<section class="section" aria-labelledby="study-method"><h2 id="study-method">How it was measured</h2><p class="muted" style="max-width:82ch">${esc(s.method)}</p></section>` : ''}
+  ${protocol.length ? `<section class="section" aria-labelledby="study-protocol"><h2 id="study-protocol">How this was established</h2><ol class="protocol-list">${protocol.map(p => `<li>${esc(p)}</li>`).join('')}</ol></section>` : ''}
+  <section class="section" aria-labelledby="study-limits"><h2 id="study-limits">Limits</h2><ul class="findings">${(s.caveats || []).map(c => `<li>${esc(c)}</li>`).join('')}</ul></section>
+  ${studySources(s)}`);
+}
 function renderStudy(id) {
   const s = studyById(id);
   if (!s) { content('<div class="empty"><h1 class="page-title">Study not found</h1><p>This link may point to a study that has not been published.</p><a class="button" href="#studies">All studies</a></div>'); return; }
-  if (!s.pairs) { renderNoteStudy(s); return; }
+  if (!s.pairs || (s.kind && s.kind !== 'benchmark')) { renderNarrativeStudy(s); return; }
   const cfg = s.configs, setup = c => modelById(c.model_id);
   const pairRows = Object.fromEntries(s.pairs.map(p => { const a = cfg.find(c => c.pair === p.id && c.format_family === 'NVFP4'), b = cfg.find(c => c.pair === p.id && c.format_family !== 'NVFP4'); return [p.id, a && b ? studyMetricRows(a.model_id, b.model_id) : []]; }));
   const limit = Math.max(25, ...Object.values(pairRows).flat().map(([, x, y]) => Math.abs((x / y - 1) * 100))) * 1.35;
@@ -852,7 +877,7 @@ function renderStudy(id) {
   const checks = (WORK.checks || []).filter(c => c.study_id === s.id), series = contextSeries().filter(x => x.proto === s.protocol_id);
   const profile = (WORK.profiles || []).find(p => p.id === s.protocol_id);
   content(`<a class="back" href="#studies">All studies</a>
-  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="actions"><a class="button" href="${esc(s.csv || 'quant-study-20261011.csv')}" download>Download CSV</a></div></div>
+  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))} · ${esc(s.evidence_level || 'benchmark')}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="actions"><a class="button" href="${esc(s.csv || 'quant-study-20261011.csv')}" download>Download CSV</a></div></div>
   <div class="study-top">
     <section aria-labelledby="study-findings"><p class="answer">${esc(s.answer)}</p><h2 id="study-findings" style="margin-top:1.8rem">Findings</h2><ul class="findings" style="margin-top:.75rem">${s.findings.map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:78ch">${esc(s.outcome)}</p></section>
     <section class="section" aria-labelledby="study-pairs"><h2 id="study-pairs">Format against format</h2><p class="muted" style="max-width:70ch">How much faster or slower each NVFP4 build is than the MLX 4-bit build of the same model. Bars to the right are faster.</p>
@@ -862,25 +887,7 @@ function renderStudy(id) {
   <section class="section" aria-labelledby="study-setups"><h2 id="study-setups">The four setups</h2>
     <div class="table-scroll"><table><thead><tr><th>Setup</th><th>Checkpoint</th><th>TensorFold</th><th class="right">Weights</th><th>Speculative decoding</th><th class="right">Long recall</th><th class="right">Tool call</th></tr></thead><tbody>${cfg.map(c => { const m = setup(c), srv = m?.config?.server || {}, ch = checks.filter(x => x.model_id === c.model_id), ok = k => { const x = ch.find(y => y.check === k); return x == null ? '—' : x.passed ? '<span class="check-ok">Passed</span>' : '<span class="check-fail">Failed</span>'; }; const spec = (WORK.results || []).find(r => r.model_id === c.model_id && r.protocol?.id === s.protocol_id)?.protocol?.notes?.find(n => n.startsWith('Speculative')); return `<tr><td>${m ? `<a class="model-name" href="${modelURL(m, 'coding')}">${esc(c.label)}</a>` : esc(c.label)}</td><td class="small">${esc(c.checkpoint)}</td><td class="small">${esc(c.engine_version.split(' ')[0])}</td><td class="right num">${m?.diskGiB != null ? fmt(m.diskGiB, 1) + ' GiB' : '—'}</td><td class="small">${esc((srv.speculative_decoding || spec?.replace('Speculative decoding on: ', '') || '').replace(/\.$/, ''))}</td><td class="right">${ok('long_recall')}</td><td class="right">${ok('tool_call')}</td></tr>`; }).join('')}</tbody></table></div></section>
   <div class="cols"><section><h2>Protocol</h2><p class="muted">${esc(profile?.description || '')}</p><p class="small muted">Prompt text is not published; each result carries the SHA-256 of its prompt. The weight sizes exclude the 3.6 GiB DFlash2 drafter used by both 27B setups.</p></section>
-    <section><h2>Caveats</h2><ul class="findings">${s.caveats.map(c => `<li>${esc(c)}</li>`).join('')}</ul></section></div>`);
-}
-
-// Studies without format pairs: headline figures, findings, data tables, method and sources.
-function renderNoteStudy(s) {
-  const cell = (v, c) => `<td class="${c.right ? 'right num' : ''}">${esc(v)}</td>`;
-  const tables = (s.tables || []).map(t => `<figure class="chart-frame hud"><p class="chart-title">${esc(t.title)}</p>${t.sub ? `<p class="chart-sub">${esc(t.sub)}</p>` : ''}
-    <div class="table-scroll" style="margin-top:.5rem"><table><thead><tr>${t.columns.map(c => `<th class="${c.right ? 'right' : ''}">${esc(c.label)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((v, i) => cell(v, t.columns[i] || {})).join('')}</tr>`).join('')}</tbody></table></div>
-    ${t.note ? `<p class="small muted" style="margin:.75rem 0 0">${esc(t.note)}</p>` : ''}</figure>`).join('');
-  const sources = s.sources?.length ? `<section><h2>Sources</h2><ul class="findings">${s.sources.map(([label, url]) => `<li><a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a></li>`).join('')}</ul></section>` : '';
-  content(`<a class="back" href="#studies">All studies</a>
-  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div>${s.csv ? `<div class="actions"><a class="button" href="${esc(s.csv)}" download>Download CSV</a></div>` : ''}</div>
-  ${s.figures ? `<div class="figures">${s.figures.map(([label, value, note, unit]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div>` : ''}
-  <div class="study-top">
-    <section aria-labelledby="study-findings"><p class="answer">${esc(s.answer)}</p><h2 id="study-findings" style="margin-top:1.8rem">Findings</h2><ul class="findings" style="margin-top:.75rem">${s.findings.map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:78ch">${esc(s.outcome)}</p></section>
-    ${tables ? `<section class="section" aria-labelledby="study-data"><h2 id="study-data">The numbers</h2><div class="pair-grid" style="margin-top:1rem">${tables}</div></section>` : ''}
-  </div>
-  <div class="cols"><section><h2>How it was measured</h2><p class="muted">${esc(s.method || '')}</p></section>
-    <section><h2>Caveats</h2><ul class="findings">${(s.caveats || []).map(c => `<li>${esc(c)}</li>`).join('')}</ul></section>${sources}</div>`);
+    <section><h2>Caveats</h2><ul class="findings">${s.caveats.map(c => `<li>${esc(c)}</li>`).join('')}</ul></section></div>${studySources(s)}`);
 }
 
 // ---------------------------------------------------------------- views: model detail

@@ -57,3 +57,9 @@ Schema version 2 adds these arrays to `workloads.json`:
 - `timeline`: dated entries for each addition to the archive.
 
 Long-context rows from the study carry `prefill_s` and a `size_label`. Prompt text is published only as SHA-256 hashes. The flat `quant-study-20261011.csv` repeats the headline numbers.
+
+## Evidence-labeled operational studies
+
+The `studies` array also carries narrative records that are intentionally excluded from leaderboard calculations. Their `kind` and `evidence_level` fields distinguish real-client acceptance, live read-only inspection, isolated smoke qualification, matched single-pass comparison, operational observation and source/design review from a controlled benchmark. Each narrative entry provides headline values, findings, an evidence ledger, protocol steps, limitations and public primary sources where available.
+
+These records preserve recent lessons without upgrading them into stronger claims. A passing smoke test does not become a performance qualification; one incident log does not become an engine-wide benchmark; a design plan or narrow unit-test gate does not become a deployed feature. See [STUDIES.md](STUDIES.md) for the public evidence ledger and privacy boundary.

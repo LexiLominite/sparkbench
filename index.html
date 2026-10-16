@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="How fast local models generate on one NVIDIA DGX Spark: output speed, first-token latency, long-prompt processing and studies, with every trial and protocol published.">
+<meta name="description" content="Benchmarks and evidence-labeled studies from one NVIDIA DGX Spark: model speed, latency, long prompts, runtime qualification, cache behavior and measurement practice.">
 <meta name="theme-color" content="#02161a">
 <title>SparkBench</title>
 <meta property="og:title" content="SparkBench: how fast local models type on a DGX Spark">
-<meta property="og:description" content="Output speed, first-token latency, long-prompt processing and studies for local model and engine setups on one NVIDIA DGX Spark, with trials and protocols published.">
+<meta property="og:description" content="Model speed, latency, long prompts and evidence-labeled runtime studies on one NVIDIA DGX Spark, with trials, protocols and limits published.">
 <meta property="og:image" content="https://sparkbench.lexilominite.com/assets/og.png">
 <meta property="og:url" content="https://sparkbench.lexilominite.com/">
 <meta property="og:type" content="website">
@@ -16,7 +16,7 @@
 <link rel="preload" href="assets/fonts/orbitron-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/electrolize-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/app.css?v=f899ef22cb">
+<link rel="stylesheet" href="assets/app.css?v=f66751ba48">
 <script>
 // Apply a saved theme before first paint so the page never flashes the wrong one.
 try{const c=document.cookie.split('; ').find(c=>c.startsWith('sparkbench_preferences_v1='));const t=c&&JSON.parse(decodeURIComponent(c.slice(26))).state.theme;if(t==='light'){document.documentElement.dataset.theme=t;document.querySelector('meta[name=theme-color]').content='#f4f1ea'}}catch{}
@@ -55,6 +55,6 @@ try{const c=document.cookie.split('; ').find(c=>c.startsWith('sparkbench_prefere
 <div id="tray" class="selection-tray" hidden><span id="tray-count"></span><a id="compare-link" class="button primary" href="#compare">Compare</a><button id="clear-selection" class="quiet" type="button">Clear</button></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="chart-tip" id="chart-tip" role="tooltip" hidden></div>
-<script src="assets/app.js?v=09c1a73b3c"></script>
+<script src="assets/app.js?v=a50160586b"></script>
 </body>
 </html>
