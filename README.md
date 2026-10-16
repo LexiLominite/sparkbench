@@ -7,7 +7,7 @@ The site has six views:
 - **Leaderboard**: a live "token tape" that types a 512-token answer at each setup's measured speed, then the full table of writing, coding and chat results with filters, grouping, selection and CSV export.
 - **Speed map**: output speed against weight size on log scales, with the 273 GB/s memory-bandwidth ceiling for a dense model. Mixture-of-experts models and speculative decoding are the points above it.
 - **Long prompts**: prompt-processing speed from 1k to 115k tokens, and how long a 115k-token prompt takes to read.
-- **Studies**: a dated record of what was tested, including the 11 October NVFP4 against MLX 4-bit study on TensorFold.
+- **Studies**: a dated record of what was tested: the 11 October NVFP4 against MLX 4-bit study on TensorFold, plus shorter notes on vLLM KV-cache reservation (4 October), TensorFold 0.6.6 against 0.3.6.3 (8 October), prefill contention on the live Flash Next server (12 October) and power over the whole uptime (14 October). Each note has its own `study-*.csv`.
 - **Compare** and per-setup pages with trials, protocols, start-up observations and resources.
 - **Method**: hardware, timing formulas and limits.
 

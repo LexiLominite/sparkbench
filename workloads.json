@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated_utc": "2026-10-11T07:55:40+00:00",
+  "updated_utc": "2026-10-16T15:30:00+00:00",
   "scope": "Text generation speed and serving measurements. No coding correctness, writing quality, vision accuracy or tool-use quality scores are claimed.",
   "profiles": [
     {
@@ -11011,6 +11011,441 @@
         "NVFP4's gain is meant to be quality (quantization-aware training) and prefill; quality was not scored.",
         "These prompts and the 512-token limit differ from the 30 September coding/chat suite; the two are not averaged together."
       ]
+    },
+    {
+      "id": "kv-reservation-20261004",
+      "kind": "note",
+      "date": "2026-10-04",
+      "title": "Where a 27B's 104 GiB went on vLLM",
+      "question": "Why did a 20 GiB Qwen3.8 27B NVFP4 checkpoint hold over 100 GiB of the Spark's unified memory?",
+      "answer": "An explicit 77.3 GiB KV-cache budget. vLLM allocated all of it at start-up and used under 4% of it, leaving about 8 GiB for the rest of the machine.",
+      "figures": [
+        [
+          "Engine allocation",
+          "104.5",
+          "reported by the GPU driver",
+          "GiB"
+        ],
+        [
+          "KV cache reserved",
+          "77.3",
+          "explicit byte budget",
+          "GiB"
+        ],
+        [
+          "Cache in use",
+          "3.8%",
+          "at the sampled moment"
+        ],
+        [
+          "Free system memory",
+          "~8",
+          "while the model was idle",
+          "GiB"
+        ]
+      ],
+      "findings": [
+        "The launch set --kv-cache-memory-bytes to 82,978,768,158 bytes (77.28 GiB). vLLM's start-up log and source both say this value skips memory profiling and ignores --gpu-memory-utilization when sizing the cache.",
+        "The split was about 19 GiB of loaded weights, 77.2 GiB of physically allocated cache after block rounding, and roughly 8 GiB of runtime, workspace and allocator overhead that was not broken down further.",
+        "The cache held 1,614 blocks, or 1,251,776 tokens: room for about 4.8 simultaneous 262,144-token requests. At the sampled moment 3.84% was in use.",
+        "Only 16 of the checkpoint's 64 layers use full attention; the other 48 are linear attention. The cache ran in BF16, with prefix caching and KV offloading off.",
+        "The 77.28 GiB came from the control app's planner: 121.70 GiB total, minus 20.42 GiB estimated weights and 4, 8 and 12 GiB allowances for runtime, system and sidecars. Those allowances are arithmetic, not protected partitions."
+      ],
+      "outcome": "Nothing was changed: the inspection was read-only. Sizing the cache from the context and concurrency actually needed, rather than from what is left over, is the open fix.",
+      "tables": [
+        {
+          "title": "How the memory was used",
+          "sub": "One running worker, read-only inspection on 4 October",
+          "columns": [
+            {
+              "label": "Part",
+              "right": false
+            },
+            {
+              "label": "Size",
+              "right": true
+            },
+            {
+              "label": "Source",
+              "right": false
+            }
+          ],
+          "rows": [
+            [
+              "Loaded weights",
+              "~19 GiB",
+              "vLLM start-up log"
+            ],
+            [
+              "KV cache, allocated",
+              "77.2 GiB",
+              "1,614 blocks after rounding"
+            ],
+            [
+              "Runtime, workspace and overhead",
+              "~8.2 GiB",
+              "remainder, not decomposed"
+            ],
+            [
+              "Total engine allocation",
+              "104.5 GiB",
+              "GPU driver (107,024 MiB)"
+            ]
+          ]
+        }
+      ],
+      "method": "Read-only. Launch arguments, start-up log, live vLLM metrics and GPU process accounting were read from the running worker (vLLM 0.24.0, 262,144-token context, up to 16 sequences, 8,192 batched tokens, eager mode, language model only). No request was sent and nothing was restarted.",
+      "caveats": [
+        "One snapshot of an idle worker. Cache use rises with real traffic.",
+        "The roughly 8 GiB remainder was not attributed to individual allocations.",
+        "Some environment values were filtered or not readable, so other launch defaults may have played a part."
+      ],
+      "csv": "study-kv-reservation-20261004.csv"
+    },
+    {
+      "id": "tensorfold-066-vs-0363-20261008",
+      "kind": "note",
+      "date": "2026-10-08",
+      "title": "TensorFold 0.6.6 against 0.3.6.3 on the same Flash Next weights",
+      "question": "Is the newer TensorFold Python 0.6.6 release safe to swap in for the live 0.3.6.3 server, holding weights, drafts and context fixed?",
+      "answer": "Not yet. Long-prompt retrieval matched token for token at the same speed, but 0.6.6 ran out of budget on a short coding task that 0.3.6.3 finished and passed.",
+      "figures": [
+        [
+          "Identical answers",
+          "4/4",
+          "same token hashes, 8k to 261k"
+        ],
+        [
+          "261k-token request",
+          "−4%",
+          "0.6.6 wall time, one run"
+        ],
+        [
+          "Coding checks",
+          "5 vs 1",
+          "of 5 passed, 0.3.6.3 against 0.6.6"
+        ],
+        [
+          "Drafts accepted",
+          "5/9",
+          "identical on both versions"
+        ]
+      ],
+      "findings": [
+        "Retrieval answers and their token hashes were identical on both versions at 8,120, 32,696, 131,000 and 261,048 input tokens.",
+        "Wall times were within 1% up to 131k tokens. At 261k, 0.6.6 took 138.1 s against 144.0 s: about 4% faster, from a single run.",
+        "Speculative decoding behaved the same: nine drafted tokens and five accepted on the retrieval prompts.",
+        "On a short LRU-cache coding task with a 192-token budget, 0.3.6.3 finished in 165 tokens and passed 5 of 5 functional checks. 0.6.6 used all 192 tokens, stopped mid-implementation and passed 1 of 5.",
+        "Same day, the standard vLLM image moved from 0.24.0 to 0.31.0 after staging smoke tests: a 27B NVFP4 and a 27B FP8 checkpoint both loaded, answered correctly, made a valid tool call and rejected unauthenticated requests."
+      ],
+      "outcome": "The live Flash Next server stayed on TensorFold 0.3.6.3. The 0.6.6 image is kept for later qualification; that is why the Flash Next pair in the 11 October study uses different engine versions.",
+      "tables": [
+        {
+          "title": "Long-prompt retrieval",
+          "sub": "Wall time per request, seconds. Same correct answer on both versions.",
+          "columns": [
+            {
+              "label": "Input tokens",
+              "right": true
+            },
+            {
+              "label": "0.3.6.3",
+              "right": true
+            },
+            {
+              "label": "0.6.6",
+              "right": true
+            },
+            {
+              "label": "Difference",
+              "right": true
+            }
+          ],
+          "rows": [
+            [
+              "8,120",
+              "3.43",
+              "3.55",
+              "+3.5%"
+            ],
+            [
+              "32,696",
+              "13.81",
+              "13.83",
+              "+0.1%"
+            ],
+            [
+              "131,000",
+              "62.96",
+              "62.35",
+              "−1.0%"
+            ],
+            [
+              "261,048",
+              "144.04",
+              "138.05",
+              "−4.2%"
+            ]
+          ],
+          "note": "Negative means 0.6.6 was faster."
+        },
+        {
+          "title": "Short coding task",
+          "sub": "LRU cache implementation, 192-token output budget",
+          "columns": [
+            {
+              "label": "Version",
+              "right": false
+            },
+            {
+              "label": "Tokens used",
+              "right": true
+            },
+            {
+              "label": "Stop reason",
+              "right": false
+            },
+            {
+              "label": "Checks passed",
+              "right": true
+            }
+          ],
+          "rows": [
+            [
+              "0.3.6.3",
+              "165",
+              "finished",
+              "5 / 5"
+            ],
+            [
+              "0.6.6",
+              "192",
+              "length limit",
+              "1 / 5"
+            ]
+          ]
+        }
+      ],
+      "method": "Vontra/Qwen3.8-Flash-Next-MLX-4bit-MTP at a pinned revision, mounted read-only and offline for both versions. 262,144-token context, one stream, INT8 KV cache, six MTP drafts at 0.60 confidence, thinking off, separate compiler caches. The candidate ran in its own container; the production container was snapshotted and restored afterwards with identical image, arguments and configuration.",
+      "caveats": [
+        "One request per prompt length, so the 4% gain at 261k is an observation, not a general speed claim.",
+        "The coding failure is one prompt. It shows a compatibility risk worth testing, not a measured quality regression.",
+        "The vLLM 0.31.0 checks used a 2,048-token context, one sequence and a 1 GiB cache. They did not test long context, vision, concurrency or coding agents."
+      ],
+      "csv": "study-tensorfold-066-20261008.csv"
+    },
+    {
+      "id": "prefill-contention-20261012",
+      "kind": "note",
+      "date": "2026-10-12",
+      "title": "Why Flash Next sometimes types at 4 tok/s",
+      "question": "A client showed about 4 tok/s from Qwen3.8 Flash Next with three requests in flight. Is that the model's real speed?",
+      "answer": "No. Requests that reused a cached 70k-token prefix ran at 46 to 58 tok/s. The ones at 3 to 4 tok/s had to read the whole prompt again while competing with other prompts, and the old speed figure counted that waiting as generation time.",
+      "figures": [
+        [
+          "Cached prefix",
+          "46–58",
+          "TTFT 0.6 to 2.6 s",
+          "tok/s"
+        ],
+        [
+          "Uncached, contended",
+          "3.4–3.6",
+          "TTFT 54 to 112 s",
+          "tok/s"
+        ],
+        [
+          "Same-size prompts",
+          "~72k",
+          "cache reuse 0% to 99%",
+          "tokens"
+        ],
+        [
+          "Two streams, 15 Oct",
+          "~55",
+          "~100 tok/s combined",
+          "tok/s each"
+        ]
+      ],
+      "findings": [
+        "The five logged requests were all 69k to 73k tokens. The two that reused nearly the whole prefix answered in 0.6 to 2.6 s and ran at 46 to 58 tok/s.",
+        "The three with no cached prefix waited 54 to 112 s for their first token. Reading a 72k prompt alone takes roughly 29 to 35 s on this server; the rest was contention with other prompts being read at the same time.",
+        "The figure the client displayed was completion tokens divided by the request's whole wall time, including queueing and prompt reading. It is not decode speed.",
+        "The GPU was at about 96% use and 86 to 88 °C with no thermal slowdown, and the machine was not swapping. The slowdown was scheduling, not hardware.",
+        "Why near-identical prompts sometimes reuse 99% of the cache and sometimes none is still unexplained: prompt-prefix drift, cache eviction and client behaviour were not separated.",
+        "Follow-up on 15 October: the control app now reports a single request's own generation speed separately from combined output read from the engine's token counter. Two simultaneous requests then ran at about 55 tok/s each and about 100 tok/s together."
+      ],
+      "outcome": "No setting was changed and no model was switched. TensorFold's --decode-share option (default 0.25), which sets how much time new prefills take from running decodes, is the next thing to measure, along with why the prefix cache misses.",
+      "tables": [
+        {
+          "title": "Requests from the server log",
+          "sub": "Qwen3.8 Flash Next NVFP4 (QAD) on TensorFold 0.6.6, four parallel slots",
+          "columns": [
+            {
+              "label": "Prompt tokens",
+              "right": true
+            },
+            {
+              "label": "Cached",
+              "right": true
+            },
+            {
+              "label": "First token",
+              "right": true
+            },
+            {
+              "label": "Reported speed",
+              "right": true
+            }
+          ],
+          "rows": [
+            [
+              "~68.7k",
+              "~67.1k",
+              "2.57 s",
+              "58.1 tok/s"
+            ],
+            [
+              "~72.8k",
+              "~72.4k",
+              "0.63 s",
+              "46.4 tok/s"
+            ],
+            [
+              "~71.9k",
+              "0",
+              "53.73 s",
+              "3.6 tok/s"
+            ],
+            [
+              "~71.9k",
+              "0",
+              "102.81 s",
+              "3.4 tok/s"
+            ],
+            [
+              "~72.4k",
+              "0",
+              "112.15 s",
+              "3.5 tok/s"
+            ]
+          ],
+          "note": "Reported speed is completion tokens over total request time, as the client showed it at the time."
+        }
+      ],
+      "method": "Observation of live traffic, not a controlled run. The server was Qwen3.8 Flash Next NVFP4 (QAD) on TensorFold 0.6.6 with a 262,144-token context, four parallel slots, INT8 KV cache and six MTP drafts at 0.60 confidence, thinking on. Request timings were read from the server log and GPU, thermal and memory state from the host. The 15 October figure comes from the control app's new per-request and engine-counter readings.",
+      "caveats": [
+        "Five requests from real use, with unknown prompts and clients. Treat the rates as examples, not a benchmark.",
+        "The vLLM chunked-prefill scheduler is designed to protect running decodes, so vLLM may degrade more gently. That is an expectation; it was not measured here.",
+        "The 15 October two-stream figure is a single live reading."
+      ],
+      "csv": "study-prefill-contention-20261012.csv"
+    },
+    {
+      "id": "power-uptime-20261014",
+      "kind": "note",
+      "date": "2026-10-14",
+      "title": "What the Spark draws over its whole uptime",
+      "question": "Counting every hour it has been switched on, not just API time, how much power does this DGX Spark use?",
+      "answer": "About 33 W on average, or roughly 0.8 kWh a day. It idles near 25 W and the GPU averages about 48 W when busy. Nothing measures the wall socket, so every figure is an estimate.",
+      "figures": [
+        [
+          "Idle draw",
+          "~25",
+          "GPU 13 W plus allowance",
+          "W"
+        ],
+        [
+          "Average draw",
+          "33",
+          "over 319 monitored hours",
+          "W"
+        ],
+        [
+          "Switched on",
+          "2,107",
+          "18 Jul to 14 Oct, 20 boots",
+          "h"
+        ],
+        [
+          "Energy since July",
+          "~70",
+          "about ₹408 at ₹5.80/kWh",
+          "kWh"
+        ]
+      ],
+      "findings": [
+        "The Spark has been on almost continuously: 2,107 hours across 20 boots since 18 July, with only about two hours of gaps between reboots.",
+        "Idle, the GPU sensor reads about 13 W. With a fixed 12 W for the rest of the box, idle comes to about 25 W, which matches published figures of 22 to 25 W after NVIDIA's idle-power update.",
+        "During inference the GPU averaged about 48 W, so busy periods are counted at about 60 W for the box. Published reviews put the Spark at roughly 60 to 140 W during LLM work.",
+        "Charging busy time at a flat 150 W, as the first estimate did, overstated monitored energy by about 64% (17.4 against 10.6 kWh).",
+        "Across the 319 monitored hours since 1 October the average was 33 W. The 1,788 unmonitored hours before that are filled in at the same 33 W."
+      ],
+      "outcome": "The control app's Usage page now counts every powered-on hour from the boot history, shows how much is measured and how much is extrapolated, and lets the wattage assumptions be changed.",
+      "tables": [
+        {
+          "title": "Energy by period",
+          "sub": "Estimated from boot history and the GPU power sensor",
+          "columns": [
+            {
+              "label": "Period",
+              "right": false
+            },
+            {
+              "label": "Switched on",
+              "right": true
+            },
+            {
+              "label": "Energy",
+              "right": true
+            },
+            {
+              "label": "Average",
+              "right": true
+            },
+            {
+              "label": "Cost at ₹5.80/kWh",
+              "right": true
+            }
+          ],
+          "rows": [
+            [
+              "All time, since 18 Jul",
+              "2,107 h",
+              "70.3 kWh",
+              "33 W",
+              "₹408"
+            ],
+            [
+              "Last 30 days",
+              "718 h",
+              "24.0 kWh",
+              "33 W",
+              "₹139"
+            ],
+            [
+              "Last 7 days",
+              "168 h",
+              "5.95 kWh",
+              "35 W",
+              "₹34"
+            ]
+          ]
+        }
+      ],
+      "method": "Hours switched on come from the system boot history, kept in the app's own store so old boots survive log rotation. Monitored time (319 h since 1 October) uses the GPU's power sensor plus 12 W for the rest of the system, never less than 25 W. Unmonitored time (1,788 h) is charged at the monitored average. ₹5.80/kWh is the tariff saved in the app.",
+      "caveats": [
+        "The GPU sensor is the only power reading the Spark exposes. A plug-in meter at the wall would replace the 12 W allowance with a real number.",
+        "July to September may be undercounted: before NVIDIA's idle-power update the Spark idled nearer 37 W.",
+        "Busy and idle shares depend on how the Spark was used; this one mostly serves one model with light traffic."
+      ],
+      "sources": [
+        [
+          "Tom's Hardware: DGX Spark update cuts idle power by 32% or more",
+          "https://tomshardware.com/tech-industry/artificial-intelligence/nvidia-dgx-spark-update-cuts-idle-power-by-32-percent-or-more-hot-plug-detection-on-connectx-nic-makes-for-a-more-efficient-ai-workstation"
+        ]
+      ],
+      "csv": "study-power-uptime-20261014.csv"
     }
   ],
   "timeline": [
@@ -11049,6 +11484,38 @@
       "study_id": "nvfp4-vs-mlx-20261011",
       "summary": "NVFP4 doubles 27B prompt processing; MLX 4-bit still decodes faster. Flash Next NVFP4 is slower everywhere.",
       "link": "#study/nvfp4-vs-mlx-20261011"
+    },
+    {
+      "date": "2026-10-04",
+      "title": "Where a 27B's memory went",
+      "id": "kv-reservation-20261004",
+      "study_id": "kv-reservation-20261004",
+      "summary": "A 20 GiB 27B NVFP4 held 104.5 GiB on vLLM because of an explicit 77 GiB KV-cache budget, under 4% of it in use.",
+      "link": "#study/kv-reservation-20261004"
+    },
+    {
+      "date": "2026-10-08",
+      "title": "TensorFold 0.6.6 against 0.3.6.3, and vLLM 0.31.0",
+      "id": "tensorfold-066-vs-0363-20261008",
+      "study_id": "tensorfold-066-vs-0363-20261008",
+      "summary": "Same Flash Next weights: identical retrieval up to 261k tokens, but 0.6.6 failed a short coding task. vLLM moved to 0.31.0 after smoke tests.",
+      "link": "#study/tensorfold-066-vs-0363-20261008"
+    },
+    {
+      "date": "2026-10-12",
+      "title": "Why Flash Next sometimes types at 4 tok/s",
+      "id": "prefill-contention-20261012",
+      "study_id": "prefill-contention-20261012",
+      "summary": "Cached 70k prompts ran at 46–58 tok/s; uncached ones waited up to 112 s behind other prompts and showed 3–4 tok/s.",
+      "link": "#study/prefill-contention-20261012"
+    },
+    {
+      "date": "2026-10-14",
+      "title": "Power over the whole uptime",
+      "id": "power-uptime-20261014",
+      "study_id": "power-uptime-20261014",
+      "summary": "About 25 W idle and 33 W on average across 2,107 hours switched on: roughly 70 kWh since July, estimated without a wall meter.",
+      "link": "#study/power-uptime-20261014"
     }
   ]
 }

@@ -1,0 +1,11 @@
+Long-prompt retrieval
+Input tokens,0.3.6.3,0.6.6,Difference
+"8,120",3.43,3.55,+3.5%
+"32,696",13.81,13.83,+0.1%
+"131,000",62.96,62.35,−1.0%
+"261,048",144.04,138.05,−4.2%
+
+Short coding task
+Version,Tokens used,Stop reason,Checks passed
+0.3.6.3,165,finished,5 / 5
+0.6.6,192,length limit,1 / 5

@@ -808,6 +808,7 @@ function renderContext() {
 
 // ---------------------------------------------------------------- views: studies
 function studyHeadline(s) {
+  if (s.figures) return s.figures;
   const pair = id => { const a = s.configs.find(c => c.pair === id && c.format_family === 'NVFP4'), b = s.configs.find(c => c.pair === id && c.format_family !== 'NVFP4'); return a && b ? studyMetricRows(a.model_id, b.model_id) : []; };
   const pct = (rows, i) => rows[i] ? (rows[i][1] / rows[i][2] - 1) * 100 : null, signed = v => v == null ? '—' : `${v > 0 ? '+' : '−'}${fmt(Math.abs(v), 0)}%`;
   const big = pair('27b'), flash = pair('flash'), checks = (WORK.checks || []).filter(c => c.study_id === s.id);
@@ -819,7 +820,7 @@ function renderStudies() {
   const latest = (WORK.studies || []).slice().sort((a, b) => b.date.localeCompare(a.date))[0];
   content(`<div class="page-head"><div><h1 class="page-title">What was tested, and when.</h1><p class="lede">SparkBench grows one question at a time. Each entry links to the setups or study it added; earlier numbers are never overwritten.</p></div></div>
   ${latest ? `<section class="studies-feature hud" aria-labelledby="feature-title"><div><p class="kicker">Latest study, ${esc(dayLabel(latest.date))}</p><h2 id="feature-title">${esc(latest.title)}</h2><p class="answer">${esc(latest.answer)}</p><a class="button primary" href="#study/${esc(latest.id)}">Open the study</a></div>
-    <div class="feature-figures">${studyHeadline(latest).map(([label, value, note]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div></section>` : ''}
+    <div class="feature-figures">${studyHeadline(latest).map(([label, value, note, unit]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div></section>` : ''}
   <h2 class="sr-only">Timeline</h2>
   <ol class="timeline">${items.map(t => `<li class="${t.study_id ? 'featured' : ''}"><time datetime="${esc(t.date)}">${esc(dayLabel(t.date, {day: 'numeric', month: 'short', year: 'numeric'}))}</time><div><h3><a href="${esc(t.link)}">${esc(t.title)}</a></h3><p>${esc(t.summary)}</p></div></li>`).join('')}</ol>`);
 }
@@ -835,6 +836,7 @@ function studyMetricRows(a, b) {
 function renderStudy(id) {
   const s = studyById(id);
   if (!s) { content('<div class="empty"><h1 class="page-title">Study not found</h1><p>This link may point to a study that has not been published.</p><a class="button" href="#studies">All studies</a></div>'); return; }
+  if (!s.pairs) { renderNoteStudy(s); return; }
   const cfg = s.configs, setup = c => modelById(c.model_id);
   const pairRows = Object.fromEntries(s.pairs.map(p => { const a = cfg.find(c => c.pair === p.id && c.format_family === 'NVFP4'), b = cfg.find(c => c.pair === p.id && c.format_family !== 'NVFP4'); return [p.id, a && b ? studyMetricRows(a.model_id, b.model_id) : []]; }));
   const limit = Math.max(25, ...Object.values(pairRows).flat().map(([, x, y]) => Math.abs((x / y - 1) * 100))) * 1.35;
@@ -850,7 +852,7 @@ function renderStudy(id) {
   const checks = (WORK.checks || []).filter(c => c.study_id === s.id), series = contextSeries().filter(x => x.proto === s.protocol_id);
   const profile = (WORK.profiles || []).find(p => p.id === s.protocol_id);
   content(`<a class="back" href="#studies">All studies</a>
-  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="actions"><a class="button" href="quant-study-20261011.csv" download>Download CSV</a></div></div>
+  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div><div class="actions"><a class="button" href="${esc(s.csv || 'quant-study-20261011.csv')}" download>Download CSV</a></div></div>
   <div class="study-top">
     <section aria-labelledby="study-findings"><p class="answer">${esc(s.answer)}</p><h2 id="study-findings" style="margin-top:1.8rem">Findings</h2><ul class="findings" style="margin-top:.75rem">${s.findings.map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:78ch">${esc(s.outcome)}</p></section>
     <section class="section" aria-labelledby="study-pairs"><h2 id="study-pairs">Format against format</h2><p class="muted" style="max-width:70ch">How much faster or slower each NVFP4 build is than the MLX 4-bit build of the same model. Bars to the right are faster.</p>
@@ -861,6 +863,24 @@ function renderStudy(id) {
     <div class="table-scroll"><table><thead><tr><th>Setup</th><th>Checkpoint</th><th>TensorFold</th><th class="right">Weights</th><th>Speculative decoding</th><th class="right">Long recall</th><th class="right">Tool call</th></tr></thead><tbody>${cfg.map(c => { const m = setup(c), srv = m?.config?.server || {}, ch = checks.filter(x => x.model_id === c.model_id), ok = k => { const x = ch.find(y => y.check === k); return x == null ? '—' : x.passed ? '<span class="check-ok">Passed</span>' : '<span class="check-fail">Failed</span>'; }; const spec = (WORK.results || []).find(r => r.model_id === c.model_id && r.protocol?.id === s.protocol_id)?.protocol?.notes?.find(n => n.startsWith('Speculative')); return `<tr><td>${m ? `<a class="model-name" href="${modelURL(m, 'coding')}">${esc(c.label)}</a>` : esc(c.label)}</td><td class="small">${esc(c.checkpoint)}</td><td class="small">${esc(c.engine_version.split(' ')[0])}</td><td class="right num">${m?.diskGiB != null ? fmt(m.diskGiB, 1) + ' GiB' : '—'}</td><td class="small">${esc((srv.speculative_decoding || spec?.replace('Speculative decoding on: ', '') || '').replace(/\.$/, ''))}</td><td class="right">${ok('long_recall')}</td><td class="right">${ok('tool_call')}</td></tr>`; }).join('')}</tbody></table></div></section>
   <div class="cols"><section><h2>Protocol</h2><p class="muted">${esc(profile?.description || '')}</p><p class="small muted">Prompt text is not published; each result carries the SHA-256 of its prompt. The weight sizes exclude the 3.6 GiB DFlash2 drafter used by both 27B setups.</p></section>
     <section><h2>Caveats</h2><ul class="findings">${s.caveats.map(c => `<li>${esc(c)}</li>`).join('')}</ul></section></div>`);
+}
+
+// Studies without format pairs: headline figures, findings, data tables, method and sources.
+function renderNoteStudy(s) {
+  const cell = (v, c) => `<td class="${c.right ? 'right num' : ''}">${esc(v)}</td>`;
+  const tables = (s.tables || []).map(t => `<figure class="chart-frame hud"><p class="chart-title">${esc(t.title)}</p>${t.sub ? `<p class="chart-sub">${esc(t.sub)}</p>` : ''}
+    <div class="table-scroll" style="margin-top:.5rem"><table><thead><tr>${t.columns.map(c => `<th class="${c.right ? 'right' : ''}">${esc(c.label)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((v, i) => cell(v, t.columns[i] || {})).join('')}</tr>`).join('')}</tbody></table></div>
+    ${t.note ? `<p class="small muted" style="margin:.75rem 0 0">${esc(t.note)}</p>` : ''}</figure>`).join('');
+  const sources = s.sources?.length ? `<section><h2>Sources</h2><ul class="findings">${s.sources.map(([label, url]) => `<li><a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a></li>`).join('')}</ul></section>` : '';
+  content(`<a class="back" href="#studies">All studies</a>
+  <div class="page-head" style="padding-top:1.1rem"><div><p class="kicker">${esc(dayLabel(s.date))}</p><h1 class="page-title">${esc(s.title)}</h1><p class="lede">${esc(s.question)}</p></div>${s.csv ? `<div class="actions"><a class="button" href="${esc(s.csv)}" download>Download CSV</a></div>` : ''}</div>
+  ${s.figures ? `<div class="figures">${s.figures.map(([label, value, note, unit]) => `<div class="figure"><div class="figure-label">${esc(label)}</div><div class="figure-value">${esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</div><div class="figure-note">${esc(note)}</div></div>`).join('')}</div>` : ''}
+  <div class="study-top">
+    <section aria-labelledby="study-findings"><p class="answer">${esc(s.answer)}</p><h2 id="study-findings" style="margin-top:1.8rem">Findings</h2><ul class="findings" style="margin-top:.75rem">${s.findings.map(f => `<li>${esc(f)}</li>`).join('')}</ul><p class="notice" style="max-width:78ch">${esc(s.outcome)}</p></section>
+    ${tables ? `<section class="section" aria-labelledby="study-data"><h2 id="study-data">The numbers</h2><div class="pair-grid" style="margin-top:1rem">${tables}</div></section>` : ''}
+  </div>
+  <div class="cols"><section><h2>How it was measured</h2><p class="muted">${esc(s.method || '')}</p></section>
+    <section><h2>Caveats</h2><ul class="findings">${(s.caveats || []).map(c => `<li>${esc(c)}</li>`).join('')}</ul></section>${sources}</div>`);
 }
 
 // ---------------------------------------------------------------- views: model detail
@@ -936,7 +956,7 @@ function nativeTrialTimingHTML(r) {
 function extrasHTML(m) {
   const conc = concurrencyFor(m), checks = checksFor(m), lc = longContextFor(m).filter(r => r.protocol?.id === STUDY_PROTOCOL);
   if (!conc.length && !checks.length && !lc.length) return '';
-  return `<section class="section" aria-labelledby="extras-title"><h2 id="extras-title">Serving checks, 11 October</h2><p class="muted" style="max-width:66ch">From the <a href="#study/${esc(conc[0]?.study_id || checks[0]?.study_id || '')}">NVFP4 or MLX 4-bit study</a>, run on TensorFold ${esc((conc[0] && (WORK.studies || []).flatMap(s => s.configs).find(c => c.model_id === m.id)?.engine_version.split(' ')[0]) || '')}.</p>
+  return `<section class="section" aria-labelledby="extras-title"><h2 id="extras-title">Serving checks, 11 October</h2><p class="muted" style="max-width:66ch">From the <a href="#study/${esc(conc[0]?.study_id || checks[0]?.study_id || '')}">NVFP4 or MLX 4-bit study</a>, run on TensorFold ${esc((conc[0] && (WORK.studies || []).flatMap(s => s.configs || []).find(c => c.model_id === m.id)?.engine_version.split(' ')[0]) || '')}.</p>
     <div class="figures" style="margin-top:14px">${conc.map(c => `<div class="figure"><div class="figure-label">${c.streams} streams at once</div><div class="figure-value">${fmt(c.aggregate_tps, 1)}<small>tok/s total</small></div><div class="figure-note">${c.per_request_decode_tps ? 'Per stream ' + c.per_request_decode_tps.map(v => fmt(v, 1)).join(', ') : 'Per-stream rates not logged'}</div></div>`).join('')}${lc.map(r => `<div class="figure"><div class="figure-label">Prompt of ${fmtInt(r.prompt_tokens)} tokens</div><div class="figure-value">${fmtInt(r.prefill_tps)}<small>tok/s</small></div><div class="figure-note">Read in ${fmt(r.prefill_s, 1)} s</div></div>`).join('')}</div>
     ${checks.length ? `<ul class="findings" style="margin-top:18px">${checks.map(c => `<li>${esc(c.label)}${c.prompt_tokens ? ` (${fmtInt(c.prompt_tokens)} tokens)` : ''}: ${c.passed ? '<span class="check-ok">passed</span>' : '<span class="check-fail">failed</span>'}</li>`).join('')}</ul>` : ''}</section>`;
 }

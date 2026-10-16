@@ -1,0 +1,7 @@
+Requests from the server log
+Prompt tokens,Cached,First token,Reported speed
+~68.7k,~67.1k,2.57 s,58.1 tok/s
+~72.8k,~72.4k,0.63 s,46.4 tok/s
+~71.9k,0,53.73 s,3.6 tok/s
+~71.9k,0,102.81 s,3.4 tok/s
+~72.4k,0,112.15 s,3.5 tok/s

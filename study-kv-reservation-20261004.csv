@@ -1,0 +1,6 @@
+How the memory was used
+Part,Size,Source
+Loaded weights,~19 GiB,vLLM start-up log
+"KV cache, allocated",77.2 GiB,"1,614 blocks after rounding"
+"Runtime, workspace and overhead",~8.2 GiB,"remainder, not decomposed"
+Total engine allocation,104.5 GiB,"GPU driver (107,024 MiB)"
